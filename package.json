@@ -2,10 +2,13 @@
   "name": "new-dev-portfolio",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite --host localhost --port 8080",
-    "build": "vite build",
+    "build": "node node_modules/vite/bin/vite.js build",
     "preview": "vite preview --host localhost --port 8080"
   },
   "dependencies": {
