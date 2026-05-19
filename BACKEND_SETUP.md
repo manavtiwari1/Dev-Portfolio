@@ -5,7 +5,8 @@ The admin panel saves portfolio edits through a normal Node/Express backend and 
 1. Create a `.env` file from `.env.example`.
 2. Set `ADMIN_PASSWORD`.
 3. Keep `DB_PATH=./data/portfolio.db`, or change it if your host needs another writable folder.
-4. Build and start the site:
+4. Set `CORS_ORIGIN` to your website origin. Use `*` while testing, or your cPanel domain for stricter production CORS.
+5. Build and start the site:
 
 ```bash
 npm install
@@ -18,3 +19,5 @@ Open `http://localhost:8080/manav3d.html` for the portfolio and `http://localhos
 On any Node hosting provider, set the same environment variables and run `npm run build && npm start`.
 
 The SQLite file is created automatically on first use. Back up the `data/portfolio.db` file if you move servers.
+
+If the frontend is hosted somewhere else, like cPanel, keep the backend running on Render and make sure `CORS_ORIGIN` allows the cPanel website URL.

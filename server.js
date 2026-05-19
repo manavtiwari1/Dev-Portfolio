@@ -1,4 +1,5 @@
 import "dotenv/config";
+import cors from "cors";
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -12,7 +13,22 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 8080;
+const allowedOrigins = (process.env.CORS_ORIGIN || "*")
+  .split(",")
+  .map(origin => origin.trim())
+  .filter(Boolean);
 
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes("*") || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error("Not allowed by CORS"));
+  },
+  allowedHeaders: ["Content-Type", "x-admin-password"],
+  methods: ["GET", "POST", "OPTIONS"],
+}));
 app.use(express.json({ limit: "1mb" }));
 
 app.all("/api/auth", authHandler);

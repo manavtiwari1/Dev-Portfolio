@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
 
 const ADMIN_PASSWORD = "manav2025";
+const RENDER_API_BASE = "https://dev-portfolio-vlzl.onrender.com";
+const API_BASE_URL = (() => {
+  if (typeof window === "undefined") return "";
+  const configured = window.API_BASE_URL || import.meta.env?.VITE_API_BASE_URL;
+  if (configured) return configured.replace(/\/$/, "");
+  const host = window.location.hostname;
+  if (host === "localhost" || host === "127.0.0.1" || host.endsWith("onrender.com")) return "";
+  return RENDER_API_BASE;
+})();
+const apiUrl = (path) => `${API_BASE_URL}${path}`;
 
 const DEFAULT_PROJECTS = [
   { id: "1", title: "AI Study Assistant", desc: "Full-stack AI study companion powered by Claude API. Personalized learning paths, smart Q&A, and real-time feedback.", thumb: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=840&q=80", tags: ["React", "Claude API", "MongoDB"], demo: "#", github: "#" },
@@ -42,7 +52,7 @@ const storage = {
   async get(key, password) {
     if (typeof window !== "undefined" && window.storage) return window.storage.get(key);
     try {
-      const response = await fetch(`/api/storage?key=${encodeURIComponent(key)}`, {
+      const response = await fetch(apiUrl(`/api/storage?key=${encodeURIComponent(key)}`), {
         headers: { "x-admin-password": password || "" },
       });
       if (response.ok) return response.status === 204 ? null : response.json();
@@ -53,7 +63,7 @@ const storage = {
   async set(key, value, password) {
     if (typeof window !== "undefined" && window.storage) return window.storage.set(key, value);
     try {
-      const response = await fetch("/api/storage", {
+      const response = await fetch(apiUrl("/api/storage"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -218,7 +228,7 @@ export default function AdminPanel() {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/auth", {
+      const response = await fetch(apiUrl("/api/auth"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

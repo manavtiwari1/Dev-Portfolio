@@ -3131,10 +3131,20 @@
       animate();
     })();
 
+    const RENDER_API_BASE = 'https://dev-portfolio-vlzl.onrender.com';
+    const API_BASE_URL = (() => {
+      const configured = window.API_BASE_URL || '';
+      if (configured) return configured.replace(/\/$/, '');
+      const host = window.location.hostname;
+      if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('onrender.com')) return '';
+      return RENDER_API_BASE;
+    })();
+    const apiUrl = path => `${API_BASE_URL}${path}`;
+
     const storage = window.storage || {
       async get(key) {
         try {
-          const response = await fetch(`/api/storage?key=${encodeURIComponent(key)}`);
+          const response = await fetch(apiUrl(`/api/storage?key=${encodeURIComponent(key)}`));
           if (response.ok) return await response.json();
         } catch (err) { }
         const value = localStorage.getItem(key);
@@ -3142,7 +3152,7 @@
       },
       async set(key, value) {
         try {
-          const response = await fetch('/api/storage', {
+          const response = await fetch(apiUrl('/api/storage'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key, value })
@@ -3153,7 +3163,7 @@
       },
       async addContactMessage(message) {
         try {
-          const response = await fetch('/api/contact', {
+          const response = await fetch(apiUrl('/api/contact'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(message)

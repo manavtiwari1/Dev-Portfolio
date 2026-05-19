@@ -27,6 +27,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
+        index: "index.html",
         portfolio: "manav3d.html",
         admin: "admin.html",
       },
