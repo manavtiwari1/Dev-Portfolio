@@ -3133,11 +3133,41 @@
 
     const storage = window.storage || {
       async get(key) {
+        try {
+          const response = await fetch(`/api/storage?key=${encodeURIComponent(key)}`);
+          if (response.ok) return await response.json();
+        } catch (err) { }
         const value = localStorage.getItem(key);
         return value === null ? null : { value };
       },
       async set(key, value) {
+        try {
+          const response = await fetch('/api/storage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key, value })
+          });
+          if (response.ok) return;
+        } catch (err) { }
         localStorage.setItem(key, value);
+      },
+      async addContactMessage(message) {
+        try {
+          const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(message)
+          });
+          if (response.ok) return;
+        } catch (err) { }
+
+        let msgs = [];
+        try {
+          const existing = localStorage.getItem('contact_messages');
+          if (existing) msgs = JSON.parse(existing);
+        } catch (err) { msgs = []; }
+        msgs.unshift(message);
+        localStorage.setItem('contact_messages', JSON.stringify(msgs));
       }
     };
 
@@ -3430,14 +3460,7 @@
       };
 
       try {
-        // Load existing messages
-        let msgs = [];
-        try {
-          const existing = await storage.get('contact_messages');
-          if (existing) msgs = JSON.parse(existing.value);
-        } catch (err) { msgs = []; }
-        msgs.unshift(msg);
-        await storage.set('contact_messages', JSON.stringify(msgs));
+        await storage.addContactMessage(msg);
         // Reset form
         document.getElementById('contactForm').reset();
         success.style.display = 'block';
@@ -3648,7 +3671,6 @@
       window.addEventListener('load', initCarousel);
       window.addEventListener('resize', () => goTo(current, true));
     })();
-  </script>
   </script>
 </body>
 

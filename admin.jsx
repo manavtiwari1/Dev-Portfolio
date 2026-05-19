@@ -39,13 +39,30 @@ const ICONS = ["🧠","🤖","🐍","⚛️","🗄️","☁️","👁️","⚙�
 
 /* ── styles ── */
 const storage = {
-  async get(key) {
+  async get(key, password) {
     if (typeof window !== "undefined" && window.storage) return window.storage.get(key);
+    try {
+      const response = await fetch(`/api/storage?key=${encodeURIComponent(key)}`, {
+        headers: { "x-admin-password": password || "" },
+      });
+      if (response.ok) return response.status === 204 ? null : response.json();
+    } catch {}
     const value = typeof localStorage === "undefined" ? null : localStorage.getItem(key);
     return value === null ? null : { value };
   },
-  async set(key, value) {
+  async set(key, value, password) {
     if (typeof window !== "undefined" && window.storage) return window.storage.set(key, value);
+    try {
+      const response = await fetch("/api/storage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": password || "",
+        },
+        body: JSON.stringify({ key, value }),
+      });
+      if (response.ok) return;
+    } catch {}
     if (typeof localStorage !== "undefined") localStorage.setItem(key, value);
   }
 };
@@ -131,39 +148,39 @@ export default function AdminPanel() {
     (async () => {
       setLoading(true);
       try {
-        const mRes = await storage.get('contact_messages');
+        const mRes = await storage.get('contact_messages', pw);
         if (mRes) setMessages(JSON.parse(mRes.value));
       } catch { setMessages([]); }
       try {
-        const sRes = await storage.get('portfolio_skills');
+        const sRes = await storage.get('portfolio_skills', pw);
         if (sRes) setSkills(JSON.parse(sRes.value));
         else {
           setSkills(DEFAULT_SKILLS);
-          await storage.set('portfolio_skills', JSON.stringify(DEFAULT_SKILLS));
+          await storage.set('portfolio_skills', JSON.stringify(DEFAULT_SKILLS), pw);
         }
       } catch { setSkills(DEFAULT_SKILLS); }
       try {
-        const qRes = await storage.get('portfolio_qualifications');
+        const qRes = await storage.get('portfolio_qualifications', pw);
         if (qRes) setQualifications(JSON.parse(qRes.value));
         else {
           setQualifications(DEFAULT_QUALIFICATIONS);
-          await storage.set('portfolio_qualifications', JSON.stringify(DEFAULT_QUALIFICATIONS));
+          await storage.set('portfolio_qualifications', JSON.stringify(DEFAULT_QUALIFICATIONS), pw);
         }
       } catch { setQualifications(DEFAULT_QUALIFICATIONS); }
       try {
-        const cRes = await storage.get('portfolio_certifications');
+        const cRes = await storage.get('portfolio_certifications', pw);
         if (cRes) setCertifications(JSON.parse(cRes.value));
         else {
           setCertifications(DEFAULT_CERTIFICATIONS);
-          await storage.set('portfolio_certifications', JSON.stringify(DEFAULT_CERTIFICATIONS));
+          await storage.set('portfolio_certifications', JSON.stringify(DEFAULT_CERTIFICATIONS), pw);
         }
       } catch { setCertifications(DEFAULT_CERTIFICATIONS); }
       try {
-        const pRes = await storage.get('portfolio_projects');
+        const pRes = await storage.get('portfolio_projects', pw);
         if (pRes) setProjects(JSON.parse(pRes.value));
         else {
           setProjects(DEFAULT_PROJECTS);
-          await storage.set('portfolio_projects', JSON.stringify(DEFAULT_PROJECTS));
+          await storage.set('portfolio_projects', JSON.stringify(DEFAULT_PROJECTS), pw);
         }
       } catch { setProjects(DEFAULT_PROJECTS); }
       setLoading(false);
@@ -173,35 +190,57 @@ export default function AdminPanel() {
   /* ── save skills ── */
   const saveSkills = async (updated) => {
     setSkills(updated);
-    try { await storage.set('portfolio_skills', JSON.stringify(updated)); } catch {}
+    try { await storage.set('portfolio_skills', JSON.stringify(updated), pw); } catch {}
   };
 
   /* ── save messages ── */
   const saveQualifications = async (updated) => {
     setQualifications(updated);
-    try { await storage.set('portfolio_qualifications', JSON.stringify(updated)); } catch {}
+    try { await storage.set('portfolio_qualifications', JSON.stringify(updated), pw); } catch {}
   };
 
   const saveCertifications = async (updated) => {
     setCertifications(updated);
-    try { await storage.set('portfolio_certifications', JSON.stringify(updated)); } catch {}
+    try { await storage.set('portfolio_certifications', JSON.stringify(updated), pw); } catch {}
   };
 
   const saveProjects = async (updated) => {
     setProjects(updated);
-    try { await storage.set('portfolio_projects', JSON.stringify(updated)); } catch {}
+    try { await storage.set('portfolio_projects', JSON.stringify(updated), pw); } catch {}
   };
 
   const saveMsgs = async (updated) => {
     setMessages(updated);
-    try { await storage.set('contact_messages', JSON.stringify(updated)); } catch {}
+    try { await storage.set('contact_messages', JSON.stringify(updated), pw); } catch {}
   };
 
   /* ── login ── */
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault();
-    if (pw === ADMIN_PASSWORD) { setAuthed(true); setPwErr(""); }
-    else setPwErr("❌ Wrong password");
+    try {
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": pw,
+        },
+        body: JSON.stringify({ password: pw }),
+      });
+      if (response.ok) {
+        setAuthed(true);
+        setPwErr("");
+        return;
+      }
+      if (response.status === 404 && pw === ADMIN_PASSWORD) {
+        setAuthed(true);
+        setPwErr("");
+        return;
+      }
+      setPwErr("Wrong password");
+    } catch {
+      if (pw === ADMIN_PASSWORD) { setAuthed(true); setPwErr(""); }
+      else setPwErr("Wrong password");
+    }
   };
 
   /* ── message actions ── */
