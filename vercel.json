@@ -6,6 +6,14 @@
     {
       "source": "/",
       "destination": "/manav3d.html"
+    },
+    {
+      "source": "/manav",
+      "destination": "/manav3d.html"
+    },
+    {
+      "source": "/index",
+      "destination": "/manav3d.html"
     }
   ]
 }
