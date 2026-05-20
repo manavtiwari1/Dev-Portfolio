@@ -15,8 +15,16 @@ export default defineConfig({
             res.end();
             return;
           }
+          if (originalUrl === "/admin.html") {
+            res.writeHead(301, { Location: "/admin" });
+            res.end();
+            return;
+          }
           if (originalUrl === "/" || originalUrl === "/manav" || originalUrl === "/index") {
             req.url = "/manav3d.html";
+          }
+          if (originalUrl === "/admin") {
+            req.url = "/admin.html";
           }
           next();
         });

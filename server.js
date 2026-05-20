@@ -39,8 +39,16 @@ app.get("/manav3d.html", (_req, res) => {
   res.redirect(301, "/manav");
 });
 
+app.get("/admin.html", (_req, res) => {
+  res.redirect(301, "/admin");
+});
+
 app.get(["/", "/manav", "/index"], (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "manav3d.html"));
+});
+
+app.get("/admin", (_req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "admin.html"));
 });
 
 app.use(express.static(path.join(__dirname, "dist")));
