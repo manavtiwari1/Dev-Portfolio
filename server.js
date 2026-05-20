@@ -35,10 +35,15 @@ app.all("/api/auth", authHandler);
 app.all("/api/contact", contactHandler);
 app.all("/api/storage", storageHandler);
 
-app.use(express.static(path.join(__dirname, "dist")));
-app.get("/", (_req, res) => {
+app.get("/manav3d.html", (_req, res) => {
+  res.redirect(301, "/manav");
+});
+
+app.get(["/", "/manav", "/index"], (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "manav3d.html"));
 });
+
+app.use(express.static(path.join(__dirname, "dist")));
 
 app.get("*", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "manav3d.html"));

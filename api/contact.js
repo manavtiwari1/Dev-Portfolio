@@ -1,24 +1,20 @@
-import mongoose from "mongoose";
-
-const contactSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  subject: String,
-  message: String,
-  date: String,
-  read: Boolean,
-});
-
-const Contact =
-  mongoose.models.Contact ||
-  mongoose.model("Contact", contactSchema);
+import { getValue, setValue } from "./_db.js";
 
 function clean(value, maxLength) {
   return String(value || "").trim().slice(0, maxLength);
 }
 
-export default async function handler(req, res) {
+function parseMessages(value) {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     res.status(405).json({ error: "Method not allowed." });
@@ -26,6 +22,7 @@ export default async function handler(req, res) {
   }
 
   const msg = {
+    id: clean(req.body?.id, 80) || Date.now().toString(),
     name: clean(req.body?.name, 120),
     email: clean(req.body?.email, 160),
     subject: clean(req.body?.subject, 180),
@@ -40,16 +37,12 @@ export default async function handler(req, res) {
   }
 
   try {
-
-    await Contact.create(msg);
-
+    const existing = parseMessages(await getValue("contact_messages"));
+    existing.unshift(msg);
+    await setValue("contact_messages", JSON.stringify(existing.slice(0, 500)));
     res.status(200).json({ ok: true });
-
   } catch (error) {
-
-    console.log(error);
-
+    console.error(error);
     res.status(500).json({ error: "Could not save message." });
-
   }
 }

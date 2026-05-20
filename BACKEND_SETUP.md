@@ -1,23 +1,40 @@
-# Shared Admin Backend Setup
+# Render Backend Setup
 
-The admin panel saves portfolio edits through a normal Node/Express backend and a local SQLite database file.
+This portfolio uses a normal Node/Express backend with a small local JSON database file. Admin updates are saved on the server in `.backend/db.json`, not in browser localStorage.
 
-1. Create a `.env` file from `.env.example`.
-2. Set `ADMIN_PASSWORD`.
-3. Keep `DB_PATH=./data/portfolio.db`, or change it if your host needs another writable folder.
-4. Set `CORS_ORIGIN` to your website origin. Use `*` while testing, or your cPanel domain for stricter production CORS.
-5. Build and start the site:
+Important: the host must provide persistent server storage. On Render, attach a persistent disk or data can be lost after restart/deploy.
+
+## Render settings
+
+Create a Render Web Service from this repo and use:
 
 ```bash
-npm install
-npm run build
+npm install && npm run build
+```
+
+Start command:
+
+```bash
 npm start
 ```
 
-Open `http://localhost:8080/manav3d.html` for the portfolio and `http://localhost:8080/admin.html` for the admin panel.
+Environment variables:
 
-On any Node hosting provider, set the same environment variables and run `npm run build && npm start`.
+```bash
+ADMIN_PASSWORD=your-secure-admin-password
+DATA_FILE=./.backend/db.json
+CORS_ORIGIN=*
+```
 
-The SQLite file is created automatically on first use. Back up the `data/portfolio.db` file if you move servers.
+This matches the `Anchu` project style: the JSON database file lives inside the deployed app folder.
 
-If the frontend is hosted somewhere else, like cPanel, keep the backend running on Render and make sure `CORS_ORIGIN` allows the cPanel website URL.
+For stronger persistence on Render, add a persistent disk and use `DATA_FILE=/var/data/portfolio.json`. Without a disk, the app can still run and save data while the server filesystem stays alive, but Render can reset that filesystem on redeploy/restart.
+
+Use your real website URL for `CORS_ORIGIN` in production if the frontend is hosted somewhere else. Keep `*` while testing.
+
+## URLs
+
+- Portfolio: `https://your-render-app.onrender.com/manav3d.html`
+- Admin panel: `https://your-render-app.onrender.com/admin.html`
+
+After logging into the admin panel, edits to skills, qualifications, certifications, projects, and contact messages are stored in the JSON file and are visible to everyone.

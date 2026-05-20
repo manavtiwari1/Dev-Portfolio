@@ -3143,41 +3143,25 @@
 
     const storage = window.storage || {
       async get(key) {
-        try {
-          const response = await fetch(apiUrl(`/api/storage?key=${encodeURIComponent(key)}`));
-          if (response.ok) return await response.json();
-        } catch (err) { }
-        const value = localStorage.getItem(key);
-        return value === null ? null : { value };
+        const response = await fetch(apiUrl(`/api/storage?key=${encodeURIComponent(key)}`));
+        if (!response.ok) throw new Error('Could not load saved data.');
+        return await response.json();
       },
       async set(key, value) {
-        try {
-          const response = await fetch(apiUrl('/api/storage'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ key, value })
-          });
-          if (response.ok) return;
-        } catch (err) { }
-        localStorage.setItem(key, value);
+        const response = await fetch(apiUrl('/api/storage'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key, value })
+        });
+        if (!response.ok) throw new Error('Could not save data.');
       },
       async addContactMessage(message) {
-        try {
-          const response = await fetch(apiUrl('/api/contact'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(message)
-          });
-          if (response.ok) return;
-        } catch (err) { }
-
-        let msgs = [];
-        try {
-          const existing = localStorage.getItem('contact_messages');
-          if (existing) msgs = JSON.parse(existing);
-        } catch (err) { msgs = []; }
-        msgs.unshift(message);
-        localStorage.setItem('contact_messages', JSON.stringify(msgs));
+        const response = await fetch(apiUrl('/api/contact'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message)
+        });
+        if (!response.ok) throw new Error('Could not save message.');
       }
     };
 

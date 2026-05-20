@@ -51,29 +51,23 @@ const ICONS = ["🧠","🤖","🐍","⚛️","🗄️","☁️","👁️","⚙�
 const storage = {
   async get(key, password) {
     if (typeof window !== "undefined" && window.storage) return window.storage.get(key);
-    try {
-      const response = await fetch(apiUrl(`/api/storage?key=${encodeURIComponent(key)}`), {
-        headers: { "x-admin-password": password || "" },
-      });
-      if (response.ok) return response.status === 204 ? null : response.json();
-    } catch {}
-    const value = typeof localStorage === "undefined" ? null : localStorage.getItem(key);
-    return value === null ? null : { value };
+    const response = await fetch(apiUrl(`/api/storage?key=${encodeURIComponent(key)}`), {
+      headers: { "x-admin-password": password || "" },
+    });
+    if (!response.ok) throw new Error("Could not load saved data.");
+    return response.status === 204 ? null : response.json();
   },
   async set(key, value, password) {
     if (typeof window !== "undefined" && window.storage) return window.storage.set(key, value);
-    try {
-      const response = await fetch(apiUrl("/api/storage"), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-password": password || "",
-        },
-        body: JSON.stringify({ key, value }),
-      });
-      if (response.ok) return;
-    } catch {}
-    if (typeof localStorage !== "undefined") localStorage.setItem(key, value);
+    const response = await fetch(apiUrl("/api/storage"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-password": password || "",
+      },
+      body: JSON.stringify({ key, value }),
+    });
+    if (!response.ok) throw new Error("Could not save data.");
   }
 };
 

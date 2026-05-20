@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const value = getValue(key);
+      const value = await getValue(key);
       res.status(200).json(value === null ? null : { value });
     } catch (error) {
       res.status(500).json({ error: "Could not read storage value." });
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      setValue(key, req.body?.value ?? "");
+      await setValue(key, req.body?.value ?? "");
       res.status(200).json({ ok: true });
     } catch (error) {
       res.status(500).json({ error: "Could not save storage value." });

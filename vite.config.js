@@ -4,17 +4,21 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [
     react(),
-    // Redirect root "/" to the main portfolio page
+    // Serve the portfolio on clean local dev URLs.
     {
-      name: "root-redirect",
+      name: "clean-portfolio-routes",
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
-          if (req.url === "/") {
-            res.writeHead(302, { Location: "/manav3d.html" });
+          const originalUrl = req.url;
+          if (originalUrl === "/manav3d.html") {
+            res.writeHead(301, { Location: "/manav" });
             res.end();
-          } else {
-            next();
+            return;
           }
+          if (originalUrl === "/" || originalUrl === "/manav" || originalUrl === "/index") {
+            req.url = "/manav3d.html";
+          }
+          next();
         });
       },
     },
@@ -22,7 +26,7 @@ export default defineConfig({
   server: {
     host: "localhost",
     port: 8080,
-    open: "/manav3d.html",
+    open: "/manav",
   },
   build: {
     rollupOptions: {
