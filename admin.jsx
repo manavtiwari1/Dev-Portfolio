@@ -119,12 +119,20 @@ const S = {
 
   addBox: { background:"rgba(0,20,28,0.85)", border:"1px solid rgba(0,229,255,0.25)", borderRadius:14, padding:"1.4rem", marginBottom:"1.5rem" },
   addTitle: { fontFamily:"'Orbitron',monospace", fontSize:".75rem", color:"#00e5ff", letterSpacing:".12em", marginBottom:"1rem" },
-  addRow: { display:"grid", gridTemplateColumns:"auto 1fr 1fr", gap:".8rem", alignItems:"end", flexWrap:"wrap" },
-  addInput: { background:"rgba(0,30,40,0.8)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".65rem .9rem", color:"#e0f7fa", fontSize:".88rem", outline:"none", fontFamily:"inherit", width:"100%" },
+  addRow: { display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:".8rem", alignItems:"end" },
+  addInput: { background:"rgba(0,30,40,0.8)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".65rem .9rem", color:"#e0f7fa", fontSize:".88rem", outline:"none", fontFamily:"inherit", width:"100%", boxSizing:"border-box", minWidth:0 },
   iconSel: { background:"rgba(0,30,40,0.9)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".5rem", display:"flex", flexWrap:"wrap", gap:".3rem", maxHeight:100, overflowY:"auto", marginBottom:".8rem" },
   iconOpt: (sel) => ({ fontSize:"1.3rem", padding:".3rem", borderRadius:6, cursor:"pointer", background: sel ? "rgba(0,229,255,0.2)" : "transparent", border: sel ? "1px solid #00e5ff" : "1px solid transparent" }),
   addBtn: { background:"linear-gradient(135deg,#00e5ff,#1a6cf5)", color:"#000", border:"none", borderRadius:50, padding:".65rem 1.6rem", fontWeight:700, cursor:"pointer", fontFamily:"'Orbitron',monospace", fontSize:".72rem", letterSpacing:".08em", whiteSpace:"nowrap" },
   tagsInput: { background:"rgba(0,30,40,0.8)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".65rem .9rem", color:"#e0f7fa", fontSize:".88rem", outline:"none", fontFamily:"inherit", width:"100%" },
+  fieldLabel: { fontSize:".72rem", color:"#00e5ff", letterSpacing:".1em", marginBottom:".3rem", fontFamily:"'Orbitron',monospace" },
+  formGrid2: { display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))", gap:".8rem", marginBottom:".8rem" },
+  formGrid4: { display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))", gap:".8rem", marginBottom:".8rem" },
+  actionRow: { display:"flex", alignItems:"center", gap:".8rem", flexWrap:"wrap" },
+  cardActions: { display:"flex", gap:".4rem", flexShrink:0, flexWrap:"wrap", justifyContent:"flex-end" },
+  editBtn: { background:"rgba(0,229,255,0.1)", color:"#00e5ff", border:"1px solid rgba(0,229,255,0.25)", borderRadius:6, padding:".3rem .8rem", cursor:"pointer", fontSize:".75rem", fontFamily:"inherit" },
+  removeBtn: { background:"rgba(255,90,106,0.12)", color:"#ff5a6a", border:"1px solid rgba(255,90,106,0.2)", borderRadius:6, padding:".3rem .8rem", cursor:"pointer", fontSize:".75rem", fontFamily:"inherit" },
+  cancelBtn: { background:"rgba(255,255,255,0.08)", color:"#e0f7fa", border:"1px solid rgba(255,255,255,0.2)", borderRadius:50, padding:".65rem 1.4rem", fontWeight:700, cursor:"pointer", fontFamily:"'Orbitron',monospace", fontSize:".72rem", letterSpacing:".08em" },
 };
 
 export default function AdminPanel() {
@@ -143,6 +151,8 @@ export default function AdminPanel() {
   const [newQualification, setNewQualification] = useState({ role:"", org:"", desc:"", badge:"" });
   const [newCertification, setNewCertification] = useState({ icon:"🏆", name:"", org:"", badge:"" });
   const [newProject, setNewProject] = useState({ title:"", desc:"", thumb:"", tags:"", demo:"", github:"" });
+  const [editingQualification, setEditingQualification] = useState(null);
+  const [editingCertification, setEditingCertification] = useState(null);
   const [editingProject, setEditingProject] = useState(null); // { id, title, desc, thumb, tags (string), demo, github }
   const [iconOpen, setIconOpen] = useState(false);
 
@@ -294,6 +304,34 @@ export default function AdminPanel() {
 
   const deleteQualification = async (id) => {
     await saveQualifications(qualifications.filter(q => q.id !== id));
+    if (editingQualification?.id === id) setEditingQualification(null);
+  };
+
+  const startEditQualification = (q) => {
+    setEditingQualification({
+      id: q.id,
+      role: q.role || "",
+      org: q.org || "",
+      desc: q.desc || "",
+      badge: q.badge || "",
+    });
+  };
+
+  const saveEditQualification = async () => {
+    if (!editingQualification?.role?.trim()) return;
+    const updated = qualifications.map(q =>
+      q.id === editingQualification.id
+        ? {
+            ...q,
+            role: editingQualification.role.trim(),
+            org: editingQualification.org.trim(),
+            desc: editingQualification.desc.trim(),
+            badge: editingQualification.badge.trim(),
+          }
+        : q
+    );
+    await saveQualifications(updated);
+    setEditingQualification(null);
   };
 
   const addCertification = async () => {
@@ -311,6 +349,34 @@ export default function AdminPanel() {
 
   const deleteCertification = async (id) => {
     await saveCertifications(certifications.filter(c => c.id !== id));
+    if (editingCertification?.id === id) setEditingCertification(null);
+  };
+
+  const startEditCertification = (c) => {
+    setEditingCertification({
+      id: c.id,
+      icon: c.icon || "ðŸ†",
+      name: c.name || "",
+      org: c.org || "",
+      badge: c.badge || "",
+    });
+  };
+
+  const saveEditCertification = async () => {
+    if (!editingCertification?.name?.trim()) return;
+    const updated = certifications.map(c =>
+      c.id === editingCertification.id
+        ? {
+            ...c,
+            icon: editingCertification.icon.trim() || "ðŸ†",
+            name: editingCertification.name.trim(),
+            org: editingCertification.org.trim(),
+            badge: editingCertification.badge.trim(),
+          }
+        : c
+    );
+    await saveCertifications(updated);
+    setEditingCertification(null);
   };
 
   const addProject = async () => {
@@ -639,58 +705,148 @@ export default function AdminPanel() {
         ) : tab === "qualifications" ? (
           <>
             <div style={S.pageTitle}>Manage Qualifications</div>
-            <div style={S.pageSub}>Add or remove timeline items shown in the Qualifications section</div>
+            <div style={S.pageSub}>Add, edit, or remove timeline items shown in the Qualifications section</div>
 
             <div style={S.addBox}>
               <div style={S.addTitle}>+ ADD QUALIFICATION</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".8rem",marginBottom:".8rem"}}>
-                <input style={S.addInput} placeholder="Role / Title" value={newQualification.role} onChange={e=>setNewQualification(p=>({...p,role:e.target.value}))} />
-                <input style={S.addInput} placeholder="Organization / Project" value={newQualification.org} onChange={e=>setNewQualification(p=>({...p,org:e.target.value}))} />
+              <div style={S.formGrid2}>
+                <div>
+                  <div style={S.fieldLabel}>ROLE / TITLE</div>
+                  <input style={S.addInput} placeholder="Student" value={newQualification.role} onChange={e=>setNewQualification(p=>({...p,role:e.target.value}))} />
+                </div>
+                <div>
+                  <div style={S.fieldLabel}>ORGANIZATION / PROJECT</div>
+                  <input style={S.addInput} placeholder="Shivaji College, University of Delhi" value={newQualification.org} onChange={e=>setNewQualification(p=>({...p,org:e.target.value}))} />
+                </div>
               </div>
-              <textarea style={{...S.addInput,minHeight:90,resize:"vertical",marginBottom:".8rem"}} placeholder="Description" value={newQualification.desc} onChange={e=>setNewQualification(p=>({...p,desc:e.target.value}))} />
-              <div style={{display:"flex",gap:".8rem",alignItems:"center"}}>
-                <input style={S.addInput} placeholder="Badge / Year e.g. 2024" value={newQualification.badge} onChange={e=>setNewQualification(p=>({...p,badge:e.target.value}))} />
-                <button style={S.addBtn} onClick={addQualification}>ADD</button>
+              <div style={{marginBottom:".8rem"}}>
+                <div style={S.fieldLabel}>DESCRIPTION</div>
+                <textarea style={{...S.addInput,minHeight:90,resize:"vertical"}} placeholder="Short qualification description" value={newQualification.desc} onChange={e=>setNewQualification(p=>({...p,desc:e.target.value}))} />
+              </div>
+              <div style={S.actionRow}>
+                <div style={{flex:"1 1 240px"}}>
+                  <div style={S.fieldLabel}>BADGE / YEAR</div>
+                  <input style={S.addInput} placeholder="2024" value={newQualification.badge} onChange={e=>setNewQualification(p=>({...p,badge:e.target.value}))} />
+                </div>
+                <button style={S.addBtn} onClick={addQualification}>ADD QUALIFICATION</button>
               </div>
             </div>
 
             <div style={S.msgList}>
               {qualifications.map(q => (
-                <div key={q.id} style={S.msgCard(true)}>
-                  <button style={S.skillDelBtn} onClick={()=>deleteQualification(q.id)}>X</button>
-                  <div style={S.msgName}>{q.role}</div>
-                  <div style={S.msgEmail}>{q.org}</div>
-                  <div style={S.msgBody}>{q.desc}</div>
-                  <div style={S.tag}>{q.badge}</div>
-                </div>
+                editingQualification?.id === q.id ? (
+                  <div key={q.id} style={{...S.addBox, border:"1px solid rgba(0,229,255,0.45)", boxShadow:"0 0 24px rgba(0,229,255,0.1)"}}>
+                    <div style={S.addTitle}>EDIT QUALIFICATION</div>
+                    <div style={S.formGrid2}>
+                      <div>
+                        <div style={S.fieldLabel}>ROLE / TITLE</div>
+                        <input style={S.addInput} value={editingQualification.role} onChange={e=>setEditingQualification(p=>({...p,role:e.target.value}))} />
+                      </div>
+                      <div>
+                        <div style={S.fieldLabel}>ORGANIZATION / PROJECT</div>
+                        <input style={S.addInput} value={editingQualification.org} onChange={e=>setEditingQualification(p=>({...p,org:e.target.value}))} />
+                      </div>
+                    </div>
+                    <div style={{marginBottom:".8rem"}}>
+                      <div style={S.fieldLabel}>DESCRIPTION</div>
+                      <textarea style={{...S.addInput,minHeight:90,resize:"vertical"}} value={editingQualification.desc} onChange={e=>setEditingQualification(p=>({...p,desc:e.target.value}))} />
+                    </div>
+                    <div style={S.actionRow}>
+                      <div style={{flex:"1 1 240px"}}>
+                        <div style={S.fieldLabel}>BADGE / YEAR</div>
+                        <input style={S.addInput} value={editingQualification.badge} onChange={e=>setEditingQualification(p=>({...p,badge:e.target.value}))} />
+                      </div>
+                      <button style={S.addBtn} onClick={saveEditQualification}>SAVE CHANGES</button>
+                      <button style={S.cancelBtn} onClick={()=>setEditingQualification(null)}>Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div key={q.id} style={S.msgCard(true)}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem"}}>
+                      <div style={{minWidth:0}}>
+                        <div style={S.msgName}>{q.role}</div>
+                        <div style={S.msgEmail}>{q.org}</div>
+                      </div>
+                      <div style={S.cardActions}>
+                        <button style={S.editBtn} onClick={()=>startEditQualification(q)}>Edit</button>
+                        <button style={S.removeBtn} onClick={()=>deleteQualification(q.id)}>X</button>
+                      </div>
+                    </div>
+                    <div style={{...S.msgBody, marginTop:".4rem"}}>{q.desc}</div>
+                    {q.badge && <div style={{...S.tag, marginTop:".6rem", display:"inline-block"}}>{q.badge}</div>}
+                  </div>
+                )
               ))}
             </div>
           </>
         ) : (
           <>
             <div style={S.pageTitle}>Manage Certifications</div>
-            <div style={S.pageSub}>Add or remove certification cards shown below Qualifications</div>
+            <div style={S.pageSub}>Add, edit, or remove certification cards shown below Qualifications</div>
 
             <div style={S.addBox}>
               <div style={S.addTitle}>+ ADD CERTIFICATION</div>
-              <div style={{display:"grid",gridTemplateColumns:"80px 1fr 1fr 120px",gap:".8rem",marginBottom:".8rem"}}>
-                <input style={S.addInput} placeholder="Icon" value={newCertification.icon} onChange={e=>setNewCertification(p=>({...p,icon:e.target.value}))} />
-                <input style={S.addInput} placeholder="Certificate name" value={newCertification.name} onChange={e=>setNewCertification(p=>({...p,name:e.target.value}))} />
-                <input style={S.addInput} placeholder="Provider" value={newCertification.org} onChange={e=>setNewCertification(p=>({...p,org:e.target.value}))} />
-                <input style={S.addInput} placeholder="Year" value={newCertification.badge} onChange={e=>setNewCertification(p=>({...p,badge:e.target.value}))} />
+              <div style={S.formGrid4}>
+                <div>
+                  <div style={S.fieldLabel}>ICON</div>
+                  <input style={S.addInput} placeholder="Trophy" value={newCertification.icon} onChange={e=>setNewCertification(p=>({...p,icon:e.target.value}))} />
+                </div>
+                <div>
+                  <div style={S.fieldLabel}>CERTIFICATE NAME</div>
+                  <input style={S.addInput} placeholder="Microsoft Power BI" value={newCertification.name} onChange={e=>setNewCertification(p=>({...p,name:e.target.value}))} />
+                </div>
+                <div>
+                  <div style={S.fieldLabel}>PROVIDER</div>
+                  <input style={S.addInput} placeholder="Shivaji College" value={newCertification.org} onChange={e=>setNewCertification(p=>({...p,org:e.target.value}))} />
+                </div>
+                <div>
+                  <div style={S.fieldLabel}>YEAR</div>
+                  <input style={S.addInput} placeholder="2025" value={newCertification.badge} onChange={e=>setNewCertification(p=>({...p,badge:e.target.value}))} />
+                </div>
               </div>
               <button style={S.addBtn} onClick={addCertification}>ADD CERTIFICATION</button>
             </div>
 
             <div style={S.skillsGrid}>
               {certifications.map(c => (
-                <div key={c.id} style={S.skillCard}>
-                  <button style={S.skillDelBtn} onClick={()=>deleteCertification(c.id)}>X</button>
-                  <div style={S.skillIcon}>{c.icon}</div>
-                  <div style={S.skillName}>{c.name}</div>
-                  <div style={S.msgEmail}>{c.org}</div>
-                  <span style={S.tag}>{c.badge}</span>
-                </div>
+                editingCertification?.id === c.id ? (
+                  <div key={c.id} style={{...S.skillCard, gridColumn:"1 / -1", border:"1px solid rgba(0,229,255,0.45)", boxShadow:"0 0 24px rgba(0,229,255,0.1)"}}>
+                    <div style={S.addTitle}>EDIT CERTIFICATION</div>
+                    <div style={S.formGrid4}>
+                      <div>
+                        <div style={S.fieldLabel}>ICON</div>
+                        <input style={S.addInput} value={editingCertification.icon} onChange={e=>setEditingCertification(p=>({...p,icon:e.target.value}))} />
+                      </div>
+                      <div>
+                        <div style={S.fieldLabel}>CERTIFICATE NAME</div>
+                        <input style={S.addInput} value={editingCertification.name} onChange={e=>setEditingCertification(p=>({...p,name:e.target.value}))} />
+                      </div>
+                      <div>
+                        <div style={S.fieldLabel}>PROVIDER</div>
+                        <input style={S.addInput} value={editingCertification.org} onChange={e=>setEditingCertification(p=>({...p,org:e.target.value}))} />
+                      </div>
+                      <div>
+                        <div style={S.fieldLabel}>YEAR</div>
+                        <input style={S.addInput} value={editingCertification.badge} onChange={e=>setEditingCertification(p=>({...p,badge:e.target.value}))} />
+                      </div>
+                    </div>
+                    <div style={S.actionRow}>
+                      <button style={S.addBtn} onClick={saveEditCertification}>SAVE CHANGES</button>
+                      <button style={S.cancelBtn} onClick={()=>setEditingCertification(null)}>Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div key={c.id} style={S.skillCard}>
+                    <div style={{position:"absolute",top:".7rem",right:".7rem",display:"flex",gap:".4rem"}}>
+                      <button style={S.editBtn} onClick={()=>startEditCertification(c)}>Edit</button>
+                      <button style={S.removeBtn} onClick={()=>deleteCertification(c.id)}>X</button>
+                    </div>
+                    <div style={S.skillIcon}>{c.icon}</div>
+                    <div style={{...S.skillName, paddingRight:"5.6rem"}}>{c.name}</div>
+                    <div style={S.msgEmail}>{c.org}</div>
+                    {c.badge && <span style={S.tag}>{c.badge}</span>}
+                  </div>
+                )
               ))}
             </div>
           </>
