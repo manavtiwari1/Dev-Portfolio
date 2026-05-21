@@ -12,38 +12,14 @@ const API_BASE_URL = (() => {
 })();
 const apiUrl = (path) => `${API_BASE_URL}${path}`;
 
-const DEFAULT_PROJECTS = [
-  { id: "1", title: "AI Study Assistant", desc: "Full-stack AI study companion powered by Claude API. Personalized learning paths, smart Q&A, and real-time feedback.", thumb: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=840&q=80", tags: ["React", "Claude API", "MongoDB"], demo: "#", github: "#" },
-  { id: "2", title: "Facial Recognition Attendance", desc: "Real-time face detection and recognition pipeline with Flask dashboard and SQLite database.", thumb: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=840&q=80", tags: ["Python", "OpenCV", "Flask"], demo: "#", github: "#" },
-  { id: "3", title: "VIBRATIONS Festival Website", desc: "Official Shivaji College cultural fest site with Supabase auth, event registration, and admin controls.", thumb: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=840&q=80", tags: ["Supabase", "HTML/CSS/JS", "Auth"], demo: "#", github: "#" },
-  { id: "4", title: "3D Developer Portfolio", desc: "This portfolio — Three.js particles, 3D HUD rings, holographic flip cards, and a cinematic carousel.", thumb: "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=840&q=80", tags: ["Three.js", "Vite", "HTML/CSS"], demo: "#", github: "#" },
-  { id: "5", title: "RAG Knowledge Platform", desc: "Retrieval-augmented generation pipeline on AWS using embeddings and vector search.", thumb: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=840&q=80", tags: ["LangChain", "VectorDB", "AWS"], demo: "#", github: "#" },
-];
+const DEFAULT_PROJECTS = [];
 
-const DEFAULT_QUALIFICATIONS = [
-  { id: "1", role: "Full Stack Developer", org: "Shivaji College, University of Delhi", desc: "Building real-world web and AI projects - facial recognition, festival websites, and AI-powered study tools.", badge: "2023 - Present" },
-  { id: "2", role: "AI Study Assistant", org: "Personal Project", desc: "Full-stack AI study companion powered by Claude API with React frontend, Node.js backend, and MongoDB.", badge: "2024" },
-  { id: "3", role: "Facial Recognition Attendance System", org: "Project - Python / OpenCV / Flask", desc: "Smart attendance system with real-time face detection pipeline, SQLite database, and Flask dashboard.", badge: "2024" },
-  { id: "4", role: "VIBRATIONS Cultural Festival Website", org: "Shivaji College", desc: "Official college fest website with Supabase auth, event registration, admin controls, and responsive design.", badge: "2024" },
-];
+const DEFAULT_QUALIFICATIONS = [];
 
-const DEFAULT_CERTIFICATIONS = [
-  { id: "1", icon: "🏆", name: "Web Development Fundamentals", org: "Online Platform", badge: "2023" },
-  { id: "2", icon: "🏅", name: "Python for AI & Automation", org: "Online Platform", badge: "2024" },
-  { id: "3", icon: "🎖️", name: "React & Full Stack Dev", org: "Online Platform", badge: "2024" },
-];
+const DEFAULT_CERTIFICATIONS = [];
 
-const DEFAULT_SKILLS = [
-  { id: "1", icon: "🧠", name: "Generative AI", tags: ["Claude API", "LLMs"] },
-  { id: "2", icon: "🤖", name: "LLMs & RAG", tags: ["Embeddings", "VectorDB"] },
-  { id: "3", icon: "🐍", name: "Python & Flask", tags: ["Flask", "FastAPI"] },
-  { id: "4", icon: "⚛️", name: "React & Next.js", tags: ["Hooks", "Tailwind"] },
-  { id: "5", icon: "🗄️", name: "MongoDB & SQL", tags: ["MongoDB", "SQLite"] },
-  { id: "6", icon: "☁️", name: "Cloud & Supabase", tags: ["Supabase", "Auth"] },
-  { id: "7", icon: "👁️", name: "Computer Vision", tags: ["OpenCV", "Face Rec"] },
-  { id: "8", icon: "⚙️", name: "Node.js & Express", tags: ["REST API", "JWT"] },
-  { id: "9", icon: "🔧", name: "Git & DevTools", tags: ["GitHub", "VS Code"] },
-];
+const DEFAULT_SKILLS = [];
+
 
 const ICONS = ["🧠","🤖","🐍","⚛️","🗄️","☁️","👁️","⚙️","🔧","🎨","📱","🔒","🌐","📊","🚀","💡","🎯","🛠️","📦","⚡"];
 
