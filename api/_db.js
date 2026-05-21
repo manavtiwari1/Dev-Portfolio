@@ -1,8 +1,33 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { MongoClient } from "mongodb";
 
 const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), ".backend");
 const DATA_FILE = process.env.DATA_FILE || path.join(DATA_DIR, "db.json");
+
+let mongoClient = null;
+let dbInstance = null;
+
+// Lazily connect and cache MongoDB database instance
+async function getMongoDB() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    return null; // Gracefully fall back to local db.json
+  }
+  if (dbInstance) {
+    return dbInstance;
+  }
+  try {
+    mongoClient = new MongoClient(uri);
+    await mongoClient.connect();
+    dbInstance = mongoClient.db(); // Connects to the default db specified in connection string
+    console.log("Connected successfully to MongoDB Atlas.");
+    return dbInstance;
+  } catch (error) {
+    console.error("MongoDB Connection Failed, using local file DB fallback:", error);
+    return null;
+  }
+}
 
 let writeQueue = Promise.resolve();
 
@@ -46,12 +71,45 @@ export function isAdminRequest(req) {
 }
 
 export async function getValue(key) {
+  const db = await getMongoDB();
+  if (db) {
+    try {
+      const collection = db.collection("storage");
+      const doc = await collection.findOne({ _id: key });
+      return doc && typeof doc.value === "string" ? doc.value : null;
+    } catch (err) {
+      console.error("Error reading from MongoDB, falling back to file read:", err);
+    }
+  }
+
+  // Fallback to local file
   const data = await readDatabase();
   const row = data.storage[key];
   return typeof row?.value === "string" ? row.value : null;
 }
 
 export async function setValue(key, value) {
+  const db = await getMongoDB();
+  if (db) {
+    try {
+      const collection = db.collection("storage");
+      await collection.updateOne(
+        { _id: key },
+        {
+          $set: {
+            value: String(value ?? ""),
+            updatedAt: new Date().toISOString(),
+          },
+        },
+        { upsert: true }
+      );
+      return;
+    } catch (err) {
+      console.error("Error writing to MongoDB, falling back to file write:", err);
+    }
+  }
+
+  // Fallback to local file
   const nextWrite = writeQueue.then(async () => {
     const data = await readDatabase();
     data.storage[key] = {
@@ -63,3 +121,4 @@ export async function setValue(key, value) {
   writeQueue = nextWrite.catch(() => {});
   return nextWrite;
 }
+
