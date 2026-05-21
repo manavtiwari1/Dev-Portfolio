@@ -21,10 +21,6 @@ const DEFAULT_PROJECTS = [
 const DEFAULT_QUALIFICATIONS = [
   { id: "1", role: "Student", org: "Shivaji College, University of Delhi", desc: "Pursuing a degree in Computer Science with a focus on AI and web development.", badge: "2025 - 2029" },
   { id: "2", role: "Student", org: "Mahashay Chunilal Saraswati Bal Mandir Sr. Sec. School, New Delhi", desc: "Completed high school with a focus on science and mathematics. Pass CBSE Board Exams with distinction.", badge: "2017 - 2024" },
-<<<<<<< HEAD
-
-=======
->>>>>>> 1ba6058 ( School added)
 ];
 
 const DEFAULT_CERTIFICATIONS = [
