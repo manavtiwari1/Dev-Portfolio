@@ -13,7 +13,7 @@ const API_BASE_URL = (() => {
 const apiUrl = (path) => `${API_BASE_URL}${path}`;
 
 const DEFAULT_PROJECTS = [
-  { id: "1", title: "Amplify Edge Discord Bot", desc: "Fully Automod Bot for Amplify Edge Discord Server. Features include AI-powered content moderation, dynamic role assignment.", thumb: "https://vgy.me/u/BIVktF", tags: ["Java Script", "Python"], demo: "https://discord.com/oauth2/authorize?client_id=591543060530462720&permissions=8&integration_type=0&scope=bot", github: "https://github.com/manavtiwari1/Amplify-Edge-Discord-Bot" },
+  { id: "1", title: "Amplify Edge Discord Bot", desc: "Fully Automod Bot for Amplify Edge Discord Server. Features include AI-powered content moderation, dynamic role assignment.", thumb: "https://i.vgy.me/BIVktF.png", tags: ["Java Script", "Python"], demo: "https://discord.com/oauth2/authorize?client_id=591543060530462720&permissions=8&integration_type=0&scope=bot", github: "https://github.com/manavtiwari1/Amplify-Edge-Discord-Bot" },
   {id: "2", title: "Vibrations Fest Website", desc: "Official website for Vibrations Fest, a college cultural fest. Built with React and hosted on Vercel.", thumb: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=840&q=80", tags: ["HTML/CSS/JS", "Vercel"], demo: "https://vibration-shivaji.space/vibrations_login_page.html", github: "https://github.com/manavtiwari1/Vibrations" }
 ];  
 
