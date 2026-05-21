@@ -12,14 +12,32 @@ const API_BASE_URL = (() => {
 })();
 const apiUrl = (path) => `${API_BASE_URL}${path}`;
 
-const DEFAULT_PROJECTS = [];
+const DEFAULT_PROJECTS = [
+  { id: "1", title: "Amplify Edge Discord Bot", desc: "Fully Automod Bot for Amplify Edge Discord Server. Features include AI-powered content moderation, dynamic role assignment.", thumb: "https://vgy.me/u/BIVktF", tags: ["Java Script", "Python"], demo: "https://discord.com/oauth2/authorize?client_id=591543060530462720&permissions=8&integration_type=0&scope=bot", github: "https://github.com/manavtiwari1/Amplify-Edge-Discord-Bot" },
+  {id: "2", title: "Vibrations Fest Website", desc: "Official website for Vibrations Fest, a college cultural fest. Built with React and hosted on Vercel.", thumb: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=840&q=80", tags: ["HTML/CSS/JS", "Vercel"], demo: "https://vibration-shivaji.space/vibrations_login_page.html", github: "https://github.com/manavtiwari1/Vibrations" }
+];  
 
-const DEFAULT_QUALIFICATIONS = [];
 
-const DEFAULT_CERTIFICATIONS = [];
+const DEFAULT_QUALIFICATIONS = [
+  { id: "1", role: "Student", org: "Shivaji College, University of Delhi", desc: "Pursuing a degree in Computer Science with a focus on AI and web development.", badge: "2025 - 2029" },
+];
 
-const DEFAULT_SKILLS = [];
+const DEFAULT_CERTIFICATIONS = [
+  { id: "1", icon: "🏆", name: "Artificial Intelligence & Prompt Engineering", org: "Shivaji College, University of Delhi", badge: "2025" },
+  { id: "2", icon: "🏅", name: "Microsoft Power BI", org: "Shivaji College, University of Delhi", badge: "2025" },
+  { id: "3", icon: "🎖️", name: "Tableau", org: "Shivaji College, University of Delhi", badge: "2025" },
+];
 
+const DEFAULT_SKILLS = [
+  { id: "1", icon: "🧠", name: "Generative AI", tags: ["Claude API", "LLMs"] },
+  { id: "2", icon: "🤖", name: "C++ & C", tags: ["VS Code", "Algorithm Design"] },
+  { id: "3", icon: "🐍", name: "Python Language", tags: ["Flask", "FastAPI"] },
+  { id: "4", icon: "⚛️", name: "Data Analysis", tags: ["Microsoft Power BI", "Tableau"] },
+  { id: "5", icon: "🗄️", name: "Prompt Engineering", tags: ["OpenAI API", "LangChain"] },
+  { id: "6", icon: "☁️", name: "Cloud & Supabase", tags: ["Supabase", "Auth"] },
+  { id: "7", icon: "👁️", name: "Discord Bot Development", tags: ["discord.py", "Python"] },
+  { id: "8", icon: "🔧", name: "Git & DevTools", tags: ["GitHub", "VS Code"] },
+];
 
 const ICONS = ["🧠","🤖","🐍","⚛️","🗄️","☁️","👁️","⚙️","🔧","🎨","📱","🔒","🌐","📊","🚀","💡","🎯","🛠️","📦","⚡"];
 
