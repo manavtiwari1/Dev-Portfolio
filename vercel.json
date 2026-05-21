@@ -18,31 +18,31 @@
     {
       "source": "/admin",
       "destination": "/admin.html"
-    }
+    },
     {
       "source": "/about*",
       "destination": "#about"
-    }
+    },
     {
       "source": "/projects*",
       "destination": "#projects"
-    }
+    },
     {
       "source": "/contact*",
       "destination": "#contact"
-    }
+    },
     {
       "source": "/skills*",
       "destination": "#skills"
-    }
+    },
     {
       "source": "/qualifications*",
       "destination": "#qualifications"
-    }
+    },
     {
       "source": "/certifications*",
       "destination": "#certifications"
-    }
+    },
     {
       "source": "/home*",
       "destination": "#home"
