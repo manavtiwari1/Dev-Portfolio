@@ -15,7 +15,7 @@ const apiUrl = (path) => `${API_BASE_URL}${path}`;
 const DEFAULT_PROJECTS = [
   { id: "1", title: "Amplify Edge Discord Bot", desc: "Fully Automod Bot for Amplify Edge Discord Server. Features include AI-powered content moderation, dynamic role assignment.", thumb: "https://i.vgy.me/BIVktF.png", tags: ["Java Script", "Python"], demo: "https://discord.com/oauth2/authorize?client_id=591543060530462720&permissions=8&integration_type=0&scope=bot", github: "https://github.com/manavtiwari1/Amplify-Edge-Discord-Bot" },
   {id: "2", title: "Vibrations Fest Website", desc: "Official website for Vibrations Fest, a college cultural fest. Built with React and hosted on Vercel.", thumb: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=840&q=80", tags: ["HTML/CSS/JS", "Vercel"], demo: "https://vibration-shivaji.space/vibrations_login_page.html", github: "https://github.com/manavtiwari1/Vibrations" }
-];  
+];
 
 
 const DEFAULT_QUALIFICATIONS = [
@@ -148,7 +148,7 @@ export default function AdminPanel() {
   const [newProject, setNewProject] = useState({ title:"", desc:"", thumb:"", tags:"", demo:"", github:"" });
   const [editingQualification, setEditingQualification] = useState(null);
   const [editingCertification, setEditingCertification] = useState(null);
-  const [editingProject, setEditingProject] = useState(null); // { id, title, desc, thumb, tags (string), demo, github }
+  const [editingProject, setEditingProject] = useState(null);
   const [iconOpen, setIconOpen] = useState(false);
 
   /* ── load data ── */
@@ -350,7 +350,7 @@ export default function AdminPanel() {
   const startEditCertification = (c) => {
     setEditingCertification({
       id: c.id,
-      icon: c.icon || "ðŸ†",
+      icon: c.icon || "🏆",
       name: c.name || "",
       org: c.org || "",
       badge: c.badge || "",
@@ -363,7 +363,7 @@ export default function AdminPanel() {
       c.id === editingCertification.id
         ? {
             ...c,
-            icon: editingCertification.icon.trim() || "ðŸ†",
+            icon: editingCertification.icon.trim() || "🏆",
             name: editingCertification.name.trim(),
             org: editingCertification.org.trim(),
             badge: editingCertification.badge.trim(),
