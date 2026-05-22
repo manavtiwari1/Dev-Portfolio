@@ -118,7 +118,10 @@ export async function setValue(key, value) {
     };
     await writeDatabase(data);
   });
-  writeQueue = nextWrite.catch(() => {});
+  writeQueue = nextWrite.catch((err) => {
+    console.error("Database write error:", err);
+    throw err;
+  });
   return nextWrite;
 }
 
