@@ -5,6 +5,7 @@ const PUBLIC_KEYS = new Set([
   "portfolio_qualifications",
   "portfolio_certifications",
   "portfolio_projects",
+  "portfolio_chatbot",
 ]);
 
 const ADMIN_KEYS = new Set([...PUBLIC_KEYS, "contact_messages"]);

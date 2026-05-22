@@ -41,6 +41,29 @@ const DEFAULT_SKILLS = [
   { id: "8", icon: "🔧", name: "Git & DevTools", tags: ["GitHub", "VS Code"] },
 ];
 
+const DEFAULT_CHATBOT_REPLIES = {
+  intro: "Hi, I am Manav AI. Ask me about Manav's skills, projects, qualifications, socials, or how to start a collaboration.",
+  skills: "Manav's core skills include full stack web development, Generative AI, prompt engineering, Python, C/C++, data analysis, Microsoft Power BI, Tableau, Supabase, cloud workflows, Git, UI/UX design, and Discord bot development.",
+  projects: "Featured work includes the Amplify Edge Discord Bot with AI-powered moderation and dynamic roles, plus the VIBRATIONS Fest Website with registration, Supabase auth, admin controls, and responsive event pages. Upcoming projects include Smart AI Interview and AI Smart Study Assistant.",
+  futureProjects: "Manav is working on Smart AI Interview, a project that helps students practice interviews across multiple domains, including government exams and big tech companies. He is also working on an AI Smart Study Assistant for smarter learning and personalized study support.",
+  contact: "You can use the contact form below to reach Manav for project collaborations, queries, or ideas. You can also email him directly at tiwarimanav118@gmail.com. I can take you there now.",
+  qualification: "Manav is studying Computer Science at Shivaji College, University of Delhi, focused on AI and web development. He completed high school in New Delhi and has certifications in AI, prompt engineering, Power BI, Tableau, and Generative AI.",
+  socials: "For future updates and quick connection, follow Manav on LinkedIn, GitHub, X, Instagram, YouTube, Twitch, Discord, Steam, or email. I can take you to the socials section now.",
+  fallback: "I can help with Manav's skills, projects, qualifications, socials, and contact details. Try asking: What can Manav build?",
+  customQuestions: [],
+};
+
+const CHATBOT_REPLY_FIELDS = [
+  ["intro", "INTRO / FIRST MESSAGE"],
+  ["skills", "SKILLS ANSWER"],
+  ["projects", "PROJECTS ANSWER"],
+  ["futureProjects", "UPCOMING PROJECTS ANSWER"],
+  ["qualification", "QUALIFICATIONS ANSWER"],
+  ["socials", "SOCIALS / FUTURE UPDATES ANSWER"],
+  ["contact", "CONTACT ANSWER"],
+  ["fallback", "FALLBACK ANSWER"],
+];
+
 const ICONS = ["🧠","🤖","🐍","⚛️","🗄️","☁️","👁️","⚙️","🔧","🎨","📱","🔒","🌐","📊","🚀","💡","🎯","🛠️","📦","⚡"];
 
 /* ── styles ── */
@@ -141,12 +164,14 @@ export default function AdminPanel() {
   const [qualifications, setQualifications] = useState([]);
   const [certifications, setCertifications] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [chatbotReplies, setChatbotReplies] = useState(DEFAULT_CHATBOT_REPLIES);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
   const [newSkill, setNewSkill] = useState({ icon:"🚀", name:"", tags:"" });
   const [newQualification, setNewQualification] = useState({ role:"", org:"", desc:"", badge:"" });
   const [newCertification, setNewCertification] = useState({ icon:"🏆", name:"", org:"", badge:"" });
   const [newProject, setNewProject] = useState({ title:"", desc:"", thumb:"", tags:"", demo:"", github:"" });
+  const [newChatbotQuestion, setNewChatbotQuestion] = useState({ question:"", answer:"" });
   const [editingQualification, setEditingQualification] = useState(null);
   const [editingCertification, setEditingCertification] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
@@ -193,6 +218,14 @@ export default function AdminPanel() {
           await storage.set('portfolio_projects', JSON.stringify(DEFAULT_PROJECTS), pw);
         }
       } catch { setProjects(DEFAULT_PROJECTS); }
+      try {
+        const botRes = await storage.get('portfolio_chatbot', pw);
+        if (botRes) setChatbotReplies({ ...DEFAULT_CHATBOT_REPLIES, ...JSON.parse(botRes.value) });
+        else {
+          setChatbotReplies(DEFAULT_CHATBOT_REPLIES);
+          await storage.set('portfolio_chatbot', JSON.stringify(DEFAULT_CHATBOT_REPLIES), pw);
+        }
+      } catch { setChatbotReplies(DEFAULT_CHATBOT_REPLIES); }
       setLoading(false);
     })();
   }, [authed]);
@@ -217,6 +250,11 @@ export default function AdminPanel() {
   const saveProjects = async (updated) => {
     setProjects(updated);
     try { await storage.set('portfolio_projects', JSON.stringify(updated), pw); } catch {}
+  };
+
+  const saveChatbotReplies = async (updated) => {
+    setChatbotReplies(updated);
+    try { await storage.set('portfolio_chatbot', JSON.stringify(updated), pw); } catch {}
   };
 
   const saveMsgs = async (updated) => {
@@ -426,6 +464,53 @@ export default function AdminPanel() {
     setEditingProject(null);
   };
 
+  const updateChatbotReply = (key, value) => {
+    setChatbotReplies(prev => ({ ...prev, [key]: value }));
+  };
+
+  const addChatbotQuestion = async () => {
+    const question = newChatbotQuestion.question.trim();
+    const answer = newChatbotQuestion.answer.trim();
+    if (!question || !answer) return;
+    const updated = {
+      ...chatbotReplies,
+      customQuestions: [
+        ...(Array.isArray(chatbotReplies.customQuestions) ? chatbotReplies.customQuestions : []),
+        { id: Date.now().toString(), question, answer },
+      ],
+    };
+    await saveChatbotReplies(updated);
+    setNewChatbotQuestion({ question:"", answer:"" });
+  };
+
+  const deleteChatbotQuestion = async (id) => {
+    const updated = {
+      ...chatbotReplies,
+      customQuestions: (chatbotReplies.customQuestions || []).filter(item => item.id !== id),
+    };
+    await saveChatbotReplies(updated);
+  };
+
+  const saveChatbotFromEditor = async () => {
+    const cleaned = {
+      ...Object.fromEntries(
+        CHATBOT_REPLY_FIELDS.map(([key]) => [key, String(chatbotReplies[key] || DEFAULT_CHATBOT_REPLIES[key] || "").trim()])
+      ),
+      customQuestions: (chatbotReplies.customQuestions || [])
+        .map(item => ({
+          id: item.id || Date.now().toString(),
+          question: String(item.question || "").trim(),
+          answer: String(item.answer || "").trim(),
+        }))
+        .filter(item => item.question && item.answer),
+    };
+    await saveChatbotReplies(cleaned);
+  };
+
+  const resetChatbotReplies = async () => {
+    await saveChatbotReplies(DEFAULT_CHATBOT_REPLIES);
+  };
+
   const unread = messages.filter(m => !m.read).length;
   const fmt = (iso) => {
     const d = new Date(iso);
@@ -462,6 +547,7 @@ export default function AdminPanel() {
           <button style={S.tabBtn(tab==="skills")} onClick={()=>setTab("skills")}>🛠️ Skills</button>
           <button style={S.tabBtn(tab==="qualifications")} onClick={()=>setTab("qualifications")}>Qualifications</button>
           <button style={S.tabBtn(tab==="certifications")} onClick={()=>setTab("certifications")}>Certifications</button>
+          <button style={S.tabBtn(tab==="chatbot")} onClick={()=>setTab("chatbot")}>Manav AI</button>
           <button style={S.logoutBtn} onClick={()=>setAuthed(false)}>Logout</button>
         </div>
       </div>
@@ -775,7 +861,7 @@ export default function AdminPanel() {
               ))}
             </div>
           </>
-        ) : (
+        ) : tab === "certifications" ? (
           <>
             <div style={S.pageTitle}>Manage Certifications</div>
             <div style={S.pageSub}>Add, edit, or remove certification cards shown below Qualifications</div>
@@ -844,6 +930,74 @@ export default function AdminPanel() {
                   </div>
                 )
               ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={S.pageTitle}>Manage Manav AI Chatbot</div>
+            <div style={S.pageSub}>Edit chatbot replies shown on the front page. Save changes, then refresh the portfolio to see updates.</div>
+
+            <div style={S.addBox}>
+              <div style={S.addTitle}>CHATBOT REPLIES</div>
+              {CHATBOT_REPLY_FIELDS.map(([key, label]) => (
+                <div key={key} style={{marginBottom:"1rem"}}>
+                  <div style={S.fieldLabel}>{label}</div>
+                  <textarea
+                    style={{...S.addInput,minHeight:88,resize:"vertical",lineHeight:1.5}}
+                    value={chatbotReplies[key] || ""}
+                    onChange={e=>updateChatbotReply(key, e.target.value)}
+                  />
+                </div>
+              ))}
+              <div style={S.actionRow}>
+                <button style={S.addBtn} onClick={saveChatbotFromEditor}>SAVE CHATBOT REPLIES</button>
+                <button style={S.cancelBtn} onClick={resetChatbotReplies}>Reset Default</button>
+              </div>
+            </div>
+
+            <div style={S.addBox}>
+              <div style={S.addTitle}>+ ADD CUSTOM QUESTION</div>
+              <div style={S.formGrid2}>
+                <div>
+                  <div style={S.fieldLabel}>QUESTION / PROMPT</div>
+                  <input
+                    style={S.addInput}
+                    placeholder="e.g. What is Manav currently learning?"
+                    value={newChatbotQuestion.question}
+                    onChange={e=>setNewChatbotQuestion(p=>({...p,question:e.target.value}))}
+                  />
+                </div>
+                <div>
+                  <div style={S.fieldLabel}>ANSWER</div>
+                  <textarea
+                    style={{...S.addInput,minHeight:86,resize:"vertical"}}
+                    placeholder="Write the answer Manav AI should give..."
+                    value={newChatbotQuestion.answer}
+                    onChange={e=>setNewChatbotQuestion(p=>({...p,answer:e.target.value}))}
+                  />
+                </div>
+              </div>
+              <button style={S.addBtn} onClick={addChatbotQuestion}>ADD QUESTION</button>
+            </div>
+
+            <div style={S.msgList}>
+              {(chatbotReplies.customQuestions || []).length === 0 ? (
+                <div style={S.noMsg}>No custom questions yet. Add one above to show it as a chatbot quick question.</div>
+              ) : (chatbotReplies.customQuestions || []).map(item => (
+                <div key={item.id} style={S.msgCard(true)}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem"}}>
+                    <div>
+                      <div style={S.msgName}>{item.question}</div>
+                      <div style={{...S.msgBody, marginTop:".4rem"}}>{item.answer}</div>
+                    </div>
+                    <button style={S.removeBtn} onClick={()=>deleteChatbotQuestion(item.id)}>X</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{...S.noMsg, padding:"1.2rem", textAlign:"left"}}>
+              Custom questions are matched before automatic intents and appear as extra quick question chips in Manav AI.
             </div>
           </>
         )}

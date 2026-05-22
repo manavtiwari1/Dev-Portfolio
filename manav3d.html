@@ -2540,11 +2540,17 @@
       border-radius: 50%;
       display: grid;
       place-items: center;
-      color: var(--teal);
       background: #001114;
-      font-family: 'Orbitron', monospace;
-      font-size: .72rem;
-      letter-spacing: .06em;
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      overflow: hidden;
+      box-shadow: inset 0 0 14px rgba(0, 229, 255, 0.18);
+    }
+
+    .chatbot-launcher-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .chatbot-launcher-text {
@@ -2642,8 +2648,9 @@
 
       <div class="chatbot-messages" id="chatbotMessages"></div>
 
-      <div class="chatbot-suggestions" aria-label="Suggested questions">
+      <div class="chatbot-suggestions" id="chatbotSuggestions" aria-label="Suggested questions">
         <button class="chatbot-chip" type="button" data-chat-prompt="What can Manav build?">What can Manav build?</button>
+        <button class="chatbot-chip" type="button" data-chat-prompt="What are Manav's skills?">Skills</button>
         <button class="chatbot-chip" type="button" data-chat-prompt="Show me his projects">Projects</button>
         <button class="chatbot-chip" type="button" data-chat-prompt="What upcoming projects is Manav working on?">Upcoming Projects</button>
         <button class="chatbot-chip" type="button" data-chat-prompt="Tell me Manav's qualifications">Qualifications</button>
@@ -2658,7 +2665,7 @@
     </section>
 
     <button class="chatbot-launcher" type="button" id="chatbotLauncher" aria-label="Open portfolio chatbot">
-      <span class="chatbot-launcher-icon">AI</span>
+      <span class="chatbot-launcher-icon"><img src="/Photos/logobg.png" alt="Manav Tiwari logo"></span>
       <span class="chatbot-launcher-text">
         <span>Need help?</span>
         <span>Ask Manav AI</span>
@@ -3412,19 +3419,55 @@
       const form = document.getElementById('chatbotForm');
       const input = document.getElementById('chatbotInput');
       const messages = document.getElementById('chatbotMessages');
-      const chips = document.querySelectorAll('[data-chat-prompt]');
+      const suggestions = document.getElementById('chatbotSuggestions');
       if (!shell || !launcher || !form || !input || !messages) return;
 
-      const answers = {
+      const defaultChatbotAnswers = {
         intro: "Hi, I am Manav AI. Ask me about Manav's skills, projects, qualifications, socials, or how to start a collaboration.",
-        skills: "Manav works across full stack development, Generative AI, prompt engineering, Python, C/C++, data analysis, cloud tools, Supabase, Git, UI/UX, and Discord bot development.",
+        skills: "Manav's core skills include full stack web development, Generative AI, prompt engineering, Python, C/C++, data analysis, Microsoft Power BI, Tableau, Supabase, cloud workflows, Git, UI/UX design, and Discord bot development.",
         projects: "Featured work includes the Amplify Edge Discord Bot with AI-powered moderation and dynamic roles, plus the VIBRATIONS Fest Website with registration, Supabase auth, admin controls, and responsive event pages. Upcoming projects include Smart AI Interview and AI Smart Study Assistant.",
         futureProjects: "Manav is working on Smart AI Interview, a project that helps students practice interviews across multiple domains, including government exams and big tech companies. He is also working on an AI Smart Study Assistant for smarter learning and personalized study support.",
         contact: "You can use the contact form below to reach Manav for project collaborations, queries, or ideas. You can also email him directly at tiwarimanav118@gmail.com. I can take you there now.",
         qualification: "Manav is studying Computer Science at Shivaji College, University of Delhi, focused on AI and web development. He completed high school in New Delhi and has certifications in AI, prompt engineering, Power BI, Tableau, and Generative AI.",
         socials: "For future updates and quick connection, follow Manav on LinkedIn, GitHub, X, Instagram, YouTube, Twitch, Discord, Steam, or email. I can take you to the socials section now.",
-        fallback: "I can help with Manav's skills, projects, qualifications, socials, and contact details. Try asking: What can Manav build?"
+        fallback: "I can help with Manav's skills, projects, qualifications, socials, and contact details. Try asking: What can Manav build?",
+        customQuestions: []
       };
+      let answers = { ...defaultChatbotAnswers };
+
+      function normalizeQuestion(value) {
+        return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      }
+
+      function renderCustomQuestionChips() {
+        if (!suggestions) return;
+        suggestions.querySelectorAll('[data-custom-question="true"]').forEach(node => node.remove());
+        const customQuestions = Array.isArray(answers.customQuestions) ? answers.customQuestions : [];
+        customQuestions.forEach(item => {
+          if (!item.question || !item.answer) return;
+          const chip = document.createElement('button');
+          chip.className = 'chatbot-chip';
+          chip.type = 'button';
+          chip.dataset.chatPrompt = item.question;
+          chip.dataset.customQuestion = 'true';
+          chip.textContent = item.question;
+          suggestions.appendChild(chip);
+        });
+      }
+
+      async function loadChatbotAnswers() {
+        try {
+          const stored = await storage.get('portfolio_chatbot');
+          if (!stored?.value) {
+            renderCustomQuestionChips();
+            return;
+          }
+          answers = { ...defaultChatbotAnswers, ...JSON.parse(stored.value) };
+        } catch (err) {
+          answers = { ...defaultChatbotAnswers };
+        }
+        renderCustomQuestionChips();
+      }
 
       function addMessage(text, type) {
         const node = document.createElement('div');
@@ -3436,6 +3479,12 @@
 
       function getBotReply(text) {
         const q = text.toLowerCase();
+        const normalized = normalizeQuestion(text);
+        const customMatch = (Array.isArray(answers.customQuestions) ? answers.customQuestions : []).find(item => {
+          const customQuestion = normalizeQuestion(item.question);
+          return customQuestion && (normalized === customQuestion || normalized.includes(customQuestion) || customQuestion.includes(normalized));
+        });
+        if (customMatch?.answer) return customMatch.answer;
         if (q.includes('future project') || q.includes('upcoming project') || q.includes('working on') || q.includes('smart ai interview') || q.includes('study assistant')) return answers.futureProjects;
         if (q.includes('project') || q.includes('work') || q.includes('demo') || q.includes('github')) return answers.projects;
         if (q.includes('skill') || q.includes('tech') || q.includes('stack') || q.includes('build') || q.includes('developer')) return answers.skills;
@@ -3486,10 +3535,12 @@
       launcher.setAttribute('aria-expanded', 'false');
       launcher.addEventListener('click', openChat);
       closeBtn?.addEventListener('click', closeChat);
-      chips.forEach(chip => chip.addEventListener('click', () => {
+      suggestions?.addEventListener('click', e => {
+        const chip = e.target.closest('[data-chat-prompt]');
+        if (!chip) return;
         openChat();
         handlePrompt(chip.dataset.chatPrompt || chip.textContent || '');
-      }));
+      });
 
       form.addEventListener('submit', e => {
         e.preventDefault();
@@ -3499,6 +3550,12 @@
       document.addEventListener('keydown', e => {
         if (e.key === 'Escape' && shell.classList.contains('is-open')) closeChat();
       });
+
+      loadChatbotAnswers();
+      window.addEventListener('storage', e => {
+        if (e.key === 'portfolio_chatbot') loadChatbotAnswers();
+      });
+      window.addEventListener('focus', loadChatbotAnswers);
     })();
 
     const defaultSkills = [
