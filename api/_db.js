@@ -98,6 +98,41 @@ export async function getValue(key) {
   const db = await getMongoDB();
   if (db) {
     try {
+      if (key === "contact_messages") {
+        const collection = db.collection("contact_messages");
+        let docs = await collection.find({}).sort({ date: -1 }).toArray();
+        
+        // Auto-migration: if the dedicated collection is empty, check the old storage key
+        if (docs.length === 0) {
+          const storageColl = db.collection("storage");
+          const oldDoc = await storageColl.findOne({ _id: "contact_messages" });
+          if (oldDoc && typeof oldDoc.value === "string") {
+            try {
+              const parsed = JSON.parse(oldDoc.value);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                const docsToInsert = parsed.map(msg => {
+                  const cleanMsg = { ...msg };
+                  delete cleanMsg._id;
+                  return cleanMsg;
+                });
+                await collection.insertMany(docsToInsert);
+                docs = await collection.find({}).sort({ date: -1 }).toArray();
+                await storageColl.deleteOne({ _id: "contact_messages" });
+              }
+            } catch (err) {
+              console.error("Failed to migrate old contact messages:", err);
+            }
+          }
+        }
+        
+        const cleanDocs = docs.map(doc => {
+          const cleanDoc = { ...doc };
+          delete cleanDoc._id;
+          return cleanDoc;
+        });
+        return JSON.stringify(cleanDocs);
+      }
+      
       const collection = db.collection("storage");
       const doc = await collection.findOne({ _id: key });
       return doc && typeof doc.value === "string" ? doc.value : null;
@@ -116,6 +151,27 @@ export async function setValue(key, value) {
   const db = await getMongoDB();
   if (db) {
     try {
+      if (key === "contact_messages") {
+        const collection = db.collection("contact_messages");
+        try {
+          const parsed = JSON.parse(value);
+          if (Array.isArray(parsed)) {
+            await collection.deleteMany({});
+            if (parsed.length > 0) {
+              const docsToInsert = parsed.map(msg => {
+                const cleanMsg = { ...msg };
+                delete cleanMsg._id; // prevent duplicate key errors
+                return cleanMsg;
+              });
+              await collection.insertMany(docsToInsert);
+            }
+            return;
+          }
+        } catch (parseErr) {
+          console.error("Failed to parse contact_messages JSON, storing as regular key:", parseErr);
+        }
+      }
+      
       const collection = db.collection("storage");
       await collection.updateOne(
         { _id: key },
