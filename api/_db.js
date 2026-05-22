@@ -101,34 +101,46 @@ const ARRAY_KEYS = new Set([
   "portfolio_projects",
 ]);
 
+const migrationPromises = {};
+
 export async function getValue(key) {
   const db = await getMongoDB();
   if (db) {
     try {
       if (key === "contact_messages") {
         const collection = db.collection("contact_messages");
+        
+        if (migrationPromises[key]) {
+          await migrationPromises[key];
+        }
+        
         let docs = await collection.find({}).sort({ date: -1 }).toArray();
         
         // Auto-migration: if the dedicated collection is empty, check the old storage key
-        if (docs.length === 0) {
+        if (docs.length === 0 && !migrationPromises[key]) {
           const storageColl = db.collection("storage");
           const oldDoc = await storageColl.findOne({ _id: "contact_messages" });
           if (oldDoc && typeof oldDoc.value === "string") {
-            try {
-              const parsed = JSON.parse(oldDoc.value);
-              if (Array.isArray(parsed) && parsed.length > 0) {
-                const docsToInsert = parsed.map(msg => {
-                  const cleanMsg = { ...msg };
-                  delete cleanMsg._id;
-                  return cleanMsg;
-                });
-                await collection.insertMany(docsToInsert);
-                docs = await collection.find({}).sort({ date: -1 }).toArray();
-                await storageColl.deleteOne({ _id: "contact_messages" });
+            migrationPromises[key] = (async () => {
+              try {
+                const parsed = JSON.parse(oldDoc.value);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  const docsToInsert = parsed.map(msg => {
+                    const cleanMsg = { ...msg };
+                    delete cleanMsg._id;
+                    return cleanMsg;
+                  });
+                  await collection.insertMany(docsToInsert);
+                  await storageColl.deleteOne({ _id: "contact_messages" });
+                }
+              } catch (err) {
+                console.error("Failed to migrate old contact messages:", err);
+              } finally {
+                delete migrationPromises[key];
               }
-            } catch (err) {
-              console.error("Failed to migrate old contact messages:", err);
-            }
+            })();
+            await migrationPromises[key];
+            docs = await collection.find({}).sort({ date: -1 }).toArray();
           }
         }
         
@@ -142,28 +154,38 @@ export async function getValue(key) {
 
       if (ARRAY_KEYS.has(key)) {
         const collection = db.collection(key);
+        
+        if (migrationPromises[key]) {
+          await migrationPromises[key];
+        }
+        
         let docs = await collection.find({}).sort({ orderIndex: 1 }).toArray();
         
         // Auto-migration
-        if (docs.length === 0) {
+        if (docs.length === 0 && !migrationPromises[key]) {
           const storageColl = db.collection("storage");
           const oldDoc = await storageColl.findOne({ _id: key });
           if (oldDoc && typeof oldDoc.value === "string") {
-            try {
-              const parsed = JSON.parse(oldDoc.value);
-              if (Array.isArray(parsed) && parsed.length > 0) {
-                const docsToInsert = parsed.map((item, idx) => {
-                  const cleanItem = { ...item, orderIndex: idx };
-                  delete cleanItem._id;
-                  return cleanItem;
-                });
-                await collection.insertMany(docsToInsert);
-                docs = await collection.find({}).sort({ orderIndex: 1 }).toArray();
-                await storageColl.deleteOne({ _id: key });
+            migrationPromises[key] = (async () => {
+              try {
+                const parsed = JSON.parse(oldDoc.value);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  const docsToInsert = parsed.map((item, idx) => {
+                    const cleanItem = { ...item, orderIndex: idx };
+                    delete cleanItem._id;
+                    return cleanItem;
+                  });
+                  await collection.insertMany(docsToInsert);
+                  await storageColl.deleteOne({ _id: key });
+                }
+              } catch (err) {
+                console.error(`Failed to migrate ${key}:`, err);
+              } finally {
+                delete migrationPromises[key];
               }
-            } catch (err) {
-              console.error(`Failed to migrate ${key}:`, err);
-            }
+            })();
+            await migrationPromises[key];
+            docs = await collection.find({}).sort({ orderIndex: 1 }).toArray();
           }
         }
         
@@ -178,26 +200,40 @@ export async function getValue(key) {
 
       if (key === "portfolio_chatbot") {
         const collection = db.collection("portfolio_chatbot");
-        const doc = await collection.findOne({});
+        
+        if (migrationPromises[key]) {
+          await migrationPromises[key];
+        }
+        
+        let doc = await collection.findOne({});
+        
+        // Auto-migration
+        if (!doc && !migrationPromises[key]) {
+          const storageColl = db.collection("storage");
+          const oldDoc = await storageColl.findOne({ _id: "portfolio_chatbot" });
+          if (oldDoc && typeof oldDoc.value === "string") {
+            migrationPromises[key] = (async () => {
+              try {
+                const parsed = JSON.parse(oldDoc.value);
+                if (parsed && typeof parsed === "object") {
+                  await collection.insertOne(parsed);
+                  await storageColl.deleteOne({ _id: "portfolio_chatbot" });
+                }
+              } catch (err) {
+                console.error("Failed to migrate chatbot answers:", err);
+              } finally {
+                delete migrationPromises[key];
+              }
+            })();
+            await migrationPromises[key];
+            doc = await collection.findOne({});
+          }
+        }
+
         if (doc) {
           const cleanDoc = { ...doc };
           delete cleanDoc._id;
           return JSON.stringify(cleanDoc);
-        }
-        // Auto-migration
-        const storageColl = db.collection("storage");
-        const oldDoc = await storageColl.findOne({ _id: "portfolio_chatbot" });
-        if (oldDoc && typeof oldDoc.value === "string") {
-          try {
-            const parsed = JSON.parse(oldDoc.value);
-            if (parsed && typeof parsed === "object") {
-              await collection.insertOne(parsed);
-              await storageColl.deleteOne({ _id: "portfolio_chatbot" });
-              return oldDoc.value;
-            }
-          } catch (err) {
-            console.error("Failed to migrate chatbot answers:", err);
-          }
         }
       }
       
