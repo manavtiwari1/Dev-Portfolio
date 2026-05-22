@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-const ADMIN_PASSWORD = "manav2025";
+const ADMIN_PASSWORD = "Manav@1234";
+const ADMIN_USERNAME = "imanavv_25";
 const RENDER_API_BASE = "https://dev-portfolio-vlzl.onrender.com";
 const API_BASE_URL = (() => {
   if (typeof window === "undefined") return "";
@@ -66,12 +67,18 @@ const CHATBOT_REPLY_FIELDS = [
 
 const ICONS = ["🧠","🤖","🐍","⚛️","🗄️","☁️","👁️","⚙️","🔧","🎨","📱","🔒","🌐","📊","🚀","💡","🎯","🛠️","📦","⚡"];
 
+let adminUsername = "";
+let adminPassword = "";
+
 /* ── styles ── */
 const storage = {
   async get(key, password) {
     if (typeof window !== "undefined" && window.storage) return window.storage.get(key);
     const response = await fetch(apiUrl(`/api/storage?key=${encodeURIComponent(key)}`), {
-      headers: { "x-admin-password": password || "" },
+      headers: {
+        "x-admin-username": adminUsername || "",
+        "x-admin-password": password || adminPassword || ""
+      },
     });
     if (!response.ok) throw new Error("Could not load saved data.");
     return response.status === 204 ? null : response.json();
@@ -82,7 +89,8 @@ const storage = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-admin-password": password || "",
+        "x-admin-username": adminUsername || "",
+        "x-admin-password": password || adminPassword || "",
       },
       body: JSON.stringify({ key, value }),
     });
@@ -92,13 +100,17 @@ const storage = {
 
 const S = {
   root: { minHeight:"100vh", background:"#03090b", color:"#e0f7fa", fontFamily:"'Segoe UI',sans-serif", padding:0 },
-  login: { minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"linear-gradient(135deg,#03090b 0%,#061820 100%)" },
-  loginBox: { background:"rgba(0,20,28,0.9)", border:"1px solid rgba(0,229,255,0.25)", borderRadius:16, padding:"2.5rem 2rem", width:"100%", maxWidth:380, backdropFilter:"blur(20px)" },
-  loginTitle: { fontFamily:"'Orbitron',monospace", fontSize:"1.3rem", fontWeight:800, background:"linear-gradient(90deg,#00e5ff,#1a6cf5)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", textAlign:"center", marginBottom:".4rem" },
-  loginSub: { color:"#4a7a82", fontSize:".82rem", textAlign:"center", marginBottom:"1.8rem" },
-  input: { width:"100%", background:"rgba(0,30,40,0.8)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".8rem 1rem", color:"#e0f7fa", fontSize:".95rem", outline:"none", marginBottom:"1rem", fontFamily:"inherit" },
-  loginBtn: { width:"100%", background:"linear-gradient(135deg,#00e5ff,#1a6cf5)", color:"#000", border:"none", borderRadius:50, padding:".85rem", fontWeight:700, fontSize:"1rem", cursor:"pointer", fontFamily:"'Orbitron',monospace", letterSpacing:".08em" },
-  err: { color:"#ff5a6a", fontSize:".8rem", textAlign:"center", marginTop:".6rem" },
+  login: { minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"radial-gradient(circle at center, #0a1f28 0%, #03090b 100%)", padding:"1rem" },
+  loginBox: { background:"rgba(1, 10, 15, 0.75)", border:"1px solid rgba(0, 229, 255, 0.15)", borderRadius:20, padding:"3rem 2.2rem", width:"100%", maxWidth:390, backdropFilter:"blur(25px)", boxShadow:"0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(0,229,255,0.08)", transition:"all 0.3s ease" },
+  loginLogoContainer: { display:"flex", justifyContent:"center", marginBottom:"1.2rem" },
+  loginLogo: { width:74, height:74, borderRadius:"50%", border:"2px solid rgba(0, 229, 255, 0.25)", padding:4, background:"rgba(0, 20, 28, 0.6)", boxShadow:"0 0 15px rgba(0, 229, 255, 0.15)", transition:"all 0.3s ease", objectFit:"contain" },
+  loginTitle: { fontFamily:"'Orbitron',monospace", fontSize:"1.45rem", fontWeight:800, background:"linear-gradient(90deg,#00e5ff,#1a6cf5)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", textAlign:"center", marginBottom:".3rem", letterSpacing:".03em" },
+  loginSub: { color:"#4a7a82", fontSize:".8rem", textAlign:"center", marginBottom:"2rem", letterSpacing:".05em" },
+  inputContainer: { position:"relative", marginBottom:"1.2rem" },
+  inputLabel: { display:"block", fontFamily:"'Orbitron',monospace", fontSize:".65rem", fontWeight:700, color:"#00e5ff", letterSpacing:".08em", marginBottom:".4rem", textTransform:"uppercase" },
+  input: (focused) => ({ width:"100%", background: focused ? "rgba(0,25,35,0.75)" : "rgba(0,12,18,0.5)", border: focused ? "1px solid #00e5ff" : "1px solid rgba(0,229,255,0.18)", borderRadius:8, padding:".8rem 1rem", color:"#e0f7fa", fontSize:".92rem", outline:"none", fontFamily:"inherit", transition:"all 0.25s ease", boxSizing:"border-box", boxShadow: focused ? "0 0 12px rgba(0,229,255,0.2)" : "none" }),
+  loginBtn: (hovered) => ({ width:"100%", background: hovered ? "linear-gradient(90deg,#33f0ff,#3b82f6)" : "linear-gradient(90deg,#00e5ff,#1a6cf5)", color:"#000", border:"none", borderRadius:30, padding:".9rem", fontWeight:800, fontSize:".95rem", cursor:"pointer", fontFamily:"'Orbitron',monospace", letterSpacing:".1em", transition:"all 0.3s ease", transform: hovered ? "translateY(-2px)" : "none", boxShadow: hovered ? "0 6px 20px rgba(0,229,255,0.4)" : "0 4px 12px rgba(0,229,255,0.15)" }),
+  err: { color:"#ff5a6a", fontSize:".8rem", textAlign:"center", marginTop:".8rem", fontWeight:600 },
 
   nav: { background:"rgba(0,10,15,0.95)", borderBottom:"1px solid rgba(0,229,255,0.15)", padding:"1rem 2rem", display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:100, backdropFilter:"blur(16px)" },
   navTitle: { fontFamily:"'Orbitron',monospace", fontSize:"1rem", fontWeight:800, background:"linear-gradient(90deg,#00e5ff,#1a6cf5)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" },
@@ -156,8 +168,11 @@ const S = {
 
 export default function AdminPanel() {
   const [authed, setAuthed]   = useState(false);
+  const [username, setUsername] = useState("");
   const [pw, setPw]           = useState("");
   const [pwErr, setPwErr]     = useState("");
+  const [focusedField, setFocusedField] = useState(null);
+  const [isBtnHovered, setIsBtnHovered] = useState(false);
   const [tab, setTab]         = useState("messages");
   const [messages, setMessages] = useState([]);
   const [skills, setSkills]   = useState([]);
@@ -280,24 +295,34 @@ export default function AdminPanel() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-admin-username": username,
           "x-admin-password": pw,
         },
-        body: JSON.stringify({ password: pw }),
+        body: JSON.stringify({ username, password: pw }),
       });
       if (response.ok) {
+        adminUsername = username;
+        adminPassword = pw;
         setAuthed(true);
         setPwErr("");
         return;
       }
-      if (response.status === 404 && pw === ADMIN_PASSWORD) {
+      if (response.status === 404 && pw === ADMIN_PASSWORD && username.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
+        adminUsername = username;
+        adminPassword = pw;
         setAuthed(true);
         setPwErr("");
         return;
       }
-      setPwErr("Wrong password");
+      setPwErr("Wrong username or password");
     } catch {
-      if (pw === ADMIN_PASSWORD) { setAuthed(true); setPwErr(""); }
-      else setPwErr("Wrong password");
+      if (pw === ADMIN_PASSWORD && username.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
+        adminUsername = username;
+        adminPassword = pw;
+        setAuthed(true);
+        setPwErr("");
+      }
+      else setPwErr("Wrong username or password");
     }
   };
 
@@ -531,12 +556,47 @@ export default function AdminPanel() {
   if (!authed) return (
     <div style={S.login}>
       <div style={S.loginBox}>
+        <div style={S.loginLogoContainer}>
+          <img style={S.loginLogo} src="/Photos/logobg.png" alt="Manav Tiwari Logo" />
+        </div>
         <div style={S.loginTitle}>ADMIN PANEL</div>
         <div style={S.loginSub}>Code with Manav · Secure Access</div>
         <form onSubmit={login}>
-          <input style={S.input} type="password" placeholder="Enter admin password" value={pw}
-            onChange={e => setPw(e.target.value)} autoFocus />
-          <button style={S.loginBtn} type="submit">ACCESS PANEL →</button>
+          <div style={S.inputContainer}>
+            <label style={S.inputLabel}>Admin Username</label>
+            <input
+              style={S.input(focusedField === "username")}
+              type="text"
+              placeholder="Enter admin username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              onFocus={() => setFocusedField("username")}
+              onBlur={() => setFocusedField(null)}
+              autoFocus
+              required
+            />
+          </div>
+          <div style={S.inputContainer}>
+            <label style={S.inputLabel}>Admin Password</label>
+            <input
+              style={S.input(focusedField === "password")}
+              type="password"
+              placeholder="Enter admin password"
+              value={pw}
+              onChange={e => setPw(e.target.value)}
+              onFocus={() => setFocusedField("password")}
+              onBlur={() => setFocusedField(null)}
+              required
+            />
+          </div>
+          <button
+            style={S.loginBtn(isBtnHovered)}
+            type="submit"
+            onMouseEnter={() => setIsBtnHovered(true)}
+            onMouseLeave={() => setIsBtnHovered(false)}
+          >
+            ACCESS PANEL →
+          </button>
           {pwErr && <div style={S.err}>{pwErr}</div>}
         </form>
       </div>

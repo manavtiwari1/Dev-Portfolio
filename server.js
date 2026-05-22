@@ -26,7 +26,7 @@ app.use(cors({
     }
     callback(new Error("Not allowed by CORS"));
   },
-  allowedHeaders: ["Content-Type", "x-admin-password"],
+  allowedHeaders: ["Content-Type", "x-admin-password", "x-admin-username"],
   methods: ["GET", "POST", "OPTIONS"],
 }));
 app.use(express.json({ limit: "1mb" }));

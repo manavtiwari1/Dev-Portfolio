@@ -86,12 +86,20 @@ async function writeDatabase(data) {
 }
 
 export function isAdminRequest(req) {
-  const expected = process.env.ADMIN_PASSWORD || "manav2025";
-  const provided =
+  const expectedPassword = process.env.ADMIN_PASSWORD || "Manav@1234";
+  const expectedUsername = process.env.ADMIN_USERNAME || "imanavv_25";
+  const providedPassword =
     req.headers["x-admin-password"] ||
     req.body?.password ||
     req.query?.password;
-  return Boolean(expected && provided === expected);
+  const providedUsername =
+    req.headers["x-admin-username"] ||
+    req.body?.username ||
+    req.query?.username;
+  return Boolean(
+    expectedPassword && providedPassword === expectedPassword &&
+    expectedUsername && providedUsername && providedUsername.toLowerCase() === expectedUsername.toLowerCase()
+  );
 }
 
 const ARRAY_KEYS = new Set([
