@@ -53,6 +53,10 @@ app.get("/admin", (_req, res) => {
 
 app.use(express.static(path.join(__dirname, "dist")));
 
+app.get("*.pdf", (_req, res) => {
+  res.sendFile(path.join(__dirname, _req.path));
+});
+
 app.get("*", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "manav3d.html"));
 });
