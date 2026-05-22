@@ -10,7 +10,7 @@ let dbInstance = null;
 
 // Lazily connect and cache MongoDB database instance
 async function getMongoDB() {
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env.MONGODB_URI || "mongodb+srv://tiwarimanav118_db_user:Manav123@cluster0.oqebpy9.mongodb.net/?appName=Cluster0";
   if (!uri) {
     return null; // Gracefully fall back to local db.json
   }
