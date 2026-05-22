@@ -756,12 +756,20 @@
       border-radius: 16px;
     }
 
-    .card-3d:hover .card-3d-inner,
-    .card-3d:focus-within .card-3d-inner {
-      transform: rotateY(180deg);
+    /* Desktop: flip on hover */
+    @media (hover: hover) {
+      .card-3d:hover .card-3d-inner,
+      .card-3d:focus-within .card-3d-inner {
+        transform: rotateY(180deg);
+      }
     }
 
-    @media (hover: none) and (pointer: coarse) {
+    /* Mobile/touch: flip only via JS .flipped class (tap to flip) */
+    @media (hover: none) {
+      .card-3d:hover .card-3d-inner,
+      .card-3d:focus-within .card-3d-inner {
+        transform: none !important;
+      }
       .card-3d.flipped .card-3d-inner {
         transform: rotateY(180deg);
       }
@@ -4167,18 +4175,21 @@
         });
       });
 
-      /* Mobile touch card flip — use event delegation so it works
-         even after dynamic re-render via loadPortfolioSkills() */
+      /* Mobile touch card flip — event delegation on grid container so it
+         survives dynamic re-renders from loadPortfolioSkills().
+         Uses matchMedia('(hover: none)') to stay in sync with CSS rules. */
       function attachCardFlip() {
         const grid = document.getElementById('skills-grid');
         if (!grid || grid.dataset.flipBound) return;
         grid.dataset.flipBound = 'true';
         grid.addEventListener('click', (e) => {
-          if (!('ontouchstart' in window) && window.innerWidth > 768) return;
+          // Only run on devices where CSS hover is disabled (touch/mobile)
+          if (!window.matchMedia('(hover: none)').matches) return;
           const card = e.target.closest('.card-3d');
           if (!card) return;
           e.preventDefault();
-          // If another card is already flipped, unflip it first
+          e.stopPropagation();
+          // Unflip any other already-flipped card
           grid.querySelectorAll('.card-3d.flipped').forEach(c => {
             if (c !== card) c.classList.remove('flipped');
           });
@@ -4186,6 +4197,10 @@
         });
       }
       attachCardFlip();
+
+      /* Also re-attach after dynamic skill reload (in case grid element changed) */
+      const _origLoadSkills = window.loadPortfolioSkills;
+      window.addEventListener('skills-reloaded', attachCardFlip);
 
       /* Init */
       window._projInit = initCarousel;
