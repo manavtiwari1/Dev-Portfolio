@@ -2451,6 +2451,7 @@
       bottom: clamp(16px, 3vw, 34px);
       z-index: 260;
       font-family: 'Rajdhani', sans-serif;
+      pointer-events: none;
     }
 
     .chatbot-panel {
@@ -2472,7 +2473,7 @@
 
     .chatbot-shell.is-open .chatbot-panel {
       opacity: 1;
-      pointer-events: all;
+      pointer-events: auto;
       transform: translateY(0) scale(1);
     }
 
@@ -2641,6 +2642,7 @@
       font-weight: 900;
       box-shadow: 0 0 28px rgba(0, 229, 255, 0.36), 0 14px 42px rgba(0, 0, 0, 0.35);
       transition: transform .25s ease, opacity .25s ease;
+      pointer-events: auto;
     }
 
     .chatbot-launcher:hover {
