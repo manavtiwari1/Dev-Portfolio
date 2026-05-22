@@ -1,3 +1,24 @@
 {
-  "storage": {}
+  "storage": {
+    "portfolio_skills": {
+      "value": "[{\"id\":\"1\",\"icon\":\"🧠\",\"name\":\"Generative AI\",\"tags\":[\"Claude API\",\"LLMs\"]},{\"id\":\"2\",\"icon\":\"🤖\",\"name\":\"C++ & C\",\"tags\":[\"VS Code\",\"Algorithm Design\"]},{\"id\":\"3\",\"icon\":\"🐍\",\"name\":\"Python Language\",\"tags\":[\"Flask\",\"FastAPI\"]},{\"id\":\"4\",\"icon\":\"⚛️\",\"name\":\"Data Analysis\",\"tags\":[\"Microsoft Power BI\",\"Tableau\"]},{\"id\":\"5\",\"icon\":\"🗄️\",\"name\":\"Prompt Engineering\",\"tags\":[\"OpenAI API\",\"LangChain\"]},{\"id\":\"6\",\"icon\":\"☁️\",\"name\":\"Cloud & Supabase\",\"tags\":[\"Supabase\",\"Auth\"]},{\"id\":\"7\",\"icon\":\"👁️\",\"name\":\"Discord Bot Development\",\"tags\":[\"discord.py\",\"Python\"]},{\"id\":\"8\",\"icon\":\"🔧\",\"name\":\"Git & DevTools\",\"tags\":[\"GitHub\",\"VS Code\"]}]",
+      "updatedAt": "2026-05-22T00:00:00Z"
+    },
+    "portfolio_qualifications": {
+      "value": "[{\"id\":\"1\",\"role\":\"Student\",\"org\":\"Shivaji College, University of Delhi\",\"desc\":\"Pursuing a degree in Computer Science with a focus on AI and web development.\",\"badge\":\"2025 - 2029\"},{\"id\":\"2\",\"role\":\"Student\",\"org\":\"Mahashay Chunilal Saraswati Bal Mandir Sr. Sec. School, New Delhi\",\"desc\":\"Completed high school with a focus on science and mathematics. Pass CBSE Board Exams with distinction.\",\"badge\":\"2017 - 2024\"}]",
+      "updatedAt": "2026-05-22T00:00:00Z"
+    },
+    "portfolio_certifications": {
+      "value": "[{\"id\":\"1\",\"icon\":\"🏆\",\"name\":\"Artificial Intelligence & Prompt Engineering\",\"org\":\"Shivaji College, University of Delhi\",\"badge\":\"2025\"},{\"id\":\"2\",\"icon\":\"🏅\",\"name\":\"Microsoft Power BI\",\"org\":\"Shivaji College, University of Delhi\",\"badge\":\"2025\"},{\"id\":\"3\",\"icon\":\"🎖️\",\"name\":\"Tableau\",\"org\":\"Shivaji College, University of Delhi\",\"badge\":\"2025\"},{\"id\":\"4\",\"icon\":\"🥇\",\"name\":\"Generative AI\",\"org\":\"Coursera\",\"badge\":\"2024\"}]",
+      "updatedAt": "2026-05-22T00:00:00Z"
+    },
+    "portfolio_projects": {
+      "value": "[{\"id\":\"1\",\"title\":\"Amplify Edge Discord Bot\",\"desc\":\"Fully Automod Bot for Amplify Edge Discord Server. Features include AI-powered content moderation, dynamic role assignment.\",\"thumb\":\"https://i.vgy.me/BIVktF.png\",\"tags\":[\"Java Script\",\"Python\"],\"demo\":\"https://discord.com/oauth2/authorize?client_id=591543060530462720&permissions=8&integration_type=0&scope=bot\",\"github\":\"https://github.com/manavtiwari1/Amplify-Edge-Discord-Bot\"},{\"id\":\"2\",\"title\":\"Vibrations Fest Website\",\"desc\":\"Official website for Vibrations Fest, a college cultural fest. Built with React and hosted on Vercel.\",\"thumb\":\"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=840&q=80\",\"tags\":[\"HTML/CSS/JS\",\"Vercel\"],\"demo\":\"https://vibration-shivaji.space/vibrations_login_page.html\",\"github\":\"https://github.com/manavtiwari1/Vibrations\"}]",
+      "updatedAt": "2026-05-22T00:00:00Z"
+    },
+    "portfolio_chatbot": {
+      "value": "{\"intro\":\"Hi, I am Manav AI. Ask me about Manav's skills, projects, qualifications, socials, or how to start a collaboration.\",\"skills\":\"Manav's core skills include full stack web development, Generative AI, prompt engineering, Python, C/C++, data analysis, Microsoft Power BI, Tableau, Supabase, cloud workflows, Git, UI/UX design, and Discord bot development.\",\"projects\":\"Featured work includes the Amplify Edge Discord Bot with AI-powered moderation and dynamic roles, plus the VIBRATIONS Fest Website with registration, Supabase auth, admin controls, and responsive event pages. Upcoming projects include Smart AI Interview and AI Smart Study Assistant.\",\"futureProjects\":\"Manav is working on Smart AI Interview, a project that helps students practice interviews across multiple domains, including government exams and big tech companies. He is also working on an AI Smart Study Assistant for smarter learning and personalized study support.\",\"contact\":\"You can use the contact form below to reach Manav for project collaborations, queries, or ideas. You can also email him directly at tiwarimanav118@gmail.com. I can take you there now.\",\"qualification\":\"Manav is studying Computer Science at Shivaji College, University of Delhi, focused on AI and web development. He completed high school in New Delhi and has certifications in AI, prompt engineering, Power BI, Tableau, and Generative AI.\",\"socials\":\"For future updates and quick connection, follow Manav on LinkedIn, GitHub, X, Instagram, YouTube, Twitch, Discord, Steam, or email. I can take you to the socials section now.\",\"fallback\":\"I can help with Manav's skills, projects, qualifications, socials, and contact details. Try asking: What can Manav build?\",\"customQuestions\":[]}",
+      "updatedAt": "2026-05-22T00:00:00Z"
+    }
+  }
 }

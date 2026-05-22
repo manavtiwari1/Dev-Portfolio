@@ -1,0 +1,12 @@
+
+> new-dev-portfolio@1.0.0 dev
+> vite --host localhost --port 8080
+
+Port 8080 is in use, trying another one...
+
+  [32m[1mVITE[22m v7.3.3[39m  [2mready in [0m[1m482[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m8081[22m/[39m
+[2m11:53:41 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mmanav3d.html[22m
+[2m11:53:51 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mmanav3d.html[22m
+[2m11:54:20 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mmanav3d.html[22m
