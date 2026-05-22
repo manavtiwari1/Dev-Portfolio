@@ -469,6 +469,16 @@
       transform: translateY(-3px);
     }
 
+    /* Mobile / touch fixes: ensure taps register and remove tap highlight */
+    button, a, .btn-solid, .btn-ghost, .proj-btn, .proj-arrow, .proj-dot, .chatbot-launcher, .hamburger, .nav-close-btn, .nav-link {
+      touch-action: manipulation;
+      -ms-touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
     /* HUD Photo Ring */
     .hud-wrap {
       position: relative;
@@ -3354,6 +3364,7 @@
       const canvas = document.getElementById('bg-canvas');
       if (!canvas || !window.THREE) return;
       const isMobile = window.innerWidth <= 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+      if (isMobile) return; // disable 3D background on mobile to prevent freezing
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, alpha: true });
       renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
       renderer.setSize(window.innerWidth, window.innerHeight);
