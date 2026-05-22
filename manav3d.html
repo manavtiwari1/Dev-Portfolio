@@ -333,10 +333,8 @@
 
     /* ── HERO ── */
     #hero {
-      /* Use dvh (dynamic viewport height) — accounts for mobile browser bars
-         shrinking/hiding so content fills the real visible area */
-      min-height: 100dvh;
       min-height: 100vh; /* fallback for older browsers */
+      min-height: 100dvh; /* dynamic viewport height — hides mobile browser bar space */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2000,8 +1998,36 @@
 
     /* ── MOBILE PERFORMANCE ── */
     @media (max-width: 768px) {
+      /* Kill expensive effects on mobile */
       .scanlines { display: none !important; }
-      nav { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+
+      /* Reduce backdrop-filter cost (full blur = GPU killer on mobile) */
+      nav { backdrop-filter: blur(6px) !important; -webkit-backdrop-filter: blur(6px) !important; }
+      #nav-overlay { backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important; }
+      .social-card { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(4,18,28,0.92) !important; }
+      .proj-card { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+      .proj-badge { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+      .chatbot-panel { backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important; }
+
+      /* Kill expensive infinite CSS animations on mobile */
+      .card-icon { animation: none !important; }
+      .card-back::before { animation: none !important; }
+      .holo { display: none !important; }
+      .proj-card.is-active { animation: none !important; }
+      .proj-card.is-active::before { display: none !important; }
+      .mail-icon { animation: none !important; }
+
+      /* Simplify social card hover — no 3D transform on mobile */
+      .social-card:hover,
+      .social-card:active {
+        transform: scale(1.02) !important;
+      }
+      .social-card:hover .social-icon {
+        transform: scale(1.08) !important;
+      }
+
+      /* Disable expensive filter on card icons */
+      .card-icon { filter: none !important; }
     }
 
     /* holographic shimmer on cards */
@@ -3412,9 +3438,13 @@
       const canvas = document.getElementById('bg-canvas');
       if (!canvas || !window.THREE) return;
       const isMobile = window.innerWidth <= 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-      // Reduced quality on mobile instead of disabling completely
+      // On very low-end devices (< 3GB RAM hint or very small screen), skip 3D
+      const isVeryLowEnd = (navigator.deviceMemory && navigator.deviceMemory < 2)
+        || (isMobile && window.innerWidth < 360);
+      if (isVeryLowEnd) { canvas.style.display = 'none'; return; }
+
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, alpha: true, powerPreference: isMobile ? 'low-power' : 'default' });
-      renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 1.5) : Math.min(window.devicePixelRatio, 2));
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setClearColor(0x000000, 0);
 
@@ -3711,7 +3741,7 @@
       window.addEventListener('storage', e => {
         if (e.key === 'portfolio_chatbot') loadChatbotAnswers();
       });
-      window.addEventListener('focus', loadChatbotAnswers);
+      /* Don't reload chatbot on every focus — it's loaded once at startup */
     })();
 
     const defaultSkills = [
@@ -3916,10 +3946,20 @@
         loadPortfolioContent();
       }
     });
+    /* Only reload portfolio content if data is stale (> 5 min since last load)
+       Prevents hammering the API on every tab switch / focus event */
+    let _lastPortfolioLoad = Date.now();
+    const STALE_THRESHOLD = 5 * 60 * 1000; // 5 minutes
+    function maybeReloadPortfolio() {
+      if (Date.now() - _lastPortfolioLoad > STALE_THRESHOLD) {
+        _lastPortfolioLoad = Date.now();
+        loadPortfolioContent();
+      }
+    }
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) loadPortfolioContent();
+      if (!document.hidden) maybeReloadPortfolio();
     });
-    window.addEventListener('focus', loadPortfolioContent);
+    window.addEventListener('focus', maybeReloadPortfolio);
 
 
 
@@ -3981,7 +4021,17 @@
         if (href === current) l.classList.add('active-link');
       });
     }
-    window.addEventListener('scroll', updateActiveLink);
+    /* Debounced scroll — updateActiveLink fires at most once per 100ms */
+    let _scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!_scrollTicking) {
+        _scrollTicking = true;
+        requestAnimationFrame(() => {
+          updateActiveLink();
+          _scrollTicking = false;
+        });
+      }
+    }, { passive: true });
 
     /* ── CONTACT FORM ── */
     async function submitForm(e) {
@@ -4177,11 +4227,11 @@
         lastX = e.touches[0].clientX; lastT = now;
         setTranslate(startScroll + (e.touches[0].clientX - startX), false);
       }, { passive: true });
-      window.addEventListener('touchend', () => {
+      window.addEventListener('touchend', (e) => {
         if (!isDragging) return;
         isDragging = false;
         rafId = requestAnimationFrame(applyInertia);
-      });
+      }, { passive: true });
 
       /* Arrow buttons */
       btnPrev.addEventListener('click', () => goTo(current - 1));
@@ -4235,6 +4285,10 @@
         }, { passive: true });
 
         document.addEventListener('touchend', (e) => {
+          // Skip if the carousel is currently being dragged
+          const track = document.getElementById('projTrack');
+          if (track && track.classList.contains('is-dragging')) return;
+
           const dx = Math.abs(e.changedTouches[0].clientX - tapStartX);
           const dy = Math.abs(e.changedTouches[0].clientY - tapStartY);
           if (dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) return; // was a scroll
