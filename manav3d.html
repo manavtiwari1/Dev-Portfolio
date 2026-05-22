@@ -2866,8 +2866,14 @@
     <div class="sec-head">
       <h2 class="sec-title">Technical Arsenal</h2><span class="sec-line"></span>
     </div>
-    <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:2rem;letter-spacing:.05em">Hover over
+    <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:2rem;letter-spacing:.05em" id="flip-hint-text">Hover over
       a card to flip it ↻</p>
+    <script>
+      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        var h = document.getElementById('flip-hint-text');
+        if (h) h.textContent = 'Tap a card to flip it ↻';
+      }
+    <\/script>
     <div class="card-3d-grid" id="skills-grid">
 
       <!-- Generative AI -->
@@ -3209,7 +3215,7 @@
     </div>
     <p class="social-intro">Connect with me across the web. I'm always active and open to new conversations!</p>
     <div class="social-grid">
-      <a href="https://github.com/manavtiwari1" class="social-card featured">
+      <a href="https://github.com/manavtiwari1" class="social-card featured" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -3220,7 +3226,7 @@
         <div class="social-name">GitHub</div>
         <div class="social-sub">Code &amp; Projects</div>
       </a>
-      <a href="https://www.linkedin.com/in/manav-tiwari-0185651b2/" class="social-card">
+      <a href="https://www.linkedin.com/in/manav-tiwari-0185651b2/" class="social-card" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -3231,7 +3237,7 @@
         <div class="social-name">LinkedIn</div>
         <div class="social-sub">Professional Network</div>
       </a>
-      <a href="https://x.com/ManavAneja13" class="social-card">
+      <a href="https://x.com/ManavAneja13" class="social-card" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -3242,7 +3248,7 @@
         <div class="social-name">X (Twitter)</div>
         <div class="social-sub">Tech &amp; Updates</div>
       </a>
-      <a href="https://www.instagram.com/imanavv_25/?__pwa=1" class="social-card">
+      <a href="https://www.instagram.com/imanavv_25/" class="social-card" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -3253,7 +3259,7 @@
         <div class="social-name">Instagram</div>
         <div class="social-sub">Behind the Scenes</div>
       </a>
-      <a href="https://www.youtube.com/@amplify_25" class="social-card">
+      <a href="https://www.youtube.com/@amplify_25" class="social-card" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -3264,7 +3270,7 @@
         <div class="social-name">YouTube</div>
         <div class="social-sub">Video Content</div>
       </a>
-      <a href="https://www.twitch.tv/mannavvvvv_1" class="social-card">
+      <a href="https://www.twitch.tv/mannavvvvv_1" class="social-card" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -3275,7 +3281,7 @@
         <div class="social-name">Twitch</div>
         <div class="social-sub">Live Streams</div>
       </a>
-      <a href="https://discord.gg/wZawPJ5" class="social-card">
+      <a href="https://discord.gg/wZawPJ5" class="social-card" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -3286,7 +3292,7 @@
         <div class="social-name">Discord</div>
         <div class="social-sub">Community Chat</div>
       </a>
-      <a href="https://steamcommunity.com/id/manavaneja/" class="social-card">
+      <a href="https://steamcommunity.com/id/manavaneja/" class="social-card" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -3364,8 +3370,8 @@
       const canvas = document.getElementById('bg-canvas');
       if (!canvas || !window.THREE) return;
       const isMobile = window.innerWidth <= 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-      if (isMobile) return; // disable 3D background on mobile to prevent freezing
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, alpha: true });
+      // Reduced quality on mobile instead of disabling completely
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, alpha: true, powerPreference: isMobile ? 'low-power' : 'default' });
       renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setClearColor(0x000000, 0);
@@ -3374,8 +3380,8 @@
       const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
       camera.position.z = 50;
 
-      // ── PARTICLE FIELD ──
-      const particleCount = isMobile ? 400 : 1800;
+      // ── PARTICLE FIELD ── (fewer particles on mobile for performance)
+      const particleCount = isMobile ? 300 : 1800;
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
       const sizes = new Float32Array(particleCount);
@@ -3399,49 +3405,60 @@
       particleGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
       const particleMat = new THREE.PointsMaterial({
-        size: 0.5, vertexColors: true, transparent: true,
-        opacity: 0.7, sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false
+        size: isMobile ? 0.8 : 0.5, vertexColors: true, transparent: true,
+        opacity: isMobile ? 0.55 : 0.7, sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false
       });
       const particles = new THREE.Points(particleGeo, particleMat);
       scene.add(particles);
 
+      // ── WIREFRAME ICOSAHEDRON (skip on mobile for perf) ──
+      let ico, icoMat, ring, ringMat;
+      if (!isMobile) {
+        const icoGeo = new THREE.IcosahedronGeometry(8, 1);
+        icoMat = new THREE.MeshBasicMaterial({
+          color: 0x1a6cf5, wireframe: true, transparent: true, opacity: 0.09
+        });
+        ico = new THREE.Mesh(icoGeo, icoMat);
+        ico.position.set(-30, 12, -15);
+        scene.add(ico);
 
+        // ── RING ──
+        const ringGeo = new THREE.TorusGeometry(20, 0.3, 6, 80);
+        ringMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.08 });
+        ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = Math.PI / 3;
+        ring.position.set(0, 0, -30);
+        scene.add(ring);
 
-      // ── WIREFRAME ICOSAHEDRON ──
-      const icoGeo = new THREE.IcosahedronGeometry(8, 1);
-      const icoMat = new THREE.MeshBasicMaterial({
-        color: 0x1a6cf5, wireframe: true, transparent: true, opacity: 0.09
-      });
-      const ico = new THREE.Mesh(icoGeo, icoMat);
-      ico.position.set(-30, 12, -15);
-      scene.add(ico);
-
-      // ── RING ──
-      const ringGeo = new THREE.TorusGeometry(20, 0.3, 6, 80);
-      const ringMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.08 });
-      const ring = new THREE.Mesh(ringGeo, ringMat);
-      ring.rotation.x = Math.PI / 3;
-      ring.position.set(0, 0, -30);
-      scene.add(ring);
-
-      // ── CONNECTING LINES ──
-      const lineCount = isMobile ? 10 : 40;
-      for (let i = 0; i < lineCount; i++) {
-        const pts = [
-          new THREE.Vector3((Math.random() - .5) * 160, (Math.random() - .5) * 160, (Math.random() - .5) * 60),
-          new THREE.Vector3((Math.random() - .5) * 160, (Math.random() - .5) * 160, (Math.random() - .5) * 60)
-        ];
-        const lGeo = new THREE.BufferGeometry().setFromPoints(pts);
-        const lMat = new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: Math.random() * .04 + .01 });
-        scene.add(new THREE.Line(lGeo, lMat));
+        // ── CONNECTING LINES ──
+        const lineCount = 40;
+        for (let i = 0; i < lineCount; i++) {
+          const pts = [
+            new THREE.Vector3((Math.random() - .5) * 160, (Math.random() - .5) * 160, (Math.random() - .5) * 60),
+            new THREE.Vector3((Math.random() - .5) * 160, (Math.random() - .5) * 160, (Math.random() - .5) * 60)
+          ];
+          const lGeo = new THREE.BufferGeometry().setFromPoints(pts);
+          const lMat = new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: Math.random() * .04 + .01 });
+          scene.add(new THREE.Line(lGeo, lMat));
+        }
       }
 
-      // ── MOUSE PARALLAX ──
+      // ── MOUSE PARALLAX (only desktop) ──
       let mx = 0, my = 0;
-      document.addEventListener('mousemove', e => {
-        mx = (e.clientX / window.innerWidth - 0.5) * 2;
-        my = (e.clientY / window.innerHeight - 0.5) * 2;
-      });
+      if (!isMobile) {
+        document.addEventListener('mousemove', e => {
+          mx = (e.clientX / window.innerWidth - 0.5) * 2;
+          my = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+      }
+
+      // ── GYROSCOPE PARALLAX (mobile) ──
+      if (isMobile && window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', e => {
+          if (e.gamma != null) mx = (e.gamma / 45) * 0.5;
+          if (e.beta != null) my = ((e.beta - 45) / 45) * 0.5;
+        }, { passive: true });
+      }
 
       // ── RESIZE ──
       window.addEventListener('resize', () => {
@@ -3453,21 +3470,20 @@
       // ── ANIMATE ──
       const clock = new THREE.Clock();
       let lastFrame = 0;
-      const frameInterval = isMobile ? 33 : 16; // ~30fps on mobile, ~60fps on desktop
+      const frameInterval = isMobile ? 50 : 16; // ~20fps on mobile, ~60fps on desktop
       function animate(now) {
         requestAnimationFrame(animate);
         if (document.hidden) return; // skip when tab is hidden
         if (now - lastFrame < frameInterval) return; // throttle on mobile
         lastFrame = now;
         const t = clock.getElapsedTime();
-        particleMat.opacity = 0.7;
-        icoMat.opacity = 0.09;
-        ringMat.opacity = 0.08;
-        particles.rotation.y = t * 0.02;
+        particles.rotation.y = t * (isMobile ? 0.01 : 0.02);
         particles.rotation.x = t * 0.008;
-        ico.rotation.x = t * 0.15;
-        ico.rotation.z = t * 0.1;
-        ring.rotation.z = t * 0.05;
+        if (!isMobile && ico && icoMat && ring && ringMat) {
+          ico.rotation.x = t * 0.15;
+          ico.rotation.z = t * 0.1;
+          ring.rotation.z = t * 0.05;
+        }
         camera.position.x += (mx * 3 - camera.position.x) * 0.04;
         camera.position.y += (-my * 3 - camera.position.y) * 0.04;
         renderer.render(scene, camera);
@@ -4151,15 +4167,25 @@
         });
       });
 
-      /* Mobile touch card flip */
-      document.querySelectorAll('.card-3d').forEach(card => {
-        card.addEventListener('click', (e) => {
-          if (window.innerWidth <= 768) {
-            e.preventDefault();
-            card.classList.toggle('flipped');
-          }
+      /* Mobile touch card flip — use event delegation so it works
+         even after dynamic re-render via loadPortfolioSkills() */
+      function attachCardFlip() {
+        const grid = document.getElementById('skills-grid');
+        if (!grid || grid.dataset.flipBound) return;
+        grid.dataset.flipBound = 'true';
+        grid.addEventListener('click', (e) => {
+          if (!('ontouchstart' in window) && window.innerWidth > 768) return;
+          const card = e.target.closest('.card-3d');
+          if (!card) return;
+          e.preventDefault();
+          // If another card is already flipped, unflip it first
+          grid.querySelectorAll('.card-3d.flipped').forEach(c => {
+            if (c !== card) c.classList.remove('flipped');
+          });
+          card.classList.toggle('flipped');
         });
-      });
+      }
+      attachCardFlip();
 
       /* Init */
       window._projInit = initCarousel;
