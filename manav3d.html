@@ -4209,32 +4209,44 @@
         });
       });
 
-      /* Mobile touch card flip — event delegation on grid container so it
-         survives dynamic re-renders from loadPortfolioSkills().
-         Uses matchMedia('(hover: none)') to stay in sync with CSS rules. */
-      function attachCardFlip() {
-        const grid = document.getElementById('skills-grid');
-        if (!grid || grid.dataset.flipBound) return;
-        grid.dataset.flipBound = 'true';
-        grid.addEventListener('click', (e) => {
-          // Only run on devices where CSS hover is disabled (touch/mobile)
-          if (!window.matchMedia('(hover: none)').matches) return;
-          const card = e.target.closest('.card-3d');
-          if (!card) return;
-          e.preventDefault();
-          e.stopPropagation();
-          // Unflip any other already-flipped card
+      /* ── MOBILE CARD FLIP ──
+         Uses touchstart/touchend instead of click+matchMedia.
+         touchend is 100% reliable on ALL touch devices.
+         We distinguish a tap (finger barely moved) from a scroll (finger moved a lot).
+         preventDefault() on touchend stops the browser from firing
+         synthetic hover/click events that would fight our .flipped class. */
+      (function () {
+        let tapStartX = 0, tapStartY = 0;
+        const TAP_THRESHOLD = 12; // px — more than this = scroll, not tap
+
+        function doFlip(card) {
+          const grid = document.getElementById('skills-grid');
+          if (!grid || !card) return;
+          // Unflip all other cards first
           grid.querySelectorAll('.card-3d.flipped').forEach(c => {
             if (c !== card) c.classList.remove('flipped');
           });
           card.classList.toggle('flipped');
-        });
-      }
-      attachCardFlip();
+        }
 
-      /* Also re-attach after dynamic skill reload (in case grid element changed) */
-      const _origLoadSkills = window.loadPortfolioSkills;
-      window.addEventListener('skills-reloaded', attachCardFlip);
+        document.addEventListener('touchstart', (e) => {
+          tapStartX = e.touches[0].clientX;
+          tapStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+          const dx = Math.abs(e.changedTouches[0].clientX - tapStartX);
+          const dy = Math.abs(e.changedTouches[0].clientY - tapStartY);
+          if (dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) return; // was a scroll
+
+          const card = e.target.closest('.card-3d');
+          if (!card) return;
+
+          // Prevent synthetic mouse/hover events so CSS :hover doesn't conflict
+          e.preventDefault();
+          doFlip(card);
+        }, { passive: false });
+      })();
 
       /* Init */
       window._projInit = initCarousel;
