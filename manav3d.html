@@ -1937,6 +1937,12 @@
           rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px);
     }
 
+    /* ── MOBILE PERFORMANCE ── */
+    @media (max-width: 768px) {
+      .scanlines { display: none !important; }
+      nav { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    }
+
     /* holographic shimmer on cards */
     @keyframes holoshimmer {
       0% {
@@ -3338,8 +3344,9 @@
     (function () {
       const canvas = document.getElementById('bg-canvas');
       if (!canvas || !window.THREE) return;
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      const isMobile = window.innerWidth <= 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, alpha: true });
+      renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setClearColor(0x000000, 0);
 
@@ -3348,7 +3355,7 @@
       camera.position.z = 50;
 
       // ── PARTICLE FIELD ──
-      const particleCount = 1800;
+      const particleCount = isMobile ? 400 : 1800;
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
       const sizes = new Float32Array(particleCount);
@@ -3398,7 +3405,7 @@
       scene.add(ring);
 
       // ── CONNECTING LINES ──
-      const lineCount = 40;
+      const lineCount = isMobile ? 10 : 40;
       for (let i = 0; i < lineCount; i++) {
         const pts = [
           new THREE.Vector3((Math.random() - .5) * 160, (Math.random() - .5) * 160, (Math.random() - .5) * 60),
@@ -3425,13 +3432,17 @@
 
       // ── ANIMATE ──
       const clock = new THREE.Clock();
-      function animate() {
+      let lastFrame = 0;
+      const frameInterval = isMobile ? 33 : 16; // ~30fps on mobile, ~60fps on desktop
+      function animate(now) {
         requestAnimationFrame(animate);
+        if (document.hidden) return; // skip when tab is hidden
+        if (now - lastFrame < frameInterval) return; // throttle on mobile
+        lastFrame = now;
         const t = clock.getElapsedTime();
-        const isLight = false;
         particleMat.opacity = 0.7;
-        icoMat.opacity = isLight ? 0.04 : 0.09;
-        ringMat.opacity = isLight ? 0.04 : 0.08;
+        icoMat.opacity = 0.09;
+        ringMat.opacity = 0.08;
         particles.rotation.y = t * 0.02;
         particles.rotation.x = t * 0.008;
         ico.rotation.x = t * 0.15;
@@ -3441,7 +3452,7 @@
         camera.position.y += (-my * 3 - camera.position.y) * 0.04;
         renderer.render(scene, camera);
       }
-      animate();
+      animate(0);
     })();
 
     const RENDER_API_BASE = 'https://dev-portfolio-vlzl.onrender.com';
@@ -3848,7 +3859,9 @@
     const roleEl = document.querySelector('.hero-role');
     if (roleEl) {
       const base = '<span class="iam">I am</span> a ';
+      const typingSpeed = (window.innerWidth <= 768) ? 110 : 85;
       setInterval(() => {
+        if (document.hidden) return; // don't run when tab is hidden
         const p = phrases[pi];
         if (!del) {
           ci++; roleEl.innerHTML = base + p.slice(0, ci) + '<span style="color:var(--teal);animation:blink .7s step-end infinite">|</span>';
@@ -3858,7 +3871,7 @@
           ci--; roleEl.innerHTML = base + p.slice(0, ci) + '<span style="color:var(--teal)">|</span>';
           if (ci === 0) { del = false; pi = (pi + 1) % phrases.length; }
         }
-      }, 85);
+      }, typingSpeed);
     }
 
     /* ── NAV OVERLAY ── */

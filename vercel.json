@@ -4,6 +4,7 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/manav_tiwari_resume.pdf", "destination": "/manav_tiwari_resume.pdf" },
     { "source": "/(.*)", "destination": "/manav3d.html" }
   ]
 }
