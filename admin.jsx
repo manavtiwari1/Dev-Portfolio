@@ -183,50 +183,60 @@ export default function AdminPanel() {
     (async () => {
       setLoading(true);
       try {
-        const mRes = await storage.get('contact_messages', pw);
-        if (mRes) setMessages(JSON.parse(mRes.value));
-      } catch { setMessages([]); }
-      try {
-        const sRes = await storage.get('portfolio_skills', pw);
-        if (sRes) setSkills(JSON.parse(sRes.value));
-        else {
+        const [mRes, sRes, qRes, cRes, pRes, botRes] = await Promise.all([
+          storage.get('contact_messages', pw).catch(() => null),
+          storage.get('portfolio_skills', pw).catch(() => null),
+          storage.get('portfolio_qualifications', pw).catch(() => null),
+          storage.get('portfolio_certifications', pw).catch(() => null),
+          storage.get('portfolio_projects', pw).catch(() => null),
+          storage.get('portfolio_chatbot', pw).catch(() => null),
+        ]);
+
+        if (mRes && mRes.value) {
+          setMessages(JSON.parse(mRes.value));
+        } else {
+          setMessages([]);
+        }
+
+        if (sRes && sRes.value) {
+          setSkills(JSON.parse(sRes.value));
+        } else {
           setSkills(DEFAULT_SKILLS);
-          await storage.set('portfolio_skills', JSON.stringify(DEFAULT_SKILLS), pw);
+          storage.set('portfolio_skills', JSON.stringify(DEFAULT_SKILLS), pw).catch(() => {});
         }
-      } catch { setSkills(DEFAULT_SKILLS); }
-      try {
-        const qRes = await storage.get('portfolio_qualifications', pw);
-        if (qRes) setQualifications(JSON.parse(qRes.value));
-        else {
+
+        if (qRes && qRes.value) {
+          setQualifications(JSON.parse(qRes.value));
+        } else {
           setQualifications(DEFAULT_QUALIFICATIONS);
-          await storage.set('portfolio_qualifications', JSON.stringify(DEFAULT_QUALIFICATIONS), pw);
+          storage.set('portfolio_qualifications', JSON.stringify(DEFAULT_QUALIFICATIONS), pw).catch(() => {});
         }
-      } catch { setQualifications(DEFAULT_QUALIFICATIONS); }
-      try {
-        const cRes = await storage.get('portfolio_certifications', pw);
-        if (cRes) setCertifications(JSON.parse(cRes.value));
-        else {
+
+        if (cRes && cRes.value) {
+          setCertifications(JSON.parse(cRes.value));
+        } else {
           setCertifications(DEFAULT_CERTIFICATIONS);
-          await storage.set('portfolio_certifications', JSON.stringify(DEFAULT_CERTIFICATIONS), pw);
+          storage.set('portfolio_certifications', JSON.stringify(DEFAULT_CERTIFICATIONS), pw).catch(() => {});
         }
-      } catch { setCertifications(DEFAULT_CERTIFICATIONS); }
-      try {
-        const pRes = await storage.get('portfolio_projects', pw);
-        if (pRes) setProjects(JSON.parse(pRes.value));
-        else {
+
+        if (pRes && pRes.value) {
+          setProjects(JSON.parse(pRes.value));
+        } else {
           setProjects(DEFAULT_PROJECTS);
-          await storage.set('portfolio_projects', JSON.stringify(DEFAULT_PROJECTS), pw);
+          storage.set('portfolio_projects', JSON.stringify(DEFAULT_PROJECTS), pw).catch(() => {});
         }
-      } catch { setProjects(DEFAULT_PROJECTS); }
-      try {
-        const botRes = await storage.get('portfolio_chatbot', pw);
-        if (botRes) setChatbotReplies({ ...DEFAULT_CHATBOT_REPLIES, ...JSON.parse(botRes.value) });
-        else {
+
+        if (botRes && botRes.value) {
+          setChatbotReplies({ ...DEFAULT_CHATBOT_REPLIES, ...JSON.parse(botRes.value) });
+        } else {
           setChatbotReplies(DEFAULT_CHATBOT_REPLIES);
-          await storage.set('portfolio_chatbot', JSON.stringify(DEFAULT_CHATBOT_REPLIES), pw);
+          storage.set('portfolio_chatbot', JSON.stringify(DEFAULT_CHATBOT_REPLIES), pw).catch(() => {});
         }
-      } catch { setChatbotReplies(DEFAULT_CHATBOT_REPLIES); }
-      setLoading(false);
+      } catch (err) {
+        console.error("Error loading data in parallel:", err);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [authed]);
 

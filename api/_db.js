@@ -7,6 +7,9 @@ const DATA_FILE = process.env.DATA_FILE || path.join(DATA_DIR, "db.json");
 
 let mongoClient = null;
 let dbInstance = null;
+let connectPromise = null;
+let lastFailedTime = 0;
+const FAIL_COOLDOWN_MS = 30000; // 30 seconds cooldown after a failure
 
 // Lazily connect and cache MongoDB database instance
 async function getMongoDB() {
@@ -17,16 +20,37 @@ async function getMongoDB() {
   if (dbInstance) {
     return dbInstance;
   }
-  try {
-    mongoClient = new MongoClient(uri);
-    await mongoClient.connect();
-    dbInstance = mongoClient.db(); // Connects to the default db specified in connection string
-    console.log("Connected successfully to MongoDB Atlas.");
-    return dbInstance;
-  } catch (error) {
-    console.error("MongoDB Connection Failed, using local file DB fallback:", error);
+  if (connectPromise) {
+    return connectPromise;
+  }
+
+  const now = Date.now();
+  if (now - lastFailedTime < FAIL_COOLDOWN_MS) {
     return null;
   }
+
+  connectPromise = (async () => {
+    try {
+      mongoClient = new MongoClient(uri, {
+        connectTimeoutMS: 5000,
+        socketTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 5000,
+      });
+      await mongoClient.connect();
+      dbInstance = mongoClient.db(); // Connects to the default db specified in connection string
+      console.log("Connected successfully to MongoDB Atlas.");
+      return dbInstance;
+    } catch (error) {
+      lastFailedTime = Date.now();
+      console.error("MongoDB Connection Failed, using local file DB fallback:", error);
+      dbInstance = null;
+      return null;
+    } finally {
+      connectPromise = null;
+    }
+  })();
+
+  return connectPromise;
 }
 
 let writeQueue = Promise.resolve();
