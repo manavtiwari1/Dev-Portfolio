@@ -94,6 +94,13 @@ export function isAdminRequest(req) {
   return Boolean(expected && provided === expected);
 }
 
+const ARRAY_KEYS = new Set([
+  "portfolio_skills",
+  "portfolio_qualifications",
+  "portfolio_certifications",
+  "portfolio_projects",
+]);
+
 export async function getValue(key) {
   const db = await getMongoDB();
   if (db) {
@@ -132,6 +139,67 @@ export async function getValue(key) {
         });
         return JSON.stringify(cleanDocs);
       }
+
+      if (ARRAY_KEYS.has(key)) {
+        const collection = db.collection(key);
+        let docs = await collection.find({}).sort({ orderIndex: 1 }).toArray();
+        
+        // Auto-migration
+        if (docs.length === 0) {
+          const storageColl = db.collection("storage");
+          const oldDoc = await storageColl.findOne({ _id: key });
+          if (oldDoc && typeof oldDoc.value === "string") {
+            try {
+              const parsed = JSON.parse(oldDoc.value);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                const docsToInsert = parsed.map((item, idx) => {
+                  const cleanItem = { ...item, orderIndex: idx };
+                  delete cleanItem._id;
+                  return cleanItem;
+                });
+                await collection.insertMany(docsToInsert);
+                docs = await collection.find({}).sort({ orderIndex: 1 }).toArray();
+                await storageColl.deleteOne({ _id: key });
+              }
+            } catch (err) {
+              console.error(`Failed to migrate ${key}:`, err);
+            }
+          }
+        }
+        
+        const cleanDocs = docs.map(doc => {
+          const cleanDoc = { ...doc };
+          delete cleanDoc._id;
+          delete cleanDoc.orderIndex;
+          return cleanDoc;
+        });
+        return JSON.stringify(cleanDocs);
+      }
+
+      if (key === "portfolio_chatbot") {
+        const collection = db.collection("portfolio_chatbot");
+        const doc = await collection.findOne({});
+        if (doc) {
+          const cleanDoc = { ...doc };
+          delete cleanDoc._id;
+          return JSON.stringify(cleanDoc);
+        }
+        // Auto-migration
+        const storageColl = db.collection("storage");
+        const oldDoc = await storageColl.findOne({ _id: "portfolio_chatbot" });
+        if (oldDoc && typeof oldDoc.value === "string") {
+          try {
+            const parsed = JSON.parse(oldDoc.value);
+            if (parsed && typeof parsed === "object") {
+              await collection.insertOne(parsed);
+              await storageColl.deleteOne({ _id: "portfolio_chatbot" });
+              return oldDoc.value;
+            }
+          } catch (err) {
+            console.error("Failed to migrate chatbot answers:", err);
+          }
+        }
+      }
       
       const collection = db.collection("storage");
       const doc = await collection.findOne({ _id: key });
@@ -169,6 +237,41 @@ export async function setValue(key, value) {
           }
         } catch (parseErr) {
           console.error("Failed to parse contact_messages JSON, storing as regular key:", parseErr);
+        }
+      }
+
+      if (ARRAY_KEYS.has(key)) {
+        const collection = db.collection(key);
+        try {
+          const parsed = JSON.parse(value);
+          if (Array.isArray(parsed)) {
+            await collection.deleteMany({});
+            if (parsed.length > 0) {
+              const docsToInsert = parsed.map((item, idx) => {
+                const cleanItem = { ...item, orderIndex: idx };
+                delete cleanItem._id;
+                return cleanItem;
+              });
+              await collection.insertMany(docsToInsert);
+            }
+            return;
+          }
+        } catch (parseErr) {
+          console.error(`Failed to parse ${key} JSON:`, parseErr);
+        }
+      }
+
+      if (key === "portfolio_chatbot") {
+        const collection = db.collection("portfolio_chatbot");
+        try {
+          const parsed = JSON.parse(value);
+          if (parsed && typeof parsed === "object") {
+            await collection.deleteMany({});
+            await collection.insertOne(parsed);
+            return;
+          }
+        } catch (err) {
+          console.error("Failed to save chatbot answers to dedicated collection:", err);
         }
       }
       
