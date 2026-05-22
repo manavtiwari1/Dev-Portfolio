@@ -746,8 +746,15 @@
       border-radius: 16px;
     }
 
-    .card-3d:hover .card-3d-inner {
+    .card-3d:hover .card-3d-inner,
+    .card-3d:focus-within .card-3d-inner {
       transform: rotateY(180deg);
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .card-3d.flipped .card-3d-inner {
+        transform: rotateY(180deg);
+      }
     }
 
     /* shared face */
@@ -1610,14 +1617,16 @@
       background: linear-gradient(90deg, transparent, var(--teal), transparent);
     }
 
-    .social-card:hover {
+    .social-card:hover,
+    .social-card:active {
       transform: scale(1.02) rotateX(-3deg) translateZ(8px);
       border-color: rgba(0, 229, 255, 0.6);
       box-shadow: 0 16px 44px rgba(0, 229, 255, 0.2), 0 0 0 1px rgba(0, 229, 255, 0.35);
       background: rgba(4, 18, 28, 0.85);
     }
 
-    .social-card:hover::before {
+    .social-card:hover::before,
+    .social-card:active::before {
       opacity: 1;
     }
 
@@ -4128,6 +4137,16 @@
         });
         btn.addEventListener('mouseleave', () => {
           btn.style.transform = '';
+        });
+      });
+
+      /* Mobile touch card flip */
+      document.querySelectorAll('.card-3d').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            card.classList.toggle('flipped');
+          }
         });
       });
 
