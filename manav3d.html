@@ -729,15 +729,17 @@
       border-radius: 16px;
     }
 
-    /* Desktop: flip on hover (non-touch devices) */
-    html:not(.touch-device) .card-3d:hover .card-3d-inner,
-    html:not(.touch-device) .card-3d:focus-within .card-3d-inner {
-      transform: rotateY(180deg);
+    /* Desktop: flip on hover */
+    @media (hover: hover) {
+      .card-3d:hover .card-3d-inner,
+      .card-3d:focus-within .card-3d-inner {
+        transform: rotateY(180deg);
+      }
     }
 
-    /* Touch devices: flip only via JS .flipped class (tap to flip) */
-    html.touch-device .card-3d.flipped .card-3d-inner {
-      transform: rotateY(180deg);
+    /* Flip via JS .flipped class (works on both touch & desktop clicks) */
+    .card-3d.flipped .card-3d-inner {
+      transform: rotateY(180deg) !important;
     }
 
     /* shared face */
@@ -4228,9 +4230,8 @@
           doFlip(card);
         }, { passive: false });
 
-        // Fallback click listener for touch devices (if touchend didn't call preventDefault or was not triggered)
+        // Click listener as standard handler/fallback for all devices (touch or desktop click)
         document.addEventListener('click', (e) => {
-          if (!document.documentElement.classList.contains('touch-device')) return;
           const card = e.target.closest('.card-3d');
           if (!card) return;
           doFlip(card);
