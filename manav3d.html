@@ -3570,17 +3570,21 @@
         });
       }
 
+      let _lastChatbotAnswersStr = '';
       async function loadChatbotAnswers() {
         try {
           const stored = await storage.get('portfolio_chatbot');
           if (!stored?.value) {
-            renderCustomQuestionChips();
-            return;
+            answers = { ...defaultChatbotAnswers };
+          } else {
+            answers = { ...defaultChatbotAnswers, ...JSON.parse(stored.value) };
           }
-          answers = { ...defaultChatbotAnswers, ...JSON.parse(stored.value) };
         } catch (err) {
           answers = { ...defaultChatbotAnswers };
         }
+        const currentStr = JSON.stringify(answers);
+        if (_lastChatbotAnswersStr === currentStr) return;
+        _lastChatbotAnswersStr = currentStr;
         renderCustomQuestionChips();
       }
 
@@ -3666,6 +3670,7 @@
         if (e.key === 'Escape' && shell.classList.contains('is-open')) closeChat();
       });
 
+      window._reloadChatbot = loadChatbotAnswers;
       loadChatbotAnswers();
       window.addEventListener('storage', e => {
         if (e.key === 'portfolio_chatbot') loadChatbotAnswers();
@@ -3717,11 +3722,16 @@
       return fallback;
     }
 
+    window._loadedDataCache = window._loadedDataCache || {};
+
     async function loadPortfolioSkills() {
       const grid = document.getElementById('skills-grid');
       if (!grid) return;
 
       const skills = await loadStoredList('portfolio_skills', defaultSkills);
+      const serialized = JSON.stringify(skills);
+      if (window._loadedDataCache['skills'] === serialized) return;
+      window._loadedDataCache['skills'] = serialized;
 
       grid.innerHTML = skills.map(skill => {
         const safeName = escapeHtml(skill.name || 'Untitled Skill');
@@ -3756,6 +3766,9 @@
       const list = document.getElementById('qualification-list');
       if (!list) return;
       const items = await loadStoredList('portfolio_qualifications', defaultQualifications);
+      const serialized = JSON.stringify(items);
+      if (window._loadedDataCache['qualifications'] === serialized) return;
+      window._loadedDataCache['qualifications'] = serialized;
 
       let html = `
         <div class="tl-deco-plus">+</div>
@@ -3799,6 +3812,10 @@
       const list = document.getElementById('certs');
       if (!list) return;
       const items = await loadStoredList('portfolio_certifications', defaultCertifications);
+      const serialized = JSON.stringify(items);
+      if (window._loadedDataCache['certifications'] === serialized) return;
+      window._loadedDataCache['certifications'] = serialized;
+
       list.innerHTML = items.map((item, index) => `
     <div class="cert-card">
       <div class="cert-icon ${index === 0 ? 'g' : ''}">${escapeHtml(item.icon || '🏆')}</div>
@@ -3823,6 +3840,10 @@
         }
       } catch { }
       if (!projects.length) return; /* keep static HTML if no admin data yet */
+
+      const serialized = JSON.stringify(projects);
+      if (window._loadedDataCache['projects'] === serialized) return;
+      window._loadedDataCache['projects'] = serialized;
 
       track.innerHTML = projects.map((proj, i) => {
         const tags = (proj.tags || []).map(t => `<span class="proj-badge">${escapeHtml(t)}</span>`).join('');
@@ -3867,6 +3888,9 @@
       loadPortfolioQualifications();
       loadPortfolioCertifications();
       loadPortfolioProjects();
+      if (typeof window._reloadChatbot === 'function') {
+        window._reloadChatbot();
+      }
     }
 
     loadPortfolioContent();
@@ -3875,10 +3899,10 @@
         loadPortfolioContent();
       }
     });
-    /* Only reload portfolio content if data is stale (> 5 min since last load)
-       Prevents hammering the API on every tab switch / focus event */
+    /* Reload portfolio content if data is stale (> 3 seconds since last load)
+       Allows fast sync when user is focusing or switching tabs */
     let _lastPortfolioLoad = Date.now();
-    const STALE_THRESHOLD = 5 * 60 * 1000; // 5 minutes
+    const STALE_THRESHOLD = 3000; // 3 seconds
     function maybeReloadPortfolio() {
       if (Date.now() - _lastPortfolioLoad > STALE_THRESHOLD) {
         _lastPortfolioLoad = Date.now();
@@ -3889,6 +3913,13 @@
       if (!document.hidden) maybeReloadPortfolio();
     });
     window.addEventListener('focus', maybeReloadPortfolio);
+
+    // Active tab polling: Check for updates every 4 seconds
+    setInterval(() => {
+      if (!document.hidden) {
+        maybeReloadPortfolio();
+      }
+    }, 4000);
 
 
 
