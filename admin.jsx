@@ -27,6 +27,7 @@ const DEFAULT_CERTIFICATIONS = [
   { id: "1", icon: "🏆", name: "Artificial Intelligence & Prompt Engineering", org: "Shivaji College, University of Delhi", badge: "2025" },
   { id: "2", icon: "🏅", name: "Microsoft Power BI", org: "Shivaji College, University of Delhi", badge: "2025" },
   { id: "3", icon: "🎖️", name: "Tableau", org: "Shivaji College, University of Delhi", badge: "2025" },
+  { id: "4", icon: "🥇", name: "Generative AI", org: "Coursera", badge: "2024" }
 ];
 
 const DEFAULT_SKILLS = [
