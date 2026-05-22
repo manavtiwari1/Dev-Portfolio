@@ -4195,9 +4195,6 @@
          preventDefault() on touchend stops the browser from firing
          synthetic hover/click events that would fight our .flipped class. */
       (function () {
-        let tapStartX = 0, tapStartY = 0;
-        const TAP_THRESHOLD = 12; // px — more than this = scroll, not tap
-
         function doFlip(card) {
           const grid = document.getElementById('skills-grid');
           if (!grid || !card) return;
@@ -4208,29 +4205,6 @@
           card.classList.toggle('flipped');
         }
 
-        document.addEventListener('touchstart', (e) => {
-          tapStartX = e.touches[0].clientX;
-          tapStartY = e.touches[0].clientY;
-        }, { passive: true });
-
-        document.addEventListener('touchend', (e) => {
-          // Skip if the carousel is currently being dragged
-          const track = document.getElementById('projTrack');
-          if (track && track.classList.contains('is-dragging')) return;
-
-          const dx = Math.abs(e.changedTouches[0].clientX - tapStartX);
-          const dy = Math.abs(e.changedTouches[0].clientY - tapStartY);
-          if (dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) return; // was a scroll
-
-          const card = e.target.closest('.card-3d');
-          if (!card) return;
-
-          // Prevent synthetic mouse/hover events so CSS :hover doesn't conflict
-          e.preventDefault();
-          doFlip(card);
-        }, { passive: false });
-
-        // Click listener as standard handler/fallback for all devices (touch or desktop click)
         document.addEventListener('click', (e) => {
           const card = e.target.closest('.card-3d');
           if (!card) return;
