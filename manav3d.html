@@ -729,23 +729,15 @@
       border-radius: 16px;
     }
 
-    /* Desktop: flip on hover */
-    @media (hover: hover) {
-      .card-3d:hover .card-3d-inner,
-      .card-3d:focus-within .card-3d-inner {
-        transform: rotateY(180deg);
-      }
+    /* Desktop: flip on hover (non-touch devices) */
+    html:not(.touch-device) .card-3d:hover .card-3d-inner,
+    html:not(.touch-device) .card-3d:focus-within .card-3d-inner {
+      transform: rotateY(180deg);
     }
 
-    /* Mobile/touch: flip only via JS .flipped class (tap to flip) */
-    @media (hover: none) {
-      .card-3d:hover .card-3d-inner,
-      .card-3d:focus-within .card-3d-inner {
-        transform: none !important;
-      }
-      .card-3d.flipped .card-3d-inner {
-        transform: rotateY(180deg);
-      }
+    /* Touch devices: flip only via JS .flipped class (tap to flip) */
+    html.touch-device .card-3d.flipped .card-3d-inner {
+      transform: rotateY(180deg);
     }
 
     /* shared face */
@@ -2872,6 +2864,7 @@
       a card to flip it ↻</p>
     <script>
       if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        document.documentElement.classList.add('touch-device');
         var h = document.getElementById('flip-hint-text');
         if (h) h.textContent = 'Tap a card to flip it ↻';
       }
@@ -4234,6 +4227,14 @@
           e.preventDefault();
           doFlip(card);
         }, { passive: false });
+
+        // Fallback click listener for touch devices (if touchend didn't call preventDefault or was not triggered)
+        document.addEventListener('click', (e) => {
+          if (!document.documentElement.classList.contains('touch-device')) return;
+          const card = e.target.closest('.card-3d');
+          if (!card) return;
+          doFlip(card);
+        });
       })();
 
       /* Init */
