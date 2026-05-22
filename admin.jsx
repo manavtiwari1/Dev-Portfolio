@@ -117,6 +117,7 @@ const S = {
   navBtns: { display:"flex", gap:"0.5rem" },
   tabBtn: (active) => ({ background: active ? "linear-gradient(135deg,#00e5ff,#1a6cf5)" : "rgba(0,229,255,0.07)", color: active ? "#000" : "#00e5ff", border: active ? "none" : "1px solid rgba(0,229,255,0.2)", borderRadius:50, padding:".45rem 1.1rem", cursor:"pointer", fontWeight:700, fontSize:".8rem", fontFamily:"inherit", transition:"all .2s" }),
   logoutBtn: { background:"rgba(255,90,106,0.1)", color:"#ff5a6a", border:"1px solid rgba(255,90,106,0.3)", borderRadius:50, padding:".45rem 1rem", cursor:"pointer", fontSize:".8rem", fontFamily:"inherit" },
+  visitBtn: { background:"rgba(0,229,255,0.1)", color:"#00e5ff", border:"1px solid rgba(0,229,255,0.3)", borderRadius:50, padding:".45rem 1.1rem", cursor:"pointer", fontSize:".8rem", fontFamily:"inherit", textDecoration:"none", display:"inline-flex", alignItems:"center" },
 
   main: { padding:"1.5rem", maxWidth:900, margin:"0 auto" },
   pageTitle: { fontFamily:"'Orbitron',monospace", fontSize:"1.2rem", fontWeight:800, color:"#00e5ff", marginBottom:".3rem" },
@@ -610,6 +611,7 @@ export default function AdminPanel() {
       <div style={S.nav}>
         <div style={S.navTitle}>⚡ ADMIN — CODE WITH MANAV</div>
         <div style={S.navBtns}>
+          <a href="/" target="_blank" rel="noopener noreferrer" style={S.visitBtn}>🌐 Visit Website</a>
           <button style={S.tabBtn(tab==="messages")} onClick={()=>setTab("messages")}>
             📬 Messages {unread > 0 && <span style={{background:"#00e5ff",color:"#000",borderRadius:10,padding:"0 5px",fontSize:".65rem",marginLeft:4}}>{unread}</span>}
           </button>
