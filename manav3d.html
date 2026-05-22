@@ -3,8 +3,27 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Manav Tiwari — Portfolio</title>
+
+  <!-- PWA / App-like experience -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#00e5ff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Manav.dev" />
+  <link rel="apple-touch-icon" href="/Photos/logobg.png" />
+
+  <!-- SEO -->
+  <meta name="description" content="Manav Tiwari — Full Stack Developer working at the intersection of AI, cloud, and real-world problem solving." />
+  <meta name="author" content="Manav Tiwari" />
+  <meta property="og:title" content="Manav Tiwari — Portfolio" />
+  <meta property="og:description" content="Full Stack Developer · AI · Cloud · Data" />
+  <meta property="og:image" content="/Photos/manav.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <link
     href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
@@ -51,6 +70,14 @@
       pointer-events: none;
     }
 
+    /* ── PWA SAFE AREA & DYNAMIC VIEWPORT ── */
+    :root {
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+    }
+
 
 
 
@@ -65,6 +92,8 @@
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       padding: 14px 20vw;
+      /* Account for notch/status bar on iOS standalone mode */
+      padding-top: calc(14px + var(--safe-top));
       background: rgba(3, 9, 11, 0.92);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
@@ -304,7 +333,10 @@
 
     /* ── HERO ── */
     #hero {
-      min-height: 100vh;
+      /* Use dvh (dynamic viewport height) — accounts for mobile browser bars
+         shrinking/hiding so content fills the real visible area */
+      min-height: 100dvh;
+      min-height: 100vh; /* fallback for older browsers */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1899,6 +1931,8 @@
       background: rgba(3, 9, 11, 0.95);
       border-top: 1px solid var(--border);
       padding: 2rem 5vw;
+      /* Safe area for home indicator on iOS */
+      padding-bottom: calc(2rem + var(--safe-bottom));
       text-align: center;
       position: relative;
       z-index: 1;
