@@ -237,7 +237,13 @@ export default function AdminPanel() {
         }
 
         if (expRes && expRes.value) {
-          setExperiences(JSON.parse(expRes.value));
+          const parsed = JSON.parse(expRes.value);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setExperiences(parsed);
+          } else {
+            setExperiences(DEFAULT_EXPERIENCE);
+            storage.set('portfolio_workexperience', JSON.stringify(DEFAULT_EXPERIENCE), pw).catch(() => {});
+          }
         } else {
           setExperiences(DEFAULT_EXPERIENCE);
           storage.set('portfolio_workexperience', JSON.stringify(DEFAULT_EXPERIENCE), pw).catch(() => {});

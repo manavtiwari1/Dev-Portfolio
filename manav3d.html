@@ -3798,7 +3798,7 @@
         const stored = await storage.get(key);
         if (stored && stored.value) {
           const parsed = JSON.parse(stored.value);
-          if (Array.isArray(parsed)) return parsed;
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
         }
         await storage.set(key, JSON.stringify(fallback));
       } catch (err) { }
