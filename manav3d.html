@@ -168,9 +168,9 @@
     }
 
     .nav-right {
-      display: none;
+      display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
       justify-self: end;
     }
 
@@ -179,7 +179,7 @@
       background: transparent;
       border: none;
       cursor: pointer;
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -647,12 +647,15 @@
         padding: 14px 5vw;
       }
 
-      .desktop-nav,
-      .theme-btn {
+      .desktop-nav {
         display: none;
       }
 
       .nav-right {
+        display: flex;
+      }
+
+      .hamburger {
         display: flex;
       }
 
@@ -2758,10 +2761,232 @@
         max-width: 92%;
       }
     }
+
+    /* ── LIGHT / WHITE THEME SWITCHER ── */
+    body.light {
+      --bg: #f4fafc;
+      --white: #0a1b1f;
+      --muted: #5e848c;
+      --card: rgba(220, 240, 245, 0.85);
+      --border: rgba(0, 180, 204, 0.22);
+      --glow: 0 0 30px rgba(0, 180, 204, 0.15);
+      --glow2: 0 0 60px rgba(0, 180, 204, 0.25);
+    }
+
+    /* Smooth transitions for theme switching */
+    body, nav, .chatbot-panel, .about-content-card, .sec-title, .desktop-nav a, .theme-btn, .hamburger span, .proj-card, .tl-card, .cert-card, .social-card, .cf-input, .chatbot-message, .chatbot-chip, .chatbot-form, .chatbot-input {
+      transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+    }
+
+    /* Light Theme Button & Cute SVG Transitions */
+    .theme-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    body.light .theme-btn {
+      border-color: rgba(10, 27, 31, 0.15);
+    }
+
+    .theme-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--teal);
+    }
+
+    body.light .theme-btn:hover {
+      background: rgba(0, 229, 255, 0.08);
+      border-color: var(--teal2);
+    }
+
+    .theme-toggle-svg {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .theme-toggle-svg .sun-body {
+      transition: cx 0.5s cubic-bezier(0.4, 0, 0.2, 1), cy 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .theme-toggle-svg .mask-circle {
+      cx: 18;
+      cy: 6;
+      r: 5;
+      transition: cx 0.5s cubic-bezier(0.4, 0, 0.2, 1), cy 0.5s cubic-bezier(0.4, 0, 0.2, 1), r 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .theme-toggle-svg .sun-rays {
+      transform-origin: center;
+      transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      transform: scale(0) rotate(45deg);
+    }
+
+    .theme-toggle-svg {
+      transform: rotate(40deg);
+    }
+
+    body.light .theme-toggle-svg {
+      transform: rotate(90deg);
+    }
+
+    body.light .theme-toggle-svg .mask-circle {
+      cx: 28;
+      cy: 0;
+      r: 0;
+    }
+
+    body.light .theme-toggle-svg .sun-rays {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+
+    /* Light Mode CSS Overrides */
+    body.light nav {
+      background: rgba(244, 250, 252, 0.95);
+      border-bottom: 1px solid rgba(0, 180, 204, 0.18);
+    }
+
+    body.light .desktop-nav a {
+      color: rgba(10, 27, 31, 0.75);
+    }
+
+    body.light .desktop-nav a:hover,
+    body.light .desktop-nav a.active {
+      color: var(--teal2);
+    }
+
+    body.light #nav-overlay .nav-link {
+      color: rgba(10, 27, 31, 0.6);
+    }
+
+    body.light #nav-overlay .nav-link:hover,
+    body.light #nav-overlay .nav-link.active-link {
+      color: var(--teal2);
+    }
+
+    body.light .nav-close-btn {
+      color: var(--white);
+      border-color: rgba(10, 27, 31, 0.25);
+    }
+
+    body.light .btn-solid {
+      background: #0a1b1f;
+      color: #f4fafc;
+    }
+
+    body.light .btn-ghost {
+      background: rgba(255, 255, 255, 0.85);
+      color: #0a1b1f;
+      border-color: rgba(10, 27, 31, 0.35);
+    }
+
+    body.light .card-back {
+      background: linear-gradient(135deg, rgba(220, 240, 245, 0.97), rgba(235, 246, 248, 0.97));
+      border-color: rgba(0, 180, 204, 0.4);
+      box-shadow: 0 0 40px rgba(0, 180, 204, 0.1), inset 0 0 28px rgba(0, 180, 204, 0.04);
+    }
+
+    body.light .proj-card {
+      background: rgba(235, 246, 248, 0.85);
+      border-color: rgba(0, 180, 204, 0.2);
+    }
+
+    body.light .proj-card.is-active {
+      box-shadow:
+        0 0 0 1px rgba(0, 180, 204, 0.35),
+        0 0 60px rgba(0, 180, 204, 0.15),
+        0 30px 60px rgba(0, 0, 0, 0.12);
+    }
+
+    body.light .proj-desc {
+      color: rgba(10, 27, 31, 0.85);
+    }
+
+    body.light .proj-dot {
+      background: rgba(0, 180, 204, 0.2);
+    }
+
+    body.light .proj-dot.is-active {
+      background: var(--teal2);
+    }
+
+    body.light .tl-card {
+      border-color: rgba(0, 180, 204, 0.18);
+    }
+
+    body.light .tl-card:hover {
+      border-color: var(--teal2);
+      box-shadow: 0 8px 30px rgba(0, 180, 204, 0.12);
+    }
+
+    body.light .cert-card {
+      border-color: rgba(0, 180, 204, 0.18);
+    }
+
+    body.light .cert-icon {
+      background: rgba(255, 255, 255, 0.6);
+      border-color: rgba(0, 180, 204, 0.2);
+    }
+
+    body.light .social-card {
+      background: rgba(235, 246, 248, 0.85);
+      border-color: rgba(0, 180, 204, 0.25);
+    }
+
+    body.light .cf-input {
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(0, 180, 204, 0.25);
+    }
+
+    body.light .chatbot-panel {
+      background: linear-gradient(145deg, rgba(230, 245, 248, 0.96), rgba(240, 248, 255, 0.96));
+      border-color: rgba(0, 180, 204, 0.4);
+      box-shadow: 0 22px 80px rgba(0, 0, 0, 0.12), 0 0 50px rgba(0, 180, 204, 0.1);
+    }
+
+    body.light .chatbot-head {
+      border-bottom-color: rgba(0, 180, 204, 0.2);
+    }
+
+    body.light .chatbot-message.bot {
+      color: rgba(10, 27, 31, 0.94);
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 180, 204, 0.2);
+    }
+
+    body.light .chatbot-form {
+      border-top-color: rgba(0, 180, 204, 0.2);
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    body.light .chatbot-input {
+      border-color: rgba(0, 180, 204, 0.25);
+      background: rgba(255, 255, 255, 0.85);
+      color: #0a1b1f;
+    }
+
+    body.light .chatbot-chip {
+      color: rgba(10, 27, 31, 0.9);
+      background: rgba(0, 180, 204, 0.08);
+      border-color: rgba(0, 180, 204, 0.25);
+    }
   </style>
 </head>
 
 <body>
+  <script>
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light');
+    }
+  </script>
 
   <canvas id="bg-canvas"></canvas>
   <div class="scanlines"></div>
@@ -2797,6 +3022,25 @@
     </div>
 
     <div class="nav-right">
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">
+        <svg class="theme-toggle-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <mask id="moon-mask">
+            <rect x="0" y="0" width="24" height="24" fill="white" />
+            <circle cx="18" cy="6" r="5" fill="black" class="mask-circle" />
+          </mask>
+          <circle cx="12" cy="12" r="5" fill="currentColor" mask="url(#moon-mask)" class="sun-body" />
+          <g class="sun-rays" stroke="currentColor">
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </g>
+        </svg>
+      </button>
       <button class="hamburger" id="ham-btn" onclick="openNav()">
         <span></span><span></span><span></span>
       </button>
@@ -3589,11 +3833,21 @@
       const clock = new THREE.Clock();
       let lastFrame = 0;
       const frameInterval = isMobile ? 50 : 16; // ~20fps on mobile, ~60fps on desktop
+      let wasLight = false;
       function animate(now) {
         requestAnimationFrame(animate);
         if (document.hidden) return; // skip when tab is hidden
         if (now - lastFrame < frameInterval) return; // throttle on mobile
         lastFrame = now;
+
+        const isLightMode = document.body.classList.contains('light');
+        if (isLightMode !== wasLight) {
+          wasLight = isLightMode;
+          particleMat.blending = isLightMode ? THREE.NormalBlending : THREE.AdditiveBlending;
+          particleMat.opacity = isLightMode ? 0.35 : (isMobile ? 0.55 : 0.7);
+          particleMat.needsUpdate = true;
+        }
+
         const t = clock.getElapsedTime();
         particles.rotation.y = t * (isMobile ? 0.01 : 0.02);
         particles.rotation.x = t * 0.008;
@@ -4401,6 +4655,30 @@
           const card = e.target.closest('.card-3d');
           if (!card) return;
           doFlip(card);
+        });
+      })();
+
+      // ── THEME SWITCHER LOGIC ──
+      (function () {
+        const themeToggle = document.getElementById('themeToggle');
+        if (!themeToggle) return;
+
+        // Correct the meta theme-color on page load if in light mode
+        if (document.body.classList.contains('light')) {
+          const metaTheme = document.querySelector('meta[name="theme-color"]');
+          if (metaTheme) metaTheme.setAttribute('content', '#f4fafc');
+        }
+
+        themeToggle.addEventListener('click', () => {
+          document.body.classList.toggle('light');
+          const isLight = document.body.classList.contains('light');
+          localStorage.setItem('theme', isLight ? 'light' : 'dark');
+
+          // Update theme-color meta tag for PWA address bar styling
+          const metaTheme = document.querySelector('meta[name="theme-color"]');
+          if (metaTheme) {
+            metaTheme.setAttribute('content', isLight ? '#f4fafc' : '#00e5ff');
+          }
         });
       })();
 
