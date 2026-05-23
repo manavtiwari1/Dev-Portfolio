@@ -3846,7 +3846,7 @@
     async function loadPortfolioExperience() {
       const list = document.getElementById('experience-list');
       if (!list) return;
-      const items = await loadStoredList('portfolio_experience', defaultExperiences);
+      const items = await loadStoredList('portfolio_workexperience', defaultExperiences);
 
       let html = `
         <div class="tl-deco-plus">+</div>
@@ -4020,7 +4020,7 @@
 
     loadPortfolioContent();
     window.addEventListener('storage', e => {
-      if (['portfolio_skills', 'portfolio_experience', 'portfolio_qualifications', 'portfolio_certifications', 'portfolio_projects'].includes(e.key)) {
+      if (['portfolio_skills', 'portfolio_workexperience', 'portfolio_qualifications', 'portfolio_certifications', 'portfolio_projects'].includes(e.key)) {
         loadPortfolioContent();
       }
     });

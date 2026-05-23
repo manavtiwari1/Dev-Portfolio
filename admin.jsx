@@ -210,7 +210,7 @@ export default function AdminPanel() {
           storage.get('contact_messages', pw).catch(() => null),
           storage.get('portfolio_skills', pw).catch(() => null),
           storage.get('portfolio_qualifications', pw).catch(() => null),
-          storage.get('portfolio_experience', pw).catch(() => null),
+          storage.get('portfolio_workexperience', pw).catch(() => null),
           storage.get('portfolio_certifications', pw).catch(() => null),
           storage.get('portfolio_projects', pw).catch(() => null),
           storage.get('portfolio_chatbot', pw).catch(() => null),
@@ -240,7 +240,7 @@ export default function AdminPanel() {
           setExperiences(JSON.parse(expRes.value));
         } else {
           setExperiences(DEFAULT_EXPERIENCE);
-          storage.set('portfolio_experience', JSON.stringify(DEFAULT_EXPERIENCE), pw).catch(() => {});
+          storage.set('portfolio_workexperience', JSON.stringify(DEFAULT_EXPERIENCE), pw).catch(() => {});
         }
 
         if (cRes && cRes.value) {
@@ -285,7 +285,7 @@ export default function AdminPanel() {
 
   const saveExperiences = async (updated) => {
     setExperiences(updated);
-    try { await storage.set('portfolio_experience', JSON.stringify(updated), pw); } catch {}
+    try { await storage.set('portfolio_workexperience', JSON.stringify(updated), pw); } catch {}
   };
 
   const saveCertifications = async (updated) => {
