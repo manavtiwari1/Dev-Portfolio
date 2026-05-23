@@ -2766,9 +2766,9 @@
     body.light {
       --bg: #f4fafc;
       --white: #0a1b1f;
-      --muted: #5e848c;
+      --muted: #1f3a40;       /* Darker, high-contrast slate-teal for general muted text */
       --card: rgba(220, 240, 245, 0.85);
-      --border: rgba(0, 180, 204, 0.22);
+      --border: rgba(0, 180, 204, 0.25);
       --glow: 0 0 30px rgba(0, 180, 204, 0.15);
       --glow2: 0 0 60px rgba(0, 180, 204, 0.25);
     }
@@ -2848,7 +2848,7 @@
       transform: scale(1) rotate(0deg);
     }
 
-    /* Light Mode CSS Overrides */
+    /* Light Mode CSS Overrides with enhanced readability */
     body.light nav {
       background: rgba(244, 250, 252, 0.95);
       border-bottom: 1px solid rgba(0, 180, 204, 0.18);
@@ -2877,6 +2877,14 @@
       border-color: rgba(10, 27, 31, 0.25);
     }
 
+    body.light .hero-hello {
+      color: rgba(10, 27, 31, 0.95);
+    }
+
+    body.light .hero-desc {
+      color: rgba(10, 27, 31, 0.88);
+    }
+
     body.light .btn-solid {
       background: #0a1b1f;
       color: #f4fafc;
@@ -2888,12 +2896,31 @@
       border-color: rgba(10, 27, 31, 0.35);
     }
 
+    /* About Me readable overrides */
+    body.light .about-content-card p {
+      color: rgba(10, 27, 31, 0.88) !important;
+    }
+
+    body.light .about-content-card ul li {
+      color: rgba(10, 27, 31, 0.88) !important;
+    }
+
+    body.light .about-content-card {
+      border-color: rgba(0, 180, 204, 0.22);
+    }
+
+    /* Skills Card Back readable overrides */
     body.light .card-back {
       background: linear-gradient(135deg, rgba(220, 240, 245, 0.97), rgba(235, 246, 248, 0.97));
       border-color: rgba(0, 180, 204, 0.4);
       box-shadow: 0 0 40px rgba(0, 180, 204, 0.1), inset 0 0 28px rgba(0, 180, 204, 0.04);
     }
 
+    body.light .card-back-desc {
+      color: rgba(10, 27, 31, 0.88) !important;
+    }
+
+    /* Projects Carousel readable overrides */
     body.light .proj-card {
       background: rgba(235, 246, 248, 0.85);
       border-color: rgba(0, 180, 204, 0.2);
@@ -2907,7 +2934,7 @@
     }
 
     body.light .proj-desc {
-      color: rgba(10, 27, 31, 0.85);
+      color: rgba(10, 27, 31, 0.88) !important;
     }
 
     body.light .proj-dot {
@@ -2918,6 +2945,13 @@
       background: var(--teal2);
     }
 
+    body.light .proj-btn-gh {
+      background: rgba(0, 0, 0, 0.05);
+      color: #0a1b1f;
+      border-color: rgba(10, 27, 31, 0.25);
+    }
+
+    /* Qualifications readable overrides */
     body.light .tl-card {
       border-color: rgba(0, 180, 204, 0.18);
     }
@@ -2927,6 +2961,17 @@
       box-shadow: 0 8px 30px rgba(0, 180, 204, 0.12);
     }
 
+    body.light .tl-desc {
+      color: rgba(10, 27, 31, 0.85) !important;
+    }
+
+    body.light .tl-badge {
+      background: rgba(0, 0, 0, 0.06);
+      border-color: rgba(10, 27, 31, 0.15);
+      color: #1f3d45;
+    }
+
+    /* Certifications readable overrides */
     body.light .cert-card {
       border-color: rgba(0, 180, 204, 0.18);
     }
@@ -2936,16 +2981,33 @@
       border-color: rgba(0, 180, 204, 0.2);
     }
 
+    body.light .cert-badge {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(10, 27, 31, 0.12);
+      color: #244149;
+    }
+
+    /* Socials readable overrides */
     body.light .social-card {
       background: rgba(235, 246, 248, 0.85);
       border-color: rgba(0, 180, 204, 0.25);
     }
 
+    body.light .social-name {
+      color: #0a1b1f !important;
+    }
+
+    body.light .social-sub {
+      color: rgba(10, 27, 31, 0.72) !important;
+    }
+
+    /* Contact form readable overrides */
     body.light .cf-input {
       background: rgba(255, 255, 255, 0.85);
       border-color: rgba(0, 180, 204, 0.25);
     }
 
+    /* Chatbot readable overrides */
     body.light .chatbot-panel {
       background: linear-gradient(145deg, rgba(230, 245, 248, 0.96), rgba(240, 248, 255, 0.96));
       border-color: rgba(0, 180, 204, 0.4);
