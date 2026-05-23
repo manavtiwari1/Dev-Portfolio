@@ -38,7 +38,14 @@ async function getMongoDB() {
         serverSelectionTimeoutMS: 5000,
       });
       await mongoClient.connect();
-      dbInstance = mongoClient.db(); // Connects to the default db specified in connection string
+      let dbName = null;
+      try {
+        const match = uri.match(/mongodb(?:\+srv)?:\/\/[^\/]+\/([^?#\/]+)/);
+        if (match && match[1]) {
+          dbName = match[1];
+        }
+      } catch (e) {}
+      dbInstance = mongoClient.db(dbName || "portfolio");
       console.log("Connected successfully to MongoDB Atlas.");
       return dbInstance;
     } catch (error) {
@@ -105,6 +112,7 @@ export function isAdminRequest(req) {
 
 const ARRAY_KEYS = new Set([
   "portfolio_skills",
+  "portfolio_workexperience",
   "portfolio_qualifications",
   "portfolio_certifications",
   "portfolio_projects",
