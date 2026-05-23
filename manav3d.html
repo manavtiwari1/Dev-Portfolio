@@ -88,10 +88,10 @@
       left: 0;
       right: 0;
       z-index: 200;
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 220px 1fr 220px;
       align-items: center;
-      padding: 14px 8vw;
+      padding: 14px 6vw;
       /* Account for notch/status bar on iOS standalone mode */
       padding-top: calc(14px + var(--safe-top));
       background: rgba(3, 9, 11, 0.92);
@@ -104,8 +104,9 @@
       height: 44px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       text-decoration: none;
+      justify-self: start;
     }
 
     .nav-brand img {
@@ -117,8 +118,9 @@
     .desktop-nav {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: center;
       gap: 1.6rem;
+      justify-self: center;
     }
 
     .desktop-nav a {
