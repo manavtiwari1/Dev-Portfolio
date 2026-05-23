@@ -6,7 +6,7 @@ const API_BASE_URL = (() => {
   const configured = window.API_BASE_URL || import.meta.env?.VITE_API_BASE_URL;
   if (configured) return configured.replace(/\/$/, "");
   const host = window.location.hostname;
-  if (host === "localhost" || host === "127.0.0.1" || host.endsWith("onrender.com")) return "";
+  if (host === "localhost" || host === "127.0.0.1" || host.endsWith("manavtiwari.in") || host.endsWith("onrender.com")) return "";
   return RENDER_API_BASE;
 })();
 const apiUrl = (path) => `${API_BASE_URL}${path}`;
