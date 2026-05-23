@@ -24,6 +24,10 @@ const DEFAULT_QUALIFICATIONS = [
   { id: "2", role: "Student", org: "Mahashay Chunilal Saraswati Bal Mandir Sr. Sec. School, New Delhi", desc: "Completed high school with a focus on science and mathematics. Pass CBSE Board Exams with distinction.", badge: "2017 - 2024" },
 ];
 
+const DEFAULT_EXPERIENCE = [
+  { id: "1", role: "Internship", org: "Comnet Vison IT India Pvt ltd, Nehru Place", desc: "making SO PO and BTO", badge: "June 2025 to August 2025" },
+];
+
 const DEFAULT_CERTIFICATIONS = [
   { id: "1", icon: "🏆", name: "Artificial Intelligence & Prompt Engineering", org: "Shivaji College, University of Delhi", badge: "2025" },
   { id: "2", icon: "🏅", name: "Microsoft Power BI", org: "Shivaji College, University of Delhi", badge: "2025" },
@@ -184,6 +188,9 @@ export default function AdminPanel() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
   const [newSkill, setNewSkill] = useState({ icon:"🚀", name:"", tags:"" });
+  const [experiences, setExperiences] = useState([]);
+  const [newExperience, setNewExperience] = useState({ role:"", org:"", desc:"", badge:"" });
+  const [editingExperience, setEditingExperience] = useState(null);
   const [newQualification, setNewQualification] = useState({ role:"", org:"", desc:"", badge:"" });
   const [newCertification, setNewCertification] = useState({ icon:"🏆", name:"", org:"", badge:"" });
   const [newProject, setNewProject] = useState({ title:"", desc:"", thumb:"", tags:"", demo:"", github:"" });
@@ -199,10 +206,11 @@ export default function AdminPanel() {
     (async () => {
       setLoading(true);
       try {
-        const [mRes, sRes, qRes, cRes, pRes, botRes] = await Promise.all([
+        const [mRes, sRes, qRes, expRes, cRes, pRes, botRes] = await Promise.all([
           storage.get('contact_messages', pw).catch(() => null),
           storage.get('portfolio_skills', pw).catch(() => null),
           storage.get('portfolio_qualifications', pw).catch(() => null),
+          storage.get('portfolio_experience', pw).catch(() => null),
           storage.get('portfolio_certifications', pw).catch(() => null),
           storage.get('portfolio_projects', pw).catch(() => null),
           storage.get('portfolio_chatbot', pw).catch(() => null),
@@ -226,6 +234,13 @@ export default function AdminPanel() {
         } else {
           setQualifications(DEFAULT_QUALIFICATIONS);
           storage.set('portfolio_qualifications', JSON.stringify(DEFAULT_QUALIFICATIONS), pw).catch(() => {});
+        }
+
+        if (expRes && expRes.value) {
+          setExperiences(JSON.parse(expRes.value));
+        } else {
+          setExperiences(DEFAULT_EXPERIENCE);
+          storage.set('portfolio_experience', JSON.stringify(DEFAULT_EXPERIENCE), pw).catch(() => {});
         }
 
         if (cRes && cRes.value) {
@@ -266,6 +281,11 @@ export default function AdminPanel() {
   const saveQualifications = async (updated) => {
     setQualifications(updated);
     try { await storage.set('portfolio_qualifications', JSON.stringify(updated), pw); } catch {}
+  };
+
+  const saveExperiences = async (updated) => {
+    setExperiences(updated);
+    try { await storage.set('portfolio_experience', JSON.stringify(updated), pw); } catch {}
   };
 
   const saveCertifications = async (updated) => {
@@ -370,6 +390,51 @@ export default function AdminPanel() {
     };
     await saveQualifications([...qualifications, q]);
     setNewQualification({ role:"", org:"", desc:"", badge:"" });
+  };
+
+  const addExperience = async () => {
+    if (!newExperience.role.trim()) return;
+    const exp = {
+      id: Date.now().toString(),
+      role: newExperience.role.trim(),
+      org: newExperience.org.trim(),
+      desc: newExperience.desc.trim(),
+      badge: newExperience.badge.trim()
+    };
+    await saveExperiences([...experiences, exp]);
+    setNewExperience({ role:"", org:"", desc:"", badge:"" });
+  };
+
+  const deleteExperience = async (id) => {
+    await saveExperiences(experiences.filter(e => e.id !== id));
+    if (editingExperience?.id === id) setEditingExperience(null);
+  };
+
+  const startEditExperience = (exp) => {
+    setEditingExperience({
+      id: exp.id,
+      role: exp.role || "",
+      org: exp.org || "",
+      desc: exp.desc || "",
+      badge: exp.badge || "",
+    });
+  };
+
+  const saveEditExperience = async () => {
+    if (!editingExperience?.role?.trim()) return;
+    const updated = experiences.map(e =>
+      e.id === editingExperience.id
+        ? {
+            ...e,
+            role: editingExperience.role.trim(),
+            org: editingExperience.org.trim(),
+            desc: editingExperience.desc.trim(),
+            badge: editingExperience.badge.trim(),
+          }
+        : e
+    );
+    await saveExperiences(updated);
+    setEditingExperience(null);
   };
 
   const deleteQualification = async (id) => {
@@ -617,6 +682,7 @@ export default function AdminPanel() {
           </button>
           <button style={S.tabBtn(tab==="projects")} onClick={()=>setTab("projects")}>🚀 Projects</button>
           <button style={S.tabBtn(tab==="skills")} onClick={()=>setTab("skills")}>🛠️ Skills</button>
+          <button style={S.tabBtn(tab==="experience")} onClick={()=>setTab("experience")}>Work Experience</button>
           <button style={S.tabBtn(tab==="qualifications")} onClick={()=>setTab("qualifications")}>Qualifications</button>
           <button style={S.tabBtn(tab==="certifications")} onClick={()=>setTab("certifications")}>Certifications</button>
           <button style={S.tabBtn(tab==="chatbot")} onClick={()=>setTab("chatbot")}>Manav AI</button>
@@ -854,6 +920,83 @@ export default function AdminPanel() {
             </div>
             <div style={{textAlign:"center",color:"#4a7a82",fontSize:".8rem",marginTop:"1rem"}}>
               {projects.length} project{projects.length!==1?'s':''} total · Changes save instantly
+            </div>
+          </>
+        ) : tab === "experience" ? (
+          <>
+            <div style={S.pageTitle}>Manage Work Experience</div>
+            <div style={S.pageSub}>Add, edit, or remove timeline items shown in the Work Experience section</div>
+
+            <div style={S.addBox}>
+              <div style={S.addTitle}>+ ADD WORK EXPERIENCE</div>
+              <div style={S.formGrid2}>
+                <div>
+                  <div style={S.fieldLabel}>JOB TYPE / TITLE</div>
+                  <input style={S.addInput} placeholder="Internship" value={newExperience.role} onChange={e=>setNewExperience(p=>({...p,role:e.target.value}))} />
+                </div>
+                <div>
+                  <div style={S.fieldLabel}>COMPANY / LOCATION</div>
+                  <input style={S.addInput} placeholder="Comnet Vison IT India Pvt ltd, Nehru Place" value={newExperience.org} onChange={e=>setNewExperience(p=>({...p,org:e.target.value}))} />
+                </div>
+              </div>
+              <div style={{marginBottom:".8rem"}}>
+                <div style={S.fieldLabel}>DESCRIPTION</div>
+                <textarea style={{...S.addInput,minHeight:90,resize:"vertical"}} placeholder="Description of work, tasks, and responsibilities" value={newExperience.desc} onChange={e=>setNewExperience(p=>({...p,desc:e.target.value}))} />
+              </div>
+              <div style={S.actionRow}>
+                <div style={{flex:"1 1 240px"}}>
+                  <div style={S.fieldLabel}>DURATION</div>
+                  <input style={S.addInput} placeholder="June 2025 to August 2025" value={newExperience.badge} onChange={e=>setNewExperience(p=>({...p,badge:e.target.value}))} />
+                </div>
+                <button style={S.addBtn} onClick={addExperience}>ADD WORK EXPERIENCE</button>
+              </div>
+            </div>
+
+            <div style={S.msgList}>
+              {experiences.map(exp => (
+                editingExperience?.id === exp.id ? (
+                  <div key={exp.id} style={{...S.addBox, border:"1px solid rgba(0,229,255,0.45)", boxShadow:"0 0 24px rgba(0,229,255,0.1)"}}>
+                    <div style={S.addTitle}>EDIT WORK EXPERIENCE</div>
+                    <div style={S.formGrid2}>
+                      <div>
+                        <div style={S.fieldLabel}>JOB TYPE / TITLE</div>
+                        <input style={S.addInput} value={editingExperience.role} onChange={e=>setEditingExperience(p=>({...p,role:e.target.value}))} />
+                      </div>
+                      <div>
+                        <div style={S.fieldLabel}>COMPANY / LOCATION</div>
+                        <input style={S.addInput} value={editingExperience.org} onChange={e=>setEditingExperience(p=>({...p,org:e.target.value}))} />
+                      </div>
+                    </div>
+                    <div style={{marginBottom:".8rem"}}>
+                      <div style={S.fieldLabel}>DESCRIPTION</div>
+                      <textarea style={{...S.addInput,minHeight:90,resize:"vertical"}} value={editingExperience.desc} onChange={e=>setEditingExperience(p=>({...p,desc:e.target.value}))} />
+                    </div>
+                    <div style={S.actionRow}>
+                      <div style={{flex:"1 1 240px"}}>
+                        <div style={S.fieldLabel}>DURATION</div>
+                        <input style={S.addInput} value={editingExperience.badge} onChange={e=>setEditingExperience(p=>({...p,badge:e.target.value}))} />
+                      </div>
+                      <button style={S.addBtn} onClick={saveEditExperience}>SAVE CHANGES</button>
+                      <button style={S.cancelBtn} onClick={()=>setEditingExperience(null)}>Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div key={exp.id} style={S.msgCard(true)}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem"}}>
+                      <div style={{minWidth:0}}>
+                        <div style={S.msgName}>{exp.role}</div>
+                        <div style={S.msgEmail}>{exp.org}</div>
+                      </div>
+                      <div style={S.cardActions}>
+                        <button style={S.editBtn} onClick={()=>startEditExperience(exp)}>Edit</button>
+                        <button style={S.removeBtn} onClick={()=>deleteExperience(exp.id)}>X</button>
+                      </div>
+                    </div>
+                    <div style={{...S.msgBody, marginTop:".4rem"}}>{exp.desc}</div>
+                    {exp.badge && <div style={{...S.tag, marginTop:".6rem", display:"inline-block"}}>{exp.badge}</div>}
+                  </div>
+                )
+              ))}
             </div>
           </>
         ) : tab === "qualifications" ? (

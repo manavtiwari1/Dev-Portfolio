@@ -14,7 +14,7 @@ const FAIL_COOLDOWN_MS = 30000; // 30 seconds cooldown after a failure
 
 // Lazily connect and cache MongoDB database instance
 async function getMongoDB() {
-  const uri = process.env.MONGODB_URI || "mongodb+srv://tiwarimanav118_db_user:Manav123@cluster0.oqebpy9.mongodb.net/portfolio?appName=Cluster0";
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb+srv://tiwarimanav118_db_user:Manav123@cluster0.oqebpy9.mongodb.net/portfolio?appName=Cluster0";
   if (!uri) {
     return null; // Gracefully fall back to local db.json
   }

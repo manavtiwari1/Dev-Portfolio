@@ -1967,6 +1967,7 @@
     /* ── MOBILE PERFORMANCE ── */
     @media (max-width: 768px) {
       /* Kill expensive effects on mobile */
+      #bg-canvas { display: none !important; }
       .scanlines { display: none !important; }
 
       /* Reduce backdrop-filter cost (full blur = GPU killer on mobile) */
@@ -2729,6 +2730,7 @@
     <a class="nav-link" href="#about" onclick="closeNav()">About</a>
     <a class="nav-link" href="#skills" onclick="closeNav()">Technical Arsenal</a>
     <a class="nav-link" href="#projects" onclick="closeNav()">Projects</a>
+    <a class="nav-link" href="#experience" onclick="closeNav()">Work Experience</a>
     <a class="nav-link" href="#qualifications" onclick="closeNav()">Qualifications</a>
     <a class="nav-link" href="#certifications" onclick="closeNav()">Certifications</a>
     <a class="nav-link" href="#social" onclick="closeNav()">My Socials</a>
@@ -2743,6 +2745,7 @@
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
       <a href="#qualifications">Qualifications</a>
       <a href="#certifications">Certifications</a>
       <a href="#social">Socials</a>
@@ -3147,6 +3150,35 @@
       <button class="proj-arrow" id="projNext" aria-label="Next project">→</button>
     </div>
     <p class="proj-swipe-hint">⟵ DRAG TO EXPLORE ⟶</p>
+  </section>
+
+  <!-- WORK EXPERIENCE -->
+  <section id="experience" class="section3d reveal">
+    <div class="sec-head">
+      <h2 class="sec-title">Work Experience</h2><span class="sec-line"></span>
+    </div>
+
+    <!-- Center-split alternating timeline -->
+    <div class="tl-wrap" id="experience-list">
+      <div class="tl-deco-plus">+</div>
+      <div class="tl-deco-circle"></div>
+
+      <!-- Initial loading placeholder (will be replaced by JS) -->
+      <div class="tl-row is-left">
+        <div class="tl-left">
+          <div class="tl-card">
+            <div class="tl-role">Internship</div>
+            <div class="tl-org">Comnet Vison IT India Pvt ltd, Nehru Place</div>
+            <div class="tl-desc">making SO PO and BTO</div>
+            <span class="tl-badge">June 2025 to August 2025</span>
+          </div>
+        </div>
+        <div class="tl-mid">
+          <div class="tl-dot-new"></div>
+        </div>
+        <div class="tl-empty"></div>
+      </div>
+    </div>
   </section>
 
   <!-- QUALIFICATIONS -->
@@ -3574,14 +3606,15 @@
       if (!shell || !launcher || !form || !input || !messages) return;
 
       const defaultChatbotAnswers = {
-        intro: "Hi, I am Manav AI. Ask me about Manav's skills, projects, qualifications, socials, or how to start a collaboration.",
+        intro: "Hi, I am Manav AI. Ask me about Manav's skills, experience, projects, qualifications, socials, or how to start a collaboration.",
         skills: "Manav's core skills include full stack web development, Generative AI, prompt engineering, Python, C/C++, data analysis, Microsoft Power BI, Tableau, Supabase, cloud workflows, Git, UI/UX design, and Discord bot development.",
+        experience: "Manav did an Internship at Comnet Vison IT India Pvt ltd, Nehru Place from June 2025 to August 2025, where he worked on making SO PO and BTO.",
         projects: "Featured work includes the Amplify Edge Discord Bot with AI-powered moderation and dynamic roles, plus the VIBRATIONS Fest Website with registration, Supabase auth, admin controls, and responsive event pages. Upcoming projects include Smart AI Interview and AI Smart Study Assistant.",
         futureProjects: "Manav is working on Smart AI Interview, a project that helps students practice interviews across multiple domains, including government exams and big tech companies. He is also working on an AI Smart Study Assistant for smarter learning and personalized study support.",
         contact: "You can use the contact form below to reach Manav for project collaborations, queries, or ideas. You can also email him directly at tiwarimanav118@gmail.com. I can take you there now.",
         qualification: "Manav is studying Computer Science at Shivaji College, University of Delhi, focused on AI and web development. He completed high school in New Delhi and has certifications in AI, prompt engineering, Power BI, Tableau, and Generative AI.",
         socials: "For future updates and quick connection, follow Manav on LinkedIn, GitHub, X, Instagram, YouTube, Twitch, Discord, Steam, or email. I can take you to the socials section now.",
-        fallback: "I can help with Manav's skills, projects, qualifications, socials, and contact details. Try asking: What can Manav build?",
+        fallback: "I can help with Manav's skills, experience, projects, qualifications, socials, and contact details. Try asking: What can Manav build?",
         customQuestions: []
       };
       let answers = { ...defaultChatbotAnswers };
@@ -3641,6 +3674,7 @@
         });
         if (customMatch?.answer) return customMatch.answer;
         if (q.includes('future project') || q.includes('upcoming project') || q.includes('working on') || q.includes('smart ai interview') || q.includes('study assistant')) return answers.futureProjects;
+        if (q.includes('experience') || q.includes('internship') || q.includes('job') || q.includes('comnet')) return answers.experience;
         if (q.includes('project') || q.includes('work') || q.includes('demo') || q.includes('github')) return answers.projects;
         if (q.includes('skill') || q.includes('tech') || q.includes('stack') || q.includes('build') || q.includes('developer')) return answers.skills;
         if (q.includes('social') || q.includes('linkedin') || q.includes('instagram') || q.includes('discord') || q.includes('connect') || q.includes('future') || q.includes('update') || q.includes('follow')) return answers.socials;
@@ -3730,6 +3764,10 @@
       { id: "2", role: "Student", org: "Mahashay Chunilal Saraswati Bal Mandir Sr. Sec. School, New Delhi", desc: "Completed high school with a focus on science and mathematics. Pass CBSE Board Exams with distinction.", badge: "2017 - 2024" }
     ];
 
+    const defaultExperiences = [
+      { id: "1", role: "Internship", org: "Comnet Vison IT India Pvt ltd, Nehru Place", desc: "making SO PO and BTO", badge: "June 2025 to August 2025" }
+    ];
+
     const defaultCertifications = [
       { id: "1", icon: "🏆", name: "Artificial Intelligence & Prompt Engineering", org: "Shivaji College, University of Delhi", badge: "2025" },
       { id: "2", icon: "🏅", name: "Microsoft Power BI", org: "Shivaji College, University of Delhi", badge: "2025" },
@@ -3796,6 +3834,49 @@
       </div></div>
     `;
       }).join('');
+    }
+
+    async function loadPortfolioExperience() {
+      const list = document.getElementById('experience-list');
+      if (!list) return;
+      const items = await loadStoredList('portfolio_experience', defaultExperiences);
+
+      let html = `
+        <div class="tl-deco-plus">+</div>
+        <div class="tl-deco-circle"></div>
+      `;
+
+      html += items.map((item, index) => {
+        const isLeft = index % 2 === 0;
+        const cardHtml = `
+          <div class="tl-card">
+            <div class="tl-role">${escapeHtml(item.role || 'Untitled')}</div>
+            <div class="tl-org">${escapeHtml(item.org || '')}</div>
+            <div class="tl-desc">${escapeHtml(item.desc || '')}</div>
+            <span class="tl-badge">${escapeHtml(item.badge || '')}</span>
+          </div>
+        `;
+
+        if (isLeft) {
+          return `
+            <div class="tl-row is-left">
+              <div class="tl-left">${cardHtml}</div>
+              <div class="tl-mid"><div class="tl-dot-new"></div></div>
+              <div class="tl-empty"></div>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="tl-row">
+              <div class="tl-empty"></div>
+              <div class="tl-mid"><div class="tl-dot-new"></div></div>
+              <div class="tl-right">${cardHtml}</div>
+            </div>
+          `;
+        }
+      }).join('');
+
+      list.innerHTML = html;
     }
 
     async function loadPortfolioQualifications() {
@@ -3921,6 +4002,7 @@
 
     function loadPortfolioContent() {
       loadPortfolioSkills();
+      loadPortfolioExperience();
       loadPortfolioQualifications();
       loadPortfolioCertifications();
       loadPortfolioProjects();
@@ -3931,7 +4013,7 @@
 
     loadPortfolioContent();
     window.addEventListener('storage', e => {
-      if (['portfolio_skills', 'portfolio_qualifications', 'portfolio_certifications', 'portfolio_projects'].includes(e.key)) {
+      if (['portfolio_skills', 'portfolio_experience', 'portfolio_qualifications', 'portfolio_certifications', 'portfolio_projects'].includes(e.key)) {
         loadPortfolioContent();
       }
     });
@@ -4004,7 +4086,7 @@
 
     // highlight whichever section is in view
     function updateActiveLink() {
-      const sections = ['hero', 'about', 'skills', 'qualifications', 'certifications', 'social', 'contact'];
+      const sections = ['hero', 'about', 'skills', 'projects', 'experience', 'qualifications', 'certifications', 'social', 'contact'];
       const links = document.querySelectorAll('#nav-overlay .nav-link');
       let current = 'hero';
       sections.forEach(id => {
@@ -4017,16 +4099,11 @@
         if (href === current) l.classList.add('active-link');
       });
     }
-    /* Debounced scroll — updateActiveLink fires at most once per 100ms */
-    let _scrollTicking = false;
+    let scrollTimeout;
     window.addEventListener('scroll', () => {
-      if (!_scrollTicking) {
-        _scrollTicking = true;
-        requestAnimationFrame(() => {
-          updateActiveLink();
-          _scrollTicking = false;
-        });
-      }
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(updateActiveLink, 150);
+>>>>>>> Stashed changes
     }, { passive: true });
 
     /* ── CONTACT FORM ── */

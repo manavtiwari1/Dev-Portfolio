@@ -2,6 +2,7 @@ import { getValue, isAdminRequest, setValue } from "./_db.js";
 
 const PUBLIC_KEYS = new Set([
   "portfolio_skills",
+  "portfolio_experience",
   "portfolio_qualifications",
   "portfolio_certifications",
   "portfolio_projects",
