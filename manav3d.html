@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Manav Tiwari — Portfolio</title>
+  <title>Manav Tiwari — Full Stack Developer</title>
 
   <!-- PWA / App-like experience -->
   <link rel="manifest" href="/manifest.json" />
@@ -16,7 +16,8 @@
   <link rel="apple-touch-icon" href="/Photos/logobg.png" />
 
   <!-- SEO -->
-  <meta name="description" content="Manav Tiwari — Full Stack Developer working at the intersection of AI, cloud, and real-world problem solving." />
+  <meta name="description"
+    content="Manav Tiwari — Full Stack Developer working at the intersection of AI, cloud, and real-world problem solving." />
   <meta name="author" content="Manav Tiwari" />
   <meta property="og:title" content="Manav Tiwari — Portfolio" />
   <meta property="og:description" content="Full Stack Developer · AI · Cloud · Data" />
@@ -334,8 +335,10 @@
 
     /* ── HERO ── */
     #hero {
-      min-height: 100vh; /* fallback for older browsers */
-      min-height: 100dvh; /* dynamic viewport height — hides mobile browser bar space */
+      min-height: 100vh;
+      /* fallback for older browsers */
+      min-height: 100dvh;
+      /* dynamic viewport height — hides mobile browser bar space */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -537,7 +540,17 @@
     }
 
     /* Mobile / touch fixes: ensure taps register and remove tap highlight */
-    button, a, .btn-solid, .btn-ghost, .proj-btn, .proj-arrow, .proj-dot, .chatbot-launcher, .hamburger, .nav-close-btn, .nav-link {
+    button,
+    a,
+    .btn-solid,
+    .btn-ghost,
+    .proj-btn,
+    .proj-arrow,
+    .proj-dot,
+    .chatbot-launcher,
+    .hamburger,
+    .nav-close-btn,
+    .nav-link {
       touch-action: manipulation;
       -ms-touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
@@ -630,9 +643,11 @@
       nav {
         padding: 14px 4vw;
       }
+
       .desktop-nav {
         gap: 1rem;
       }
+
       .desktop-nav a {
         font-size: 0.72rem;
       }
@@ -784,6 +799,7 @@
 
     /* Desktop: flip on hover */
     @media (hover: hover) {
+
       .card-3d:hover .card-3d-inner,
       .card-3d:focus-within .card-3d-inner {
         transform: rotateY(180deg);
@@ -2019,36 +2035,83 @@
 
     /* ── MOBILE PERFORMANCE ── */
     @media (max-width: 768px) {
+
       /* Kill expensive effects on mobile */
-      .scanlines { display: none !important; }
+      .scanlines {
+        display: none !important;
+      }
 
       /* Reduce backdrop-filter cost (full blur = GPU killer on mobile) */
-      nav { backdrop-filter: blur(6px) !important; -webkit-backdrop-filter: blur(6px) !important; }
-      #nav-overlay { backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important; }
-      .social-card { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(4,18,28,0.92) !important; }
-      .proj-card { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-      .proj-badge { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-      .chatbot-panel { backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important; }
+      nav {
+        backdrop-filter: blur(6px) !important;
+        -webkit-backdrop-filter: blur(6px) !important;
+      }
+
+      #nav-overlay {
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+      }
+
+      .social-card {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(4, 18, 28, 0.92) !important;
+      }
+
+      .proj-card {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+
+      .proj-badge {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+
+      .chatbot-panel {
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+      }
 
       /* Kill expensive infinite CSS animations on mobile */
-      .card-icon { animation: none !important; }
-      .card-back::before { animation: none !important; }
-      .holo { display: none !important; }
-      .proj-card.is-active { animation: none !important; }
-      .proj-card.is-active::before { display: none !important; }
-      .mail-icon { animation: none !important; }
+      .card-icon {
+        animation: none !important;
+      }
+
+      .card-back::before {
+        animation: none !important;
+      }
+
+      .holo {
+        display: none !important;
+      }
+
+      .proj-card.is-active {
+        animation: none !important;
+      }
+
+      .proj-card.is-active::before {
+        display: none !important;
+      }
+
+      .mail-icon {
+        animation: none !important;
+      }
 
       /* Simplify social card hover — no 3D transform on mobile */
       .social-card:hover,
       .social-card:active {
         transform: scale(1.02) !important;
       }
+
       .social-card:hover .social-icon {
         transform: scale(1.08) !important;
       }
 
       /* Disable expensive filter on card icons */
-      .card-icon { filter: none !important; }
+      .card-icon {
+        filter: none !important;
+      }
     }
 
     /* holographic shimmer on cards */
@@ -2771,7 +2834,8 @@
     body.light {
       --bg: #f4fafc;
       --white: #0a1b1f;
-      --muted: #1f3a40;       /* Darker, high-contrast slate-teal for general muted text */
+      --muted: #1f3a40;
+      /* Darker, high-contrast slate-teal for general muted text */
       --card: rgba(220, 240, 245, 0.85);
       --border: rgba(0, 180, 204, 0.25);
       --glow: 0 0 30px rgba(0, 180, 204, 0.15);
@@ -2779,7 +2843,23 @@
     }
 
     /* Smooth transitions for theme switching */
-    body, nav, .chatbot-panel, .about-content-card, .sec-title, .desktop-nav a, .theme-btn, .hamburger span, .proj-card, .tl-card, .cert-card, .social-card, .cf-input, .chatbot-message, .chatbot-chip, .chatbot-form, .chatbot-input {
+    body,
+    nav,
+    .chatbot-panel,
+    .about-content-card,
+    .sec-title,
+    .desktop-nav a,
+    .theme-btn,
+    .hamburger span,
+    .proj-card,
+    .tl-card,
+    .cert-card,
+    .social-card,
+    .cf-input,
+    .chatbot-message,
+    .chatbot-chip,
+    .chatbot-form,
+    .chatbot-input {
       transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
     }
 
@@ -3090,7 +3170,8 @@
 
     <div class="nav-right">
       <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">
-        <svg class="theme-toggle-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="theme-toggle-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <mask id="moon-mask">
             <rect x="0" y="0" width="24" height="24" fill="white" />
             <circle cx="18" cy="6" r="5" fill="black" class="mask-circle" />
@@ -3128,17 +3209,22 @@
       <div class="chatbot-messages" id="chatbotMessages"></div>
 
       <div class="chatbot-suggestions" id="chatbotSuggestions" aria-label="Suggested questions">
-        <button class="chatbot-chip" type="button" data-chat-prompt="What can Manav build?">What can Manav build?</button>
+        <button class="chatbot-chip" type="button" data-chat-prompt="What can Manav build?">What can Manav
+          build?</button>
         <button class="chatbot-chip" type="button" data-chat-prompt="What are Manav's skills?">Skills</button>
         <button class="chatbot-chip" type="button" data-chat-prompt="Show me his projects">Projects</button>
-        <button class="chatbot-chip" type="button" data-chat-prompt="What upcoming projects is Manav working on?">Upcoming Projects</button>
-        <button class="chatbot-chip" type="button" data-chat-prompt="Tell me Manav's qualifications">Qualifications</button>
-        <button class="chatbot-chip" type="button" data-chat-prompt="Where can I connect for future updates?">Future Updates</button>
+        <button class="chatbot-chip" type="button"
+          data-chat-prompt="What upcoming projects is Manav working on?">Upcoming Projects</button>
+        <button class="chatbot-chip" type="button"
+          data-chat-prompt="Tell me Manav's qualifications">Qualifications</button>
+        <button class="chatbot-chip" type="button" data-chat-prompt="Where can I connect for future updates?">Future
+          Updates</button>
         <button class="chatbot-chip" type="button" data-chat-prompt="How can I contact Manav?">Contact</button>
       </div>
 
       <form class="chatbot-form" id="chatbotForm">
-        <input class="chatbot-input" id="chatbotInput" type="text" placeholder="Ask about skills, work, or contact..." autocomplete="off" />
+        <input class="chatbot-input" id="chatbotInput" type="text" placeholder="Ask about skills, work, or contact..."
+          autocomplete="off" />
         <button class="chatbot-send" type="submit" aria-label="Send message">></button>
       </form>
     </section>
@@ -3160,10 +3246,14 @@
         <h1 class="hero-name1">Manav</h1>
         <h1 class="hero-name2">Tiwari</h1>
         <p class="hero-role"><span class="iam">I am</span> a Full Stack Developer</p>
-        <p class="hero-desc">Full Stack Developer working at the intersection of AI, cloud, automation, and real-world problem solving. 
-          Passionate about building modern web applications, AI-powered systems, intelligent Discord bots, and data-driven dashboards that deliver impactful user experiences. 
-          Skilled in full stack development, data analysis, prompt engineering, and Generative AI workflows, with experience creating scalable and interactive solutions using modern technologies. 
-          Focused on transforming complex ideas into fast, efficient, and production-ready platforms through smart automation, analytics, and innovative AI integration.</p>
+        <p class="hero-desc">Full Stack Developer working at the intersection of AI, cloud, automation, and real-world
+          problem solving.
+          Passionate about building modern web applications, AI-powered systems, intelligent Discord bots, and
+          data-driven dashboards that deliver impactful user experiences.
+          Skilled in full stack development, data analysis, prompt engineering, and Generative AI workflows, with
+          experience creating scalable and interactive solutions using modern technologies.
+          Focused on transforming complex ideas into fast, efficient, and production-ready platforms through smart
+          automation, analytics, and innovative AI integration.</p>
         <div class="hero-btns">
           <a href="#contact" class="btn-solid">Connect With Me</a>
           <a href="#skills" class="btn-ghost">View Work</a>
@@ -3250,7 +3340,8 @@
 
   <!-- RESUME BUTTON -->
   <div class="resume-btn-container">
-    <a href="https://docs.google.com/document/d/1PF-SQ9K6Yu1DaiUYDIkRAVY6jPsjEJDG/edit?usp=sharing&ouid=117710315095802691664&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer" class="resume-cv-btn">Click here to see CV / Resume</a>
+    <a href="https://docs.google.com/document/d/1PF-SQ9K6Yu1DaiUYDIkRAVY6jPsjEJDG/edit?usp=sharing&ouid=117710315095802691664&rtpof=true&sd=true"
+      target="_blank" rel="noopener noreferrer" class="resume-cv-btn">Click here to see CV / Resume</a>
   </div>
 
   <!-- TECHNICAL ARSENAL -->
@@ -3258,7 +3349,8 @@
     <div class="sec-head">
       <h2 class="sec-title">Technical Arsenal</h2><span class="sec-line"></span>
     </div>
-    <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:2rem;letter-spacing:.05em" id="flip-hint-text">Hover over
+    <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:2rem;letter-spacing:.05em"
+      id="flip-hint-text">Hover over
       a card to flip it ↻</p>
     <script>
       if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
@@ -3301,9 +3393,10 @@
           <div class="card-face card-back">
             <span class="card-back-icon">🤖</span>
             <div class="card-back-title">C++ &amp; C</div>
-            <p class="card-back-desc">Designing efficient algorithms and data structures. Implementing low-level systems and optimizing performance in C and C++.</p>
-            <div class="card-back-tags"><span class="card-back-tag">C++</span><span
-                class="card-back-tag">C</span><span class="card-back-tag">Algorithms</span></div>
+            <p class="card-back-desc">Designing efficient algorithms and data structures. Implementing low-level systems
+              and optimizing performance in C and C++.</p>
+            <div class="card-back-tags"><span class="card-back-tag">C++</span><span class="card-back-tag">C</span><span
+                class="card-back-tag">Algorithms</span></div>
           </div>
         </div>
       </div>
@@ -3340,9 +3433,10 @@
           <div class="card-face card-back">
             <span class="card-back-icon">📊</span>
             <div class="card-back-title">Data Analysis</div>
-            <p class="card-back-desc">Analyzing and visualizing data to extract insights and support decision-making. Utilizing Python libraries like Pandas and Matplotlib for data manipulation and visualization.</p>
-            <div class="card-back-tags"><span class="card-back-tag">Pandas</span><span
-                class="card-back-tag">Advanced Excel Analytics</span><span class="card-back-tag">Data Visualization</span><span
+            <p class="card-back-desc">Analyzing and visualizing data to extract insights and support decision-making.
+              Utilizing Python libraries like Pandas and Matplotlib for data manipulation and visualization.</p>
+            <div class="card-back-tags"><span class="card-back-tag">Pandas</span><span class="card-back-tag">Advanced
+                Excel Analytics</span><span class="card-back-tag">Data Visualization</span><span
                 class="card-back-tag">Next.js</span></div>
           </div>
         </div>
@@ -3360,7 +3454,8 @@
           <div class="card-face card-back">
             <span class="card-back-icon">🧠</span>
             <div class="card-back-title">Prompt Engineering</div>
-            <p class="card-back-desc">Designing effective prompts for AI models to achieve desired outputs. Optimizing prompts for tasks like text generation, classification, and reasoning.</p>
+            <p class="card-back-desc">Designing effective prompts for AI models to achieve desired outputs. Optimizing
+              prompts for tasks like text generation, classification, and reasoning.</p>
             <div class="card-back-tags"><span class="card-back-tag">OpenAI API</span><span
                 class="card-back-tag">LangChain</span><span class="card-back-tag">Prompt Optimization</span><span
                 class="card-back-tag">Queries</span></div>
@@ -3401,8 +3496,11 @@
           <div class="card-face card-back">
             <span class="card-back-icon">👁️</span>
             <div class="card-back-title">Discord Bot Development</div>
-            <p class="card-back-desc">Creating automated bots for Discord servers using Python and the discord.py library. Implementing features like moderation, games, and integration with external APIs.</p>
-            <div class="card-back-tags"><span class="card-back-tag">Python</span><span class="card-back-tag">discord.py</span><span class="card-back-tag">Bot Development</span><span class="card-back-tag">API Integration</span></div>
+            <p class="card-back-desc">Creating automated bots for Discord servers using Python and the discord.py
+              library. Implementing features like moderation, games, and integration with external APIs.</p>
+            <div class="card-back-tags"><span class="card-back-tag">Python</span><span
+                class="card-back-tag">discord.py</span><span class="card-back-tag">Bot Development</span><span
+                class="card-back-tag">API Integration</span></div>
           </div>
         </div>
       </div>
@@ -3448,8 +3546,7 @@
         <!-- Card 1 -->
         <div class="proj-card" data-index="0">
           <div class="proj-thumb">
-            <img src="https://i.vgy.me/BIVktF.png" alt="AI Study Assistant"
-              draggable="false">
+            <img src="https://i.vgy.me/BIVktF.png" alt="AI Study Assistant" draggable="false">
             <div class="proj-thumb-overlay"></div>
             <div class="proj-badges">
               <span class="proj-badge">React</span>
@@ -3460,10 +3557,13 @@
           <div class="proj-body">
             <div class="proj-number">PROJECT — 01</div>
             <div class="proj-title">Amplify Edge Discord Bot</div>
-            <p class="proj-desc">Fully Automod Bot for Amplify Edge Discord Server. Features include AI-powered content moderation, dynamic role assignment.</p>
+            <p class="proj-desc">Fully Automod Bot for Amplify Edge Discord Server. Features include AI-powered content
+              moderation, dynamic role assignment.</p>
             <div class="proj-actions">
-              <a href="https://discord.com/oauth2/authorize?client_id=591543060530462720&permissions=8&integration_type=0&scope=bot" class="proj-btn proj-btn-live">▶ Live Demo</a>
-              <a href="https://github.com/manavtiwari1/Amplify-Edge-Discord-Bot" class="proj-btn proj-btn-gh">⌥ GitHub</a>
+              <a href="https://discord.com/oauth2/authorize?client_id=591543060530462720&permissions=8&integration_type=0&scope=bot"
+                class="proj-btn proj-btn-live">▶ Live Demo</a>
+              <a href="https://github.com/manavtiwari1/Amplify-Edge-Discord-Bot" class="proj-btn proj-btn-gh">⌥
+                GitHub</a>
             </div>
           </div>
         </div>
@@ -3648,7 +3748,8 @@
         <div class="social-name">GitHub</div>
         <div class="social-sub">Code &amp; Projects</div>
       </a>
-      <a href="https://www.linkedin.com/in/manav-tiwari-0185651b2/" class="social-card" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.linkedin.com/in/manav-tiwari-0185651b2/" class="social-card" target="_blank"
+        rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -3785,7 +3886,8 @@
     <div class="footer-logo">MANAV TIWARI</div>
     <p>Code with Manav — © 2026 · New Delhi</p>
     <div class="footer-admin-link">
-      <a href="/admin" target="_blank" rel="noopener noreferrer" class="admin-access-link" id="admin-access-link">🔒 Admin Access</a>
+      <a href="/admin" target="_blank" rel="noopener noreferrer" class="admin-access-link" id="admin-access-link">🔒
+        Admin Access</a>
     </div>
   </footer>
 
