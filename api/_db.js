@@ -14,7 +14,7 @@ const FAIL_COOLDOWN_MS = 30000; // 30 seconds cooldown after a failure
 
 // Lazily connect and cache MongoDB database instance
 async function getMongoDB() {
-  const uri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb+srv://tiwarimanav118_db_user:Manav123@cluster0.oqebpy9.mongodb.net/portfolio?appName=Cluster0";
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
   if (!uri) {
     return null; // Gracefully fall back to local db.json
   }
@@ -94,8 +94,9 @@ async function writeDatabase(data) {
 }
 
 export function isAdminRequest(req) {
-  const expectedPassword = process.env.ADMIN_PASSWORD || "Manav@1234";
-  const expectedUsername = process.env.ADMIN_USERNAME || "imanavv_25";
+  const isDev = process.env.NODE_ENV === "development" || !process.env.VERCEL;
+  const expectedPassword = process.env.ADMIN_PASSWORD || (isDev ? "Manav@1234" : undefined);
+  const expectedUsername = process.env.ADMIN_USERNAME || (isDev ? "imanavv_25" : undefined);
   const providedPassword =
     req.headers["x-admin-password"] ||
     req.body?.password ||

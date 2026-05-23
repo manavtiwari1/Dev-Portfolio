@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 
-const ADMIN_PASSWORD = "Manav@1234";
-const ADMIN_USERNAME = "imanavv_25";
 const RENDER_API_BASE = "https://dev-portfolio-vlzl.onrender.com";
 const API_BASE_URL = (() => {
   if (typeof window === "undefined") return "";
@@ -334,22 +332,9 @@ export default function AdminPanel() {
         setPwErr("");
         return;
       }
-      if (response.status === 404 && pw === ADMIN_PASSWORD && username.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
-        adminUsername = username;
-        adminPassword = pw;
-        setAuthed(true);
-        setPwErr("");
-        return;
-      }
       setPwErr("Wrong username or password");
     } catch {
-      if (pw === ADMIN_PASSWORD && username.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
-        adminUsername = username;
-        adminPassword = pw;
-        setAuthed(true);
-        setPwErr("");
-      }
-      else setPwErr("Wrong username or password");
+      setPwErr("Wrong username or password");
     }
   };
 
