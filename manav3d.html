@@ -643,22 +643,25 @@
 
     @media (max-width:980px) {
       nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 14px 5vw;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 14px 5vw !important;
       }
 
       .desktop-nav {
-        display: none;
+        display: none !important;
       }
 
       .nav-right {
-        display: flex;
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+        margin-left: auto !important;
       }
 
       .hamburger {
-        display: flex;
+        display: flex !important;
       }
 
       #hero {
