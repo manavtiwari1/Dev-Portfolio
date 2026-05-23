@@ -500,6 +500,40 @@
       transform: translateY(-3px);
     }
 
+    .resume-btn-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin: 0 0 2rem 0;
+      padding: 0;
+    }
+
+    .resume-cv-btn {
+      background: linear-gradient(135deg, #00e5ff, #1a6cf5);
+      color: #000000 !important;
+      border: none;
+      border-radius: 999px;
+      padding: 0.8rem 2.4rem;
+      font-weight: 800;
+      font-size: 0.85rem;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.25);
+      transition: all 0.3s ease;
+    }
+
+    .resume-cv-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.45);
+      color: #000000 !important;
+    }
+
     /* Mobile / touch fixes: ensure taps register and remove tap highlight */
     button, a, .btn-solid, .btn-ghost, .proj-btn, .proj-arrow, .proj-dot, .chatbot-launcher, .hamburger, .nav-close-btn, .nav-link {
       touch-action: manipulation;
@@ -2904,6 +2938,10 @@
 
   <!-- TECHNICAL ARSENAL -->
   <section id="skills" class="section3d reveal">
+    <div class="resume-btn-container">
+      <a href="/manav_tiwari_resume.pdf" target="_blank" rel="noopener noreferrer" class="resume-cv-btn">Click here to see CV / Resume</a>
+    </div>
+
     <div class="sec-head">
       <h2 class="sec-title">Technical Arsenal</h2><span class="sec-line"></span>
     </div>
