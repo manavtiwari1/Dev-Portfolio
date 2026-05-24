@@ -937,12 +937,6 @@
       overflow: hidden;
     }
 
-    /* Keep card face contents above the glow */
-    .card-face > * {
-      position: relative;
-      z-index: 2;
-    }
-
     /* Spot Glow (Cursor Spotlight effect) */
     .card-face::before {
       content: '';
@@ -954,7 +948,6 @@
         rgba(0, 229, 255, 0.15),
         transparent 80%
       );
-      z-index: 1;
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.3s ease;
