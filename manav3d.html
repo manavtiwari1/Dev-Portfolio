@@ -5342,14 +5342,14 @@
           if (response.ok) {
             const data = await response.json();
             if (data && data.contributions && Array.isArray(data.contributions)) {
-              // The contributions array is chronological. We want the last 168 days.
-              const allContributions = data.contributions;
+              // The contributions array is a 2D array of weeks. Flatten it to a 1D array of days.
+              const allContributions = data.contributions.flat();
               contributionsData = allContributions.slice(-totalCells);
               
               // Also update the Commits counter target to match real total contributions
               const commitsCounter = document.getElementById('db-counter-commits');
-              if (commitsCounter && data.total) {
-                commitsCounter.setAttribute('data-target', data.total);
+              if (commitsCounter && data.totalContributions !== undefined) {
+                commitsCounter.setAttribute('data-target', data.totalContributions);
                 if (window.dbSectionAnimated) {
                   animateSingleCounter(commitsCounter);
                 }
@@ -5370,10 +5370,17 @@
             
             // Map the API's contribution level or count
             let lvl = 0;
-            if (dayData.level !== undefined) {
-              lvl = dayData.level;
-            } else if (dayData.count !== undefined) {
-              const c = dayData.count;
+            const levelMap = {
+              'NONE': 0,
+              'FIRST_QUARTILE': 1,
+              'SECOND_QUARTILE': 2,
+              'THIRD_QUARTILE': 3,
+              'FOURTH_QUARTILE': 4
+            };
+            if (dayData.contributionLevel !== undefined) {
+              lvl = levelMap[dayData.contributionLevel] ?? 0;
+            } else if (dayData.contributionCount !== undefined) {
+              const c = dayData.contributionCount;
               lvl = c === 0 ? 0 : (c <= 2 ? 1 : (c <= 4 ? 2 : (c <= 7 ? 3 : 4)));
             }
 
@@ -5381,7 +5388,7 @@
             
             const cellDate = new Date(dayData.date);
             const dateString = `${months[cellDate.getMonth()]} ${cellDate.getDate()}, ${cellDate.getFullYear()}`;
-            const commitCount = dayData.count || 0;
+            const commitCount = dayData.contributionCount || 0;
             
             cell.setAttribute('title', `${commitCount} contributions on ${dateString}`);
             container.appendChild(cell);
