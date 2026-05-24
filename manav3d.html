@@ -903,9 +903,11 @@
       width: 100%;
       height: 100%;
       transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
       transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
       border-radius: 16px;
       transform: rotateX(var(--rot-x, 0deg)) rotateY(var(--rot-y, 0deg));
+      will-change: transform;
     }
 
     /* Desktop: flip on hover */
@@ -935,6 +937,7 @@
       justify-content: center;
       padding: 1.5rem;
       overflow: hidden;
+      will-change: transform;
     }
 
     /* Spot Glow (Cursor Spotlight effect) */
@@ -969,6 +972,9 @@
       background: var(--card);
       border: 1px solid var(--border);
       text-align: center;
+      /* push front face forward on Z so WebKit backface-visibility works on mobile */
+      transform: rotateY(0deg) translateZ(1px);
+      -webkit-transform: rotateY(0deg) translateZ(1px);
     }
 
     .card-front::after {
@@ -1043,7 +1049,9 @@
       background: linear-gradient(135deg, rgba(0, 28, 42, 0.97), rgba(8, 20, 52, 0.97));
       border: 1px solid rgba(0, 229, 255, 0.45);
       box-shadow: 0 0 40px rgba(0, 229, 255, 0.18), inset 0 0 28px rgba(0, 229, 255, 0.06);
-      transform: rotateY(180deg);
+      /* explicit rotateY + translateZ so WebKit backface-visibility works on mobile */
+      transform: rotateY(180deg) translateZ(1px);
+      -webkit-transform: rotateY(180deg) translateZ(1px);
       text-align: center;
       gap: .45rem;
     }
@@ -5467,7 +5475,9 @@
       })();
 
       // ── 3D PARALLAX TILT & CURSOR SPOTLIGHT GLOW ON CARDS ──
+      // Only run tilt on real pointer (mouse) devices — NOT on touch/mobile
       (function () {
+        if (!window.matchMedia('(pointer: fine)').matches) return;
         const grid = document.getElementById('skills-grid');
         if (!grid) return;
 
