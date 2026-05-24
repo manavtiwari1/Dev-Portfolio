@@ -4139,11 +4139,11 @@
     <div class="db-card" style="margin-top: 1.5rem; margin-bottom: 2rem;">
       <div class="db-mini-grid">
         <div class="db-mini-card">
-          <div class="db-mini-num db-counter" data-target="25" data-suffix="+">0+</div>
+          <div class="db-mini-num db-counter" id="db-counter-projects" data-target="25" data-suffix="+">0+</div>
           <div class="db-mini-label">Projects Completed</div>
         </div>
         <div class="db-mini-card">
-          <div class="db-mini-num db-counter" data-target="1540" data-suffix="+">0+</div>
+          <div class="db-mini-num db-counter" id="db-counter-commits" data-target="1540" data-suffix="+">0+</div>
           <div class="db-mini-label">GitHub Commits</div>
         </div>
         <div class="db-mini-card">
@@ -5347,9 +5347,12 @@
               contributionsData = allContributions.slice(-totalCells);
               
               // Also update the Commits counter target to match real total contributions
-              const commitsCounter = document.querySelector('.db-counter[data-target="1540"]');
+              const commitsCounter = document.getElementById('db-counter-commits');
               if (commitsCounter && data.total) {
                 commitsCounter.setAttribute('data-target', data.total);
+                if (window.dbSectionAnimated) {
+                  animateSingleCounter(commitsCounter);
+                }
               }
               fetchedSuccessfully = true;
             }
@@ -5426,39 +5429,51 @@
           
           if (reposEl && data.public_repos !== undefined) reposEl.textContent = data.public_repos;
           if (followersEl && data.followers !== undefined) followersEl.textContent = data.followers;
+
+          // Dynamically update the Projects Completed counter target to actual public repos!
+          const projectsCounter = document.getElementById('db-counter-projects');
+          if (projectsCounter && data.public_repos !== undefined) {
+            projectsCounter.setAttribute('data-target', data.public_repos);
+            if (window.dbSectionAnimated) {
+              animateSingleCounter(projectsCounter);
+            }
+          }
         } catch (err) {
           console.warn("Error fetching profile stats from GitHub API:", err);
         }
       }
 
+      function animateSingleCounter(counter) {
+        const target = +counter.getAttribute('data-target');
+        const suffix = counter.getAttribute('data-suffix') || '';
+        const duration = 1200; // Total animation time in ms
+        const startTime = performance.now();
+
+        const updateCount = (currentTime) => {
+          const elapsedTime = currentTime - startTime;
+          const progress = Math.min(elapsedTime / duration, 1);
+          
+          // Cubic ease-out
+          const easeProgress = 1 - Math.pow(1 - progress, 3);
+          const currentVal = Math.floor(easeProgress * target);
+          
+          counter.innerText = currentVal.toLocaleString() + suffix;
+
+          if (progress < 1) {
+            requestAnimationFrame(updateCount);
+          } else {
+            counter.innerText = target.toLocaleString() + suffix;
+          }
+        };
+        requestAnimationFrame(updateCount);
+      }
+
       function animateCounters() {
         const counters = document.querySelectorAll('.db-counter');
-        const duration = 1200; // Total animation time in ms
-
         counters.forEach(counter => {
-          const target = +counter.getAttribute('data-target');
-          const suffix = counter.getAttribute('data-suffix') || '';
-          const startTime = performance.now();
-
-          const updateCount = (currentTime) => {
-            const elapsedTime = currentTime - startTime;
-            const progress = Math.min(elapsedTime / duration, 1);
-            
-            // Ease out function: cubic ease-out
-            const easeProgress = 1 - Math.pow(1 - progress, 3);
-            const currentVal = Math.floor(easeProgress * target);
-            
-            counter.innerText = currentVal.toLocaleString() + suffix;
-
-            if (progress < 1) {
-              requestAnimationFrame(updateCount);
-            } else {
-              counter.innerText = target.toLocaleString() + suffix;
-            }
-          };
-          
-          requestAnimationFrame(updateCount);
+          animateSingleCounter(counter);
         });
+        window.dbSectionAnimated = true;
       }
 
       // Initialize Dashboard triggers
