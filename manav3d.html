@@ -903,8 +903,9 @@
       width: 100%;
       height: 100%;
       transform-style: preserve-3d;
-      transition: transform .75s cubic-bezier(.4, 0, .2, 1);
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
       border-radius: 16px;
+      transform: rotateX(var(--rot-x, 0deg)) rotateY(var(--rot-y, 0deg));
     }
 
     /* Desktop: flip on hover */
@@ -912,13 +913,13 @@
 
       .card-3d:hover .card-3d-inner,
       .card-3d:focus-within .card-3d-inner {
-        transform: rotateY(180deg);
+        transform: rotateY(calc(180deg + var(--rot-y, 0deg))) rotateX(var(--rot-x, 0deg));
       }
     }
 
     /* Flip via JS .flipped class (works on both touch & desktop clicks) */
     .card-3d.flipped .card-3d-inner {
-      transform: rotateY(180deg) !important;
+      transform: rotateY(calc(180deg + var(--rot-y, 0deg))) rotateX(var(--rot-x, 0deg)) !important;
     }
 
     /* shared face */
@@ -934,6 +935,40 @@
       justify-content: center;
       padding: 1.5rem;
       overflow: hidden;
+    }
+
+    /* Keep card face contents above the glow */
+    .card-face > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Spot Glow (Cursor Spotlight effect) */
+    .card-face::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 15px;
+      background: radial-gradient(
+        180px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+        rgba(0, 229, 255, 0.15),
+        transparent 80%
+      );
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card-3d:hover .card-face::before {
+      opacity: 1;
+    }
+
+    /* Magnetic Button styling class */
+    .magnetic-btn {
+      display: inline-block;
+      will-change: transform;
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     /* FRONT face */
@@ -3617,8 +3652,8 @@
           Focused on transforming complex ideas into fast, efficient, and production-ready platforms through smart
           automation, analytics, and innovative AI integration.</p>
         <div class="hero-btns">
-          <a href="#contact" class="btn-solid">Connect With Me</a>
-          <a href="#skills" class="btn-ghost">View Work</a>
+          <a href="#contact" class="btn-solid magnetic-btn">Connect With Me</a>
+          <a href="#skills" class="btn-ghost magnetic-btn">View Work</a>
         </div>
       </div>
 
@@ -3703,7 +3738,7 @@
   <!-- RESUME BUTTON -->
   <div class="resume-btn-container">
     <a href="https://docs.google.com/document/d/1PF-SQ9K6Yu1DaiUYDIkRAVY6jPsjEJDG/edit?usp=sharing&ouid=117710315095802691664&rtpof=true&sd=true"
-      target="_blank" rel="noopener noreferrer" class="resume-cv-btn">Click here to see CV / Resume</a>
+      target="_blank" rel="noopener noreferrer" class="resume-cv-btn magnetic-btn">Click here to see CV / Resume</a>
   </div>
 
   <!-- TECHNICAL ARSENAL -->
@@ -4323,7 +4358,7 @@
         <textarea class="cf-input cf-textarea" id="cf-message" placeholder="Tell me about your project or idea..."
           required></textarea>
       </div>
-      <button type="submit" class="cf-submit" id="cf-btn">
+      <button type="submit" class="cf-submit magnetic-btn" id="cf-btn">
         <span id="cf-btn-text">Send Message</span>
         <span id="cf-btn-icon">→</span>
       </button>
@@ -4846,6 +4881,7 @@
       </div></div>
     `;
       }).join('');
+      if (window._loadedMagnetic) window._loadedMagnetic();
     }
 
     async function loadPortfolioExperience() {
@@ -5378,6 +5414,76 @@
           if (!card) return;
           doFlip(card);
         });
+      })();
+
+      // ── 3D PARALLAX TILT & CURSOR SPOTLIGHT GLOW ON CARDS ──
+      (function () {
+        const grid = document.getElementById('skills-grid');
+        if (!grid) return;
+
+        grid.addEventListener('mousemove', (e) => {
+          const card = e.target.closest('.card-3d');
+          if (!card) return;
+
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          // Set spot glow coordinates
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+
+          // Calculate rotation (X/Y) relative to center of the card
+          const cx = rect.width / 2;
+          const cy = rect.height / 2;
+          const dx = x - cx;
+          const dy = y - cy;
+
+          // Max rotation: 10 degrees
+          const rx = -(dy / cy) * 10;
+          const ry = (dx / cx) * 10;
+
+          card.style.setProperty('--rot-x', `${rx}deg`);
+          card.style.setProperty('--rot-y', `${ry}deg`);
+        });
+
+        grid.addEventListener('mouseleave', (e) => {
+          // Reset tilt and hide glow for all cards
+          grid.querySelectorAll('.card-3d').forEach(c => {
+            c.style.setProperty('--rot-x', '0deg');
+            c.style.setProperty('--rot-y', '0deg');
+            c.style.setProperty('--mouse-x', '-500px');
+            c.style.setProperty('--mouse-y', '-500px');
+          });
+        }, true);
+      })();
+
+      // ── GLOBAL MAGNETIC BUTTON EFFECT ──
+      (function () {
+        const applyMagnetic = () => {
+          document.querySelectorAll('.magnetic-btn').forEach(btn => {
+            if (btn._hasMagnetic) return;
+            btn._hasMagnetic = true;
+
+            btn.addEventListener('mousemove', (e) => {
+              const rect = btn.getBoundingClientRect();
+              const mx = e.clientX - rect.left - rect.width / 2;
+              const my = e.clientY - rect.top - rect.height / 2;
+
+              // Pull button 35% of the distance to the mouse cursor
+              btn.style.transform = `translate(${mx * 0.35}px, ${my * 0.35}px)`;
+            });
+
+            btn.addEventListener('mouseleave', () => {
+              // Return smoothly
+              btn.style.transform = 'translate(0px, 0px)';
+            });
+          });
+        };
+
+        applyMagnetic();
+        // Re-run whenever dynamic cards render
+        window._loadedMagnetic = applyMagnetic;
       })();
 
       // ── THEME SWITCHER LOGIC ──

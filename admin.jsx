@@ -209,6 +209,8 @@ const S = {
   editBtn: { background:"rgba(0,229,255,0.1)", color:"#00e5ff", border:"1px solid rgba(0,229,255,0.25)", borderRadius:6, padding:".3rem .8rem", cursor:"pointer", fontSize:".75rem", fontFamily:"inherit" },
   removeBtn: { background:"rgba(255,90,106,0.12)", color:"#ff5a6a", border:"1px solid rgba(255,90,106,0.2)", borderRadius:6, padding:".3rem .8rem", cursor:"pointer", fontSize:".75rem", fontFamily:"inherit" },
   cancelBtn: { background:"rgba(255,255,255,0.08)", color:"#e0f7fa", border:"1px solid rgba(255,255,255,0.2)", borderRadius:50, padding:".65rem 1.4rem", fontWeight:700, cursor:"pointer", fontFamily:"'Orbitron',monospace", fontSize:".72rem", letterSpacing:".08em" },
+  chartBox: { background: "rgba(0, 20, 28, 0.8)", border: "1px solid rgba(0, 229, 255, 0.15)", borderRadius: 12, padding: "1.2rem", boxShadow: "0 10px 30px rgba(0,0,0,0.4)" },
+  chartTitle: { fontFamily: "'Orbitron', monospace", fontSize: ".72rem", color: "#00e5ff", letterSpacing: ".08em", marginBottom: "1rem", fontWeight: 700 },
 };
 
 export default function AdminPanel() {
@@ -218,7 +220,7 @@ export default function AdminPanel() {
   const [pwErr, setPwErr]     = useState("");
   const [focusedField, setFocusedField] = useState(null);
   const [isBtnHovered, setIsBtnHovered] = useState(false);
-  const [tab, setTab]         = useState("messages");
+  const [tab, setTab]         = useState("dashboard");
   const [messages, setMessages] = useState([]);
   const [skills, setSkills]   = useState([]);
   const [qualifications, setQualifications] = useState([]);
@@ -718,6 +720,7 @@ export default function AdminPanel() {
         <div style={S.navTitle}>⚡ ADMIN — CODE WITH MANAV</div>
         <div style={S.navBtns}>
           <a href="/" target="_blank" rel="noopener noreferrer" style={S.visitBtn}>🌐 Visit Website</a>
+          <button style={S.tabBtn(tab==="dashboard")} onClick={()=>setTab("dashboard")}>📊 Dashboard</button>
           <button style={S.tabBtn(tab==="messages")} onClick={()=>setTab("messages")}>
             📬 Messages {unread > 0 && <span style={{background:"#00e5ff",color:"#000",borderRadius:10,padding:"0 5px",fontSize:".65rem",marginLeft:4}}>{unread}</span>}
           </button>
@@ -734,6 +737,216 @@ export default function AdminPanel() {
       <div style={S.main}>
         {loading ? (
           <div style={{textAlign:"center",padding:"3rem",color:"#4a7a82"}}>Loading...</div>
+        ) : tab === "dashboard" ? (
+          /* ─────── DASHBOARD TAB ─────── */
+          <>
+            <div style={S.pageTitle}>Dashboard Overview</div>
+            <div style={S.pageSub}>Welcome back! Here is a summary of your developer portfolio metrics.</div>
+
+            {/* METRICS ROW */}
+            <div style={S.statsRow}>
+              <div style={S.statCard("#00e5ff")}>
+                <div style={S.statNum("#00e5ff")}>{messages.length}</div>
+                <div style={S.statLabel}>Total Messages</div>
+              </div>
+              <div style={S.statCard(unread > 0 ? "#ff007f" : "#00e5ff")}>
+                <div style={S.statNum(unread > 0 ? "#ff007f" : "#00e5ff")}>{unread}</div>
+                <div style={S.statLabel}>Unread Messages</div>
+              </div>
+              <div style={S.statCard("#7b2fff")}>
+                <div style={S.statNum("#7b2fff")}>{skills.length}</div>
+                <div style={S.statLabel}>Total Skills</div>
+              </div>
+              <div style={S.statCard("#f2c811")}>
+                <div style={S.statNum("#f2c811")}>
+                  {messages.length > 0 
+                    ? `${Math.round((messages.filter(m=>m.read).length / messages.length) * 100)}%` 
+                    : "100%"}
+                </div>
+                <div style={S.statLabel}>Inbox Health</div>
+              </div>
+            </div>
+
+            {/* CHARTS ROW */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "1.5rem", marginTop: "1rem" }}>
+              
+              {/* AREA CHART: Weekly Message Trend */}
+              <div style={S.chartBox}>
+                <div style={S.chartTitle}>📬 CONTACT MESSAGES (LAST 7 DAYS)</div>
+                {(() => {
+                  const last7Days = Array.from({ length: 7 }, (_, i) => {
+                    const d = new Date();
+                    d.setDate(d.getDate() - (6 - i));
+                    return d.toISOString().split("T")[0];
+                  });
+
+                  const messageCounts = last7Days.map(dateStr => {
+                    return messages.filter(m => {
+                      try {
+                        const mDateStr = new Date(m.date).toISOString().split("T")[0];
+                        return mDateStr === dateStr;
+                      } catch {
+                        return false;
+                      }
+                    }).length;
+                  });
+
+                  const maxVal = Math.max(...messageCounts, 3);
+                  const chartHeight = 120;
+                  const chartWidth = 500;
+                  const padding = 30;
+                  
+                  const points = messageCounts.map((count, idx) => {
+                    const x = padding + (idx * (chartWidth - 2 * padding)) / 6;
+                    const y = chartHeight - padding - (count * (chartHeight - 2 * padding)) / maxVal;
+                    return { x, y, count };
+                  });
+
+                  const linePath = points.map((p, idx) => `${idx === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+                  const areaPath = points.length > 0 
+                    ? `${linePath} L ${points[points.length-1].x} ${chartHeight - padding} L ${points[0].x} ${chartHeight - padding} Z` 
+                    : "";
+
+                  return (
+                    <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} style={{ width: "100%", height: "auto" }}>
+                      <defs>
+                        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.35" />
+                          <stop offset="100%" stopColor="#00e5ff" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      {Array.from({ length: 4 }).map((_, idx) => {
+                        const yVal = padding + (idx * (chartHeight - 2 * padding)) / 3;
+                        return (
+                          <line 
+                            key={idx} 
+                            x1={padding} 
+                            y1={yVal} 
+                            x2={chartWidth - padding} 
+                            y2={yVal} 
+                            stroke="rgba(74, 122, 130, 0.12)" 
+                            strokeDasharray="3 3" 
+                          />
+                        );
+                      })}
+                      {areaPath && <path d={areaPath} fill="url(#chartGrad)" />}
+                      {linePath && <path d={linePath} fill="none" stroke="#00e5ff" strokeWidth="2.5" />}
+                      {points.map((p, idx) => (
+                        <g key={idx}>
+                          <circle cx={p.x} cy={p.y} r="4" fill="#00e5ff" />
+                          <circle cx={p.x} cy={p.y} r="7" fill="none" stroke="rgba(0, 229, 255, 0.25)" strokeWidth="1" />
+                          <text x={p.x} y={p.y - 10} fill="#b0d0d8" fontSize="9" textAnchor="middle" fontFamily="monospace">{p.count}</text>
+                        </g>
+                      ))}
+                      {last7Days.map((dateStr, idx) => {
+                        const x = padding + (idx * (chartWidth - 2 * padding)) / 6;
+                        const dObj = new Date(dateStr);
+                        const dayLabel = dObj.toLocaleDateString("en-US", { weekday: "short" });
+                        return (
+                          <text key={idx} x={x} y={chartHeight - 8} fill="#4a7a82" fontSize="9" textAnchor="middle" fontFamily="monospace">{dayLabel}</text>
+                        );
+                      })}
+                    </svg>
+                  );
+                })()}
+              </div>
+
+              {/* DONUT CHART: Skill Categories */}
+              <div style={S.chartBox}>
+                <div style={S.chartTitle}>🛠️ SKILL CATEGORY DISTRIBUTION</div>
+                {(() => {
+                  let catCounts = {
+                    "AI & Data": 0,
+                    "Languages": 0,
+                    "Web Dev": 0,
+                    "Tools": 0
+                  };
+
+                  skills.forEach(sk => {
+                    const lowerName = sk.name.toLowerCase();
+                    const tags = (sk.tags || []).map(t => t.toLowerCase());
+                    
+                    if (lowerName.includes("ai") || lowerName.includes("generative") || lowerName.includes("analysis") || lowerName.includes("power bi") || lowerName.includes("tableau") || tags.includes("openai api") || tags.includes("langchain") || tags.includes("llms") || tags.includes("claude api")) {
+                      catCounts["AI & Data"]++;
+                    } else if (lowerName.includes("python") || lowerName.includes("c++") || lowerName.includes("c") || lowerName.includes("javascript") || lowerName.includes("typescript") || lowerName.includes("java") || lowerName.includes("rust") || lowerName.includes("go") || lowerName.includes("golang")) {
+                      catCounts["Languages"]++;
+                    } else if (lowerName.includes("supabase") || lowerName.includes("firebase") || lowerName.includes("discord") || lowerName.includes("npm") || lowerName.includes("nodejs") || lowerName.includes("react") || lowerName.includes("nextjs") || lowerName.includes("flutter") || lowerName.includes("tailwindcss") || lowerName.includes("tailwind") || lowerName.includes("vue") || lowerName.includes("angular")) {
+                      catCounts["Web Dev"]++;
+                    } else {
+                      catCounts["Tools"]++;
+                    }
+                  });
+
+                  const totalSkills = skills.length;
+                  const catData = Object.entries(catCounts).map(([cat, count]) => ({
+                    name: cat,
+                    count,
+                    percent: totalSkills > 0 ? (count / totalSkills) * 100 : 0
+                  }));
+
+                  let accumulatedAngle = 0;
+                  const radius = 50;
+                  const cx = 80;
+                  const cy = 80;
+                  const circumference = 2 * Math.PI * radius; // 314.16
+
+                  const colors = {
+                    "AI & Data": "#00e5ff",
+                    "Languages": "#7b2fff",
+                    "Web Dev": "#ff007f",
+                    "Tools": "#f2c811"
+                  };
+
+                  return (
+                    <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", flexWrap: "wrap", justifyContent: "center", minHeight: 120 }}>
+                      <svg width="130" height="130" viewBox="0 0 160 160">
+                        {totalSkills === 0 ? (
+                          <circle cx={cx} cy={cy} r={radius} fill="none" stroke="rgba(74, 122, 130, 0.2)" strokeWidth="18" />
+                        ) : (
+                          catData.map((d) => {
+                            const strokeLength = (d.percent / 100) * circumference;
+                            const strokeOffset = circumference - accumulatedAngle;
+                            accumulatedAngle += strokeLength;
+                            
+                            return strokeLength > 0 ? (
+                              <circle
+                                key={d.name}
+                                cx={cx}
+                                cy={cy}
+                                r={radius}
+                                fill="none"
+                                stroke={colors[d.name]}
+                                strokeWidth="18"
+                                strokeDasharray={`${strokeLength} ${circumference}`}
+                                strokeDashoffset={strokeOffset}
+                                transform="rotate(-90 80 80)"
+                              />
+                            ) : null;
+                          })
+                        )}
+                        <circle cx={cx} cy={cy} r="32" fill="#03090b" />
+                        <text x={cx} y={cy + 4} fill="#e0f7fa" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">
+                          {totalSkills} Skills
+                        </text>
+                      </svg>
+
+                      <div style={{ display: "flex", flexDirection: "column", gap: ".4rem" }}>
+                        {catData.map((d) => (
+                          <div key={d.name} style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+                            <div style={{ width: "10px", height: "10px", borderRadius: "2px", background: colors[d.name] }} />
+                            <span style={{ fontSize: ".72rem", color: "#b0d0d8", fontFamily: "monospace" }}>
+                              {d.name}: <strong>{d.count}</strong> ({Math.round(d.percent)}%)
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+            </div>
+          </>
         ) : tab === "messages" ? (
           /* ─────── MESSAGES TAB ─────── */
           <>
