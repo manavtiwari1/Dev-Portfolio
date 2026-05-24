@@ -4891,11 +4891,10 @@
       const grid = document.getElementById('skills-grid');
       if (!grid) return;
 
+      // Load skills from DB — if DB has data, trust it fully (admin may have customised it)
       let skills = await loadStoredList('portfolio_skills', defaultSkills);
-      const needsSync = !Array.isArray(skills) || 
-                        skills.length !== defaultSkills.length ||
-                        skills.some((s, idx) => s.name !== defaultSkills[idx].name || s.icon !== defaultSkills[idx].icon);
-      if (needsSync) {
+      // Only fall back to defaults if the stored list is genuinely empty/corrupt
+      if (!Array.isArray(skills) || skills.length === 0) {
         skills = defaultSkills;
         try { storage.set('portfolio_skills', JSON.stringify(defaultSkills)); } catch (e) {}
       }
