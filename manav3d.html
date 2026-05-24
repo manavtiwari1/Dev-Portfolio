@@ -5588,7 +5588,7 @@
 
         // Live weather from wttr.in (no API key required) — Bhopal, India
         if (weatherEl) {
-          fetch('https://wttr.in/Bhopal?format=j1', { headers: { 'User-Agent': 'curl/7.68.0' } })
+          fetch('https://wttr.in/New+Delhi?format=j1', { headers: { 'User-Agent': 'curl/7.68.0' } })
             .then(r => r.ok ? r.json() : null)
             .then(data => {
               if (!data || !data.current_condition) throw new Error('no data');
