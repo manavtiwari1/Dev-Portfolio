@@ -107,6 +107,6 @@ export default async function handler(req, res) {
     res.status(200).json({ reply: replyText.trim() });
   } catch (err) {
     console.error("Gemini route error:", err);
-    res.status(500).json({ error: "Failed to communicate with Gemini API." });
+    res.status(500).json({ error: "Failed to communicate with Gemini API.", details: err.message });
   }
 }
