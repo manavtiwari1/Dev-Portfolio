@@ -4606,6 +4606,12 @@
         if (q.includes('social') || q.includes('linkedin') || q.includes('instagram') || q.includes('discord') || q.includes('connect') || q.includes('future') || q.includes('update') || q.includes('follow')) return answers.socials;
         if (q.includes('contact') || q.includes('email') || q.includes('hire') || q.includes('collab')) return answers.contact;
         if (q.includes('qualification') || q.includes('education') || q.includes('college') || q.includes('school') || q.includes('certification')) return answers.qualification;
+        if (q.includes('kaise ho') || q.includes('kese ho') || q.includes('kya haal') || q.includes('how are you')) {
+          return "Main bilkul badhiya hoon! Aap batao, aap kaise ho? Aur main aapki Manav ke portfolio ke baare me kya help kar sakta hoon? 😊";
+        }
+        if (q.includes('kaun ho') || q.includes('who are you') || q.includes('name') || q.includes('naam kya')) {
+          return "Main Manav Tiwari ka virtual clone hoon, yani Manav AI! Aap batao, kaise aana hua? 🤖";
+        }
         if (q.includes('hello') || q.includes('hi') || q.includes('hey')) return answers.intro;
         return answers.fallback;
       }
