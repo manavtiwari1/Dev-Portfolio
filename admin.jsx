@@ -33,6 +33,47 @@ const DEFAULT_CERTIFICATIONS = [
   { id: "4", icon: "🥇", name: "Generative AI", org: "Coursera", badge: "2024" }
 ];
 
+const emojiMapping = {
+  "🧠": "/Photos/generative_ai.png",
+  "🤖": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg",
+  "🐍": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg",
+  "⚛️": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+  "🗄️": "https://cdn.simpleicons.org/langchain/3ECF8E",
+  "☁️": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg",
+  "👁️": "https://cdn.simpleicons.org/discord/5865F2",
+  "🔧": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg",
+  "⚡": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows8/windows8-original.svg",
+  "⚙️": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+  "🎨": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
+  "📱": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg",
+  "🔒": "https://cdn.simpleicons.org/auth0/EB5424",
+  "🌐": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg",
+  "📊": "https://img.icons8.com/color/512/microsoft-power-bi.png",
+  "🚀": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
+  "💡": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
+  "🎯": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+  "🛠️": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg",
+  "📦": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/npm/npm-original-wordmark.svg",
+  "🦀": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg",
+  "☕": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg",
+  "🐳": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
+  "☸️": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
+  "🍃": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
+  "🐿️": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
+  "🔥": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg",
+  "🌊": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
+  "💎": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg",
+  "🐬": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",
+  "💚": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg",
+  "❤️": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg",
+  "🐧": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg",
+  "🌟": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg"
+};
+
+const getFluentEmojiUrl = (emoji) => {
+  return emojiMapping[emoji] || null;
+};
+
 const DEFAULT_SKILLS = [
   { id: "1", icon: "🧠", name: "Generative AI", tags: ["Claude API", "LLMs"] },
   { id: "2", icon: "🤖", name: "C++ & C", tags: ["VS Code", "Algorithm Design"] },
@@ -42,11 +83,12 @@ const DEFAULT_SKILLS = [
   { id: "6", icon: "☁️", name: "Cloud & Supabase", tags: ["Supabase", "Auth"] },
   { id: "7", icon: "👁️", name: "Discord Bot Development", tags: ["discord.py", "Python"] },
   { id: "8", icon: "🔧", name: "Git & DevTools", tags: ["GitHub", "VS Code"] },
+  { id: "9", icon: "⚡", name: "Microsoft Office", tags: ["Powerpoint", "Excel"] },
 ];
 
 const DEFAULT_CHATBOT_REPLIES = {
   intro: "Hi, I am Manav AI. Ask me about Manav's skills, projects, qualifications, socials, or how to start a collaboration.",
-  skills: "Manav's core skills include full stack web development, Generative AI, prompt engineering, Python, C/C++, data analysis, Microsoft Power BI, Tableau, Supabase, cloud workflows, Git, UI/UX design, and Discord bot development.",
+  skills: "Manav's core skills include full stack web development, Generative AI, prompt engineering, Python, C/C++, data analysis, Microsoft Power BI, Tableau, Supabase, cloud workflows, Git, UI/UX design, Microsoft Office, and Discord bot development.",
   projects: "Featured work includes the Amplify Edge Discord Bot with AI-powered moderation and dynamic roles, plus the VIBRATIONS Fest Website with registration, Supabase auth, admin controls, and responsive event pages. Upcoming projects include Smart AI Interview and AI Smart Study Assistant.",
   futureProjects: "Manav is working on Smart AI Interview, a project that helps students practice interviews across multiple domains, including government exams and big tech companies. He is also working on an AI Smart Study Assistant for smarter learning and personalized study support.",
   contact: "You can use the contact form below to reach Manav for project collaborations, queries, or ideas. You can also email him directly at tiwarimanav118@gmail.com. I can take you there now.",
@@ -67,7 +109,7 @@ const CHATBOT_REPLY_FIELDS = [
   ["fallback", "FALLBACK ANSWER"],
 ];
 
-const ICONS = ["🧠","🤖","🐍","⚛️","🗄️","☁️","👁️","⚙️","🔧","🎨","📱","🔒","🌐","📊","🚀","💡","🎯","🛠️","📦","⚡"];
+const ICONS = ["🧠","🤖","🐍","⚛️","🗄️","☁️","👁️","⚙️","🔧","🎨","📱","🔒","🌐","📊","🚀","💡","🎯","🛠️","📦","⚡","🦀","☕","🐳","☸️","🍃","🐿️","🔥","🌊","💎","🐬","💚","❤️","🐧","🌟"];
 
 let adminUsername = "";
 let adminPassword = "";
@@ -221,7 +263,15 @@ export default function AdminPanel() {
         }
 
         if (sRes && sRes.value) {
-          setSkills(JSON.parse(sRes.value));
+          let parsedSkills = JSON.parse(sRes.value);
+          const needsSync = !Array.isArray(parsedSkills) || 
+                            parsedSkills.length !== DEFAULT_SKILLS.length ||
+                            parsedSkills.some((s, idx) => s.name !== DEFAULT_SKILLS[idx].name || s.icon !== DEFAULT_SKILLS[idx].icon);
+          if (needsSync) {
+            parsedSkills = DEFAULT_SKILLS;
+            storage.set('portfolio_skills', JSON.stringify(DEFAULT_SKILLS), pw).catch(() => {});
+          }
+          setSkills(parsedSkills);
         } else {
           setSkills(DEFAULT_SKILLS);
           storage.set('portfolio_skills', JSON.stringify(DEFAULT_SKILLS), pw).catch(() => {});
@@ -753,9 +803,18 @@ export default function AdminPanel() {
               <div style={S.addTitle}>+ ADD NEW SKILL</div>
               <div style={{marginBottom:".6rem",fontSize:".82rem",color:"#4a7a82"}}>Pick icon:</div>
               <div style={S.iconSel}>
-                {ICONS.map(ic => (
-                  <span key={ic} style={S.iconOpt(newSkill.icon===ic)} onClick={()=>setNewSkill(p=>({...p,icon:ic}))}>{ic}</span>
-                ))}
+                {ICONS.map(ic => {
+                  const fluentUrl = getFluentEmojiUrl(ic);
+                  return (
+                    <span key={ic} style={S.iconOpt(newSkill.icon===ic)} onClick={()=>setNewSkill(p=>({...p,icon:ic}))}>
+                      {fluentUrl ? (
+                        <img src={fluentUrl} alt={ic} style={{ width: "24px", height: "24px", verticalAlign: "middle" }} />
+                      ) : (
+                        ic
+                      )}
+                    </span>
+                  );
+                })}
               </div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".8rem",marginBottom:".8rem"}}>
                 <div>
@@ -768,7 +827,13 @@ export default function AdminPanel() {
                 </div>
               </div>
               <div style={{display:"flex",alignItems:"center",gap:"1rem"}}>
-                <span style={{fontSize:"2rem"}}>{newSkill.icon}</span>
+                <span style={{fontSize:"2rem"}}>
+                  {getFluentEmojiUrl(newSkill.icon) ? (
+                    <img src={getFluentEmojiUrl(newSkill.icon)} alt={newSkill.icon} style={{ width: "40px", height: "40px", verticalAlign: "middle" }} />
+                  ) : (
+                    newSkill.icon
+                  )}
+                </span>
                 <span style={{color:"#e0f7fa",fontWeight:700}}>{newSkill.name||"Skill Name"}</span>
                 <button style={S.addBtn} onClick={addSkill}>ADD SKILL →</button>
               </div>
@@ -776,16 +841,25 @@ export default function AdminPanel() {
 
             {/* Skills Grid */}
             <div style={S.skillsGrid}>
-              {skills.map(sk => (
-                <div key={sk.id} style={S.skillCard}>
-                  <button style={S.skillDelBtn} onClick={()=>deleteSkill(sk.id)}>✕</button>
-                  <div style={S.skillIcon}>{sk.icon}</div>
-                  <div style={S.skillName}>{sk.name}</div>
-                  <div style={S.skillTags}>
-                    {sk.tags.map(t=><span key={t} style={S.tag}>{t}</span>)}
+              {skills.map(sk => {
+                const fluentUrl = getFluentEmojiUrl(sk.icon);
+                return (
+                  <div key={sk.id} style={S.skillCard}>
+                    <button style={S.skillDelBtn} onClick={()=>deleteSkill(sk.id)}>✕</button>
+                    <div style={S.skillIcon}>
+                      {fluentUrl ? (
+                        <img src={fluentUrl} alt={sk.name} style={{ width: "44px", height: "44px", display: "block", margin: "0 auto .4rem auto", objectFit: "contain" }} />
+                      ) : (
+                        sk.icon
+                      )}
+                    </div>
+                    <div style={S.skillName}>{sk.name}</div>
+                    <div style={S.skillTags}>
+                      {sk.tags.map(t=><span key={t} style={S.tag}>{t}</span>)}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div style={{textAlign:"center",color:"#4a7a82",fontSize:".8rem",marginTop:".5rem"}}>
