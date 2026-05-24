@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import authHandler from "./api/auth.js";
 import contactHandler from "./api/contact.js";
 import storageHandler from "./api/storage.js";
+import chatHandler from "./api/chat.js";
 
 async function readJsonBody(req) {
   const chunks = [];
@@ -40,6 +41,7 @@ export default defineConfig({
             "/api/auth": authHandler,
             "/api/contact": contactHandler,
             "/api/storage": storageHandler,
+            "/api/chat": chatHandler,
           };
           const handler = handlers[url.pathname];
           if (!handler) {
