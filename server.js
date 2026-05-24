@@ -8,6 +8,7 @@ import authHandler from "./api/auth.js";
 import contactHandler from "./api/contact.js";
 import storageHandler from "./api/storage.js";
 import chatHandler from "./api/chat.js";
+import wakatimeHandler from "./api/wakatime.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,6 +37,7 @@ app.all("/api/auth", authHandler);
 app.all("/api/contact", contactHandler);
 app.all("/api/storage", storageHandler);
 app.all("/api/chat", chatHandler);
+app.get("/api/wakatime", wakatimeHandler);
 
 app.get("/manav3d.html", (_req, res) => {
   res.redirect(301, "/manav");

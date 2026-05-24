@@ -5783,6 +5783,23 @@
         } catch (err) {
           console.warn("Error fetching total commits from GitHub Search API:", err);
         }
+
+        // ── WAKATIME LIVE CODING HOURS ──
+        try {
+          const wakaRes = await fetch(apiUrl('/api/wakatime'));
+          if (wakaRes.ok) {
+            const wakaData = await wakaRes.json();
+            const totalHours = wakaData.total_hours ?? 0;
+            const hoursCounter = document.getElementById('db-counter-hours');
+            if (hoursCounter && totalHours > 0) {
+              hoursCounter.setAttribute('data-target', totalHours);
+              hoursCounter.setAttribute('data-suffix', '+ Hrs');
+              if (window.dbSectionAnimated) animateSingleCounter(hoursCounter);
+            }
+          }
+        } catch (err) {
+          console.warn("Error fetching WakaTime hours:", err);
+        }
       }
 
       function animateSingleCounter(counter) {
