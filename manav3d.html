@@ -4151,8 +4151,8 @@
           <div class="db-mini-label">Coffee Cups</div>
         </div>
         <div class="db-mini-card">
-          <div class="db-mini-num db-counter" data-target="15" data-suffix="+">0+</div>
-          <div class="db-mini-label">Servers Moderated</div>
+          <div class="db-mini-num db-counter" id="db-counter-followers" data-target="15" data-suffix="+">0+</div>
+          <div class="db-mini-label">GitHub Followers</div>
         </div>
       </div>
     </div>
@@ -5420,26 +5420,58 @@
 
       async function fetchGithubStats() {
         try {
+          // Fetch basic profile details (repos, followers)
           const res = await fetch('https://api.github.com/users/manavtiwari1');
-          if (!res.ok) return;
-          const data = await res.json();
-          
-          const reposEl = document.getElementById('db-git-repos');
-          const followersEl = document.getElementById('db-git-followers');
-          
-          if (reposEl && data.public_repos !== undefined) reposEl.textContent = data.public_repos;
-          if (followersEl && data.followers !== undefined) followersEl.textContent = data.followers;
+          if (res.ok) {
+            const data = await res.json();
+            
+            const reposEl = document.getElementById('db-git-repos');
+            const followersEl = document.getElementById('db-git-followers');
+            
+            if (reposEl && data.public_repos !== undefined) reposEl.textContent = data.public_repos;
+            if (followersEl && data.followers !== undefined) followersEl.textContent = data.followers;
 
-          // Dynamically update the Projects Completed counter target to actual public repos!
-          const projectsCounter = document.getElementById('db-counter-projects');
-          if (projectsCounter && data.public_repos !== undefined) {
-            projectsCounter.setAttribute('data-target', data.public_repos);
-            if (window.dbSectionAnimated) {
-              animateSingleCounter(projectsCounter);
+            // Dynamically update Projects Completed counter target to actual public repos!
+            const projectsCounter = document.getElementById('db-counter-projects');
+            if (projectsCounter && data.public_repos !== undefined) {
+              projectsCounter.setAttribute('data-target', data.public_repos);
+              if (window.dbSectionAnimated) {
+                animateSingleCounter(projectsCounter);
+              }
+            }
+
+            // Dynamically update GitHub Followers counter target!
+            const followersCounter = document.getElementById('db-counter-followers');
+            if (followersCounter && data.followers !== undefined) {
+              followersCounter.setAttribute('data-target', data.followers);
+              if (window.dbSectionAnimated) {
+                animateSingleCounter(followersCounter);
+              }
             }
           }
         } catch (err) {
           console.warn("Error fetching profile stats from GitHub API:", err);
+        }
+
+        try {
+          // Fetch actual lifetime commits dynamically using the public search API!
+          const commitRes = await fetch('https://api.github.com/search/commits?q=author:manavtiwari1', {
+            headers: { 'Accept': 'application/vnd.github+json' }
+          });
+          if (commitRes.ok) {
+            const commitData = await commitRes.json();
+            if (commitData && commitData.total_count !== undefined) {
+              const commitsCounter = document.getElementById('db-counter-commits');
+              if (commitsCounter) {
+                commitsCounter.setAttribute('data-target', commitData.total_count);
+                if (window.dbSectionAnimated) {
+                  animateSingleCounter(commitsCounter);
+                }
+              }
+            }
+          }
+        } catch (err) {
+          console.warn("Error fetching total commits from GitHub Search API:", err);
         }
       }
 
