@@ -5586,21 +5586,47 @@
         };
         timeEl.textContent = now.toLocaleTimeString('en-US', options) + ' (IST)';
 
-        // Semi-dynamic weather simulator based on local hour in India
-        const indiaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
-        const hour = indiaTime.getHours();
-        
-        let weatherText = "31°C · Clear Sky ☀️";
-        if (hour >= 18 || hour < 6) {
-          weatherText = "26°C · Clear Night 🌙";
-        } else if (hour >= 6 && hour < 11) {
-          weatherText = "29°C · Sunny Morning 🌤️";
-        } else if (hour >= 11 && hour < 15) {
-          weatherText = "34°C · Warm Sun ☀️";
-        } else if (hour >= 15 && hour < 18) {
-          weatherText = "31°C · Breezy Evening 🍃";
+        // Live weather from wttr.in (no API key required) — Bhopal, India
+        if (weatherEl) {
+          fetch('https://wttr.in/Bhopal?format=j1', { headers: { 'User-Agent': 'curl/7.68.0' } })
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+              if (!data || !data.current_condition) throw new Error('no data');
+              const c = data.current_condition[0];
+              const temp = c.temp_C;
+              const desc = c.weatherDesc[0].value.trim();
+              // Map description to emoji
+              const emojiMap = {
+                'Sunny': '☀️', 'Clear': '🌙', 'Partly cloudy': '⛅', 'Cloudy': '☁️',
+                'Overcast': '☁️', 'Mist': '🌫️', 'Fog': '🌫️', 'Haze': '🌫️',
+                'Light rain': '🌦️', 'Moderate rain': '🌧️', 'Heavy rain': '🌧️',
+                'Thunderstorm': '⛈️', 'Blizzard': '❄️', 'Snow': '❄️',
+                'Drizzle': '🌦️', 'Patchy rain': '🌦️', 'Patchy snow': '🌨️',
+                'Blowing snow': '🌨️', 'Freezing': '🥶', 'Hot': '🔥'
+              };
+              let emoji = '🌡️';
+              for (const [key, val] of Object.entries(emojiMap)) {
+                if (desc.toLowerCase().includes(key.toLowerCase())) { emoji = val; break; }
+              }
+              // Use 🌙 for night-time clear
+              const indiaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+              const hr = indiaTime.getHours();
+              if ((hr >= 18 || hr < 6) && desc.toLowerCase().includes('clear')) emoji = '🌙';
+              else if ((hr >= 18 || hr < 6) && desc.toLowerCase().includes('sunny')) emoji = '🌙';
+              weatherEl.textContent = `${temp}°C · ${desc} ${emoji}`;
+            })
+            .catch(() => {
+              // Graceful fallback
+              const indiaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+              const hour = indiaTime.getHours();
+              let weatherText = "31°C · Clear Sky ☀️";
+              if (hour >= 18 || hour < 6) weatherText = "26°C · Clear Night 🌙";
+              else if (hour >= 6 && hour < 11) weatherText = "29°C · Sunny Morning 🌤️";
+              else if (hour >= 11 && hour < 15) weatherText = "34°C · Warm Sun ☀️";
+              else if (hour >= 15 && hour < 18) weatherText = "31°C · Breezy Evening 🍃";
+              weatherEl.textContent = weatherText;
+            });
         }
-        if (weatherEl) weatherEl.textContent = weatherText;
       }
 
       async function generateGithubGrid() {
