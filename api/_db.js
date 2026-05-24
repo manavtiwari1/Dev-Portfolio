@@ -14,7 +14,7 @@ const FAIL_COOLDOWN_MS = 30000; // 30 seconds cooldown after a failure
 
 // Lazily connect and cache MongoDB database instance
 async function getMongoDB() {
-  const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI || process.env.MANGO_URL || process.env.MANGO_URI;
   if (!uri) {
     return null; // Gracefully fall back to local db.json
   }
