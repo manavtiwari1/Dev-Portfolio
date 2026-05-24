@@ -1,3 +1,5 @@
+import { getValue } from "./_db.js";
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -17,6 +19,36 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Load custom chatbot configuration from MongoDB/Local storage
+  let chatbotData = null;
+  try {
+    const raw = await getValue("portfolio_chatbot");
+    if (raw) {
+      chatbotData = JSON.parse(raw);
+    }
+  } catch (err) {
+    console.error("Failed to load chatbot custom data from DB:", err);
+  }
+
+  let customFacts = "";
+  let customInstructionsText = "";
+  if (chatbotData) {
+    customFacts = `
+    Use these custom-configured answers for these specific topics if they are relevant to the user's query:
+    - Skills & Tech Arsenal: ${chatbotData.skills || "C++, C, Python, JavaScript, HTML/CSS, React, Supabase, Generative AI APIs, Prompt Engineering, Power BI, Tableau, Git, Discord bots."}
+    - Projects & Featured Work: ${chatbotData.projects || "Amplify Edge Discord Bot, Vibrations Fest Website."}
+    - Upcoming / Future Projects: ${chatbotData.futureProjects || "Smart AI Interview, AI Smart Study Assistant."}
+    - Qualifications / Education: ${chatbotData.qualification || "Computer Science degree at Shivaji College, DU (2025 - 2029)."}
+    - Connections & Social Media links: ${chatbotData.socials || "LinkedIn, GitHub, X, Instagram, Steam, Discord."}
+    - Contacting / Collaborating: ${chatbotData.contact || "Email tiwarimanav118@gmail.com or use the contact form."}
+    `;
+
+    if (Array.isArray(chatbotData.customQuestions) && chatbotData.customQuestions.length > 0) {
+      customInstructionsText = "\nHere are some specific custom questions and answers you MUST adhere to if asked:\n" + 
+        chatbotData.customQuestions.map(q => `- Question: "${q.question}" -> Answer: "${q.answer}"`).join("\n");
+    }
+  }
+
   // System Prompt / Instruction defining the chatbot persona
   const systemInstruction = `
     You are "Manav AI", a highly intelligent virtual clone representing Manav Tiwari, a Computer Science student at Shivaji College, University of Delhi, and a Full Stack Developer.
@@ -34,6 +66,9 @@ export default async function handler(req, res) {
       4. Smart AI Interview - Interactive exam and job prep simulator.
     - Portfolio stats: 25+ Projects completed, 100+ Coding Hours, 132+ GitHub Commits, 15+ Followers on GitHub.
     - Contacts: Email tiwarimanav118@gmail.com. Has links to LinkedIn, GitHub, X (Twitter), and Instagram.
+    
+    ${customFacts}
+    ${customInstructionsText}
     
     If the user asks general coding or technical questions (e.g. "Explain recursion", "How does React work?"), answer them smartly and helpfully in a developer tone, acting as a supportive helper representing Manav's high tech skills.
   `;
