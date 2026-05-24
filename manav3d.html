@@ -4093,6 +4093,18 @@
             <span id="db-weather" class="db-metric-value">--°C · Loading...</span>
           </div>
           <div class="db-metric-row">
+            <span class="db-metric-label">🐙 GitHub:</span>
+            <span class="db-metric-value"><a href="https://github.com/manavtiwari1" target="_blank" style="color:var(--teal);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:4px;">@manavtiwari1 <span style="font-size:0.8rem;">↗</span></a></span>
+          </div>
+          <div class="db-metric-row">
+            <span class="db-metric-label">📁 Public Repos:</span>
+            <span id="db-git-repos" class="db-metric-value">--</span>
+          </div>
+          <div class="db-metric-row">
+            <span class="db-metric-label">👥 Followers:</span>
+            <span id="db-git-followers" class="db-metric-value">--</span>
+          </div>
+          <div class="db-metric-row">
             <span class="db-metric-label">⚡ Current Focus:</span>
             <span class="db-metric-value" style="color: var(--teal)">AI Agents & Scaling Apps</span>
           </div>
@@ -5312,42 +5324,109 @@
         if (weatherEl) weatherEl.textContent = weatherText;
       }
 
-      function generateGithubGrid() {
+      async function generateGithubGrid() {
         const container = document.getElementById('db-git-grid');
         if (!container) return;
 
-        container.innerHTML = ''; // clear out
-        const totalCells = 24 * 7; // 24 columns, 7 rows
-        const levels = [0, 1, 2, 3, 4];
-        const weights = [0.18, 0.25, 0.28, 0.19, 0.1]; // Weighted probability for an active profile
-
-        const getWeightedLevel = () => {
-          const r = Math.random();
-          let sum = 0;
-          for (let i = 0; i < levels.length; i++) {
-            sum += weights[i];
-            if (r <= sum) return levels[i];
-          }
-          return 0;
-        };
-
+        const totalCells = 24 * 7; // 168 cells
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const now = new Date();
 
-        for (let i = 0; i < totalCells; i++) {
-          const cell = document.createElement('div');
-          const lvl = getWeightedLevel();
-          cell.className = `db-git-cell level-${lvl}`;
+        let contributionsData = [];
+        let fetchedSuccessfully = false;
+
+        try {
+          // Fetch real GitHub contribution data from public Deno API wrapper
+          const response = await fetch('https://github-contributions-api.deno.dev/manavtiwari1.json');
+          if (response.ok) {
+            const data = await response.json();
+            if (data && data.contributions && Array.isArray(data.contributions)) {
+              // The contributions array is chronological. We want the last 168 days.
+              const allContributions = data.contributions;
+              contributionsData = allContributions.slice(-totalCells);
+              
+              // Also update the Commits counter target to match real total contributions
+              const commitsCounter = document.querySelector('.db-counter[data-target="1540"]');
+              if (commitsCounter && data.total) {
+                commitsCounter.setAttribute('data-target', data.total);
+              }
+              fetchedSuccessfully = true;
+            }
+          }
+        } catch (e) {
+          console.warn("GitHub contributions API failed, falling back to realistic simulation.", e);
+        }
+
+        container.innerHTML = ''; // clear out
+
+        if (fetchedSuccessfully) {
+          for (let i = 0; i < contributionsData.length; i++) {
+            const cell = document.createElement('div');
+            const dayData = contributionsData[i];
+            
+            // Map the API's contribution level or count
+            let lvl = 0;
+            if (dayData.level !== undefined) {
+              lvl = dayData.level;
+            } else if (dayData.count !== undefined) {
+              const c = dayData.count;
+              lvl = c === 0 ? 0 : (c <= 2 ? 1 : (c <= 4 ? 2 : (c <= 7 ? 3 : 4)));
+            }
+
+            cell.className = `db-git-cell level-${lvl}`;
+            
+            const cellDate = new Date(dayData.date);
+            const dateString = `${months[cellDate.getMonth()]} ${cellDate.getDate()}, ${cellDate.getFullYear()}`;
+            const commitCount = dayData.count || 0;
+            
+            cell.setAttribute('title', `${commitCount} contributions on ${dateString}`);
+            container.appendChild(cell);
+          }
+        } else {
+          // Fallback simulation
+          const levels = [0, 1, 2, 3, 4];
+          const weights = [0.18, 0.25, 0.28, 0.19, 0.1];
+
+          const getWeightedLevel = () => {
+            const r = Math.random();
+            let sum = 0;
+            for (let i = 0; i < levels.length; i++) {
+              sum += weights[i];
+              if (r <= sum) return levels[i];
+            }
+            return 0;
+          };
+
+          for (let i = 0; i < totalCells; i++) {
+            const cell = document.createElement('div');
+            const lvl = getWeightedLevel();
+            cell.className = `db-git-cell level-${lvl}`;
+            
+            const cellDate = new Date(now);
+            cellDate.setDate(now.getDate() - (totalCells - i));
+            
+            const commitCount = lvl === 0 ? 'No' : (lvl === 1 ? '1-2' : (lvl === 2 ? '3-4' : (lvl === 3 ? '5-7' : '8+')));
+            const dateString = `${months[cellDate.getMonth()]} ${cellDate.getDate()}, ${cellDate.getFullYear()}`;
+            
+            cell.setAttribute('title', `${commitCount} contributions on ${dateString}`);
+            container.appendChild(cell);
+          }
+        }
+      }
+
+      async function fetchGithubStats() {
+        try {
+          const res = await fetch('https://api.github.com/users/manavtiwari1');
+          if (!res.ok) return;
+          const data = await res.json();
           
-          // Calculate historical dates going back cell by cell
-          const cellDate = new Date(now);
-          cellDate.setDate(now.getDate() - (totalCells - i));
+          const reposEl = document.getElementById('db-git-repos');
+          const followersEl = document.getElementById('db-git-followers');
           
-          const commitCount = lvl === 0 ? 'No' : (lvl === 1 ? '1-2' : (lvl === 2 ? '3-4' : (lvl === 3 ? '5-7' : '8+')));
-          const dateString = `${months[cellDate.getMonth()]} ${cellDate.getDate()}, ${cellDate.getFullYear()}`;
-          
-          cell.setAttribute('title', `${commitCount} contributions on ${dateString}`);
-          container.appendChild(cell);
+          if (reposEl && data.public_repos !== undefined) reposEl.textContent = data.public_repos;
+          if (followersEl && data.followers !== undefined) followersEl.textContent = data.followers;
+        } catch (err) {
+          console.warn("Error fetching profile stats from GitHub API:", err);
         }
       }
 
@@ -5383,6 +5462,7 @@
 
       // Initialize Dashboard triggers
       generateGithubGrid();
+      fetchGithubStats();
       updateDashboardTime();
       setInterval(updateDashboardTime, 1000);
 
