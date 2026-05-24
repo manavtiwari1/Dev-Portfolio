@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import authHandler from "./api/auth.js";
