@@ -2725,17 +2725,18 @@
       border-radius: 18px;
       box-shadow: 0 22px 80px rgba(0, 0, 0, 0.48), 0 0 50px rgba(0, 229, 255, 0.18);
       overflow: hidden;
-      transform: translateY(18px) scale(0.96);
+      transform-origin: bottom right;
+      transform: scale(0.08) translate(120px, 120px);
       opacity: 0;
       pointer-events: none;
-      transition: transform .28s ease, opacity .28s ease;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
       backdrop-filter: blur(18px);
     }
 
     .chatbot-shell.is-open .chatbot-panel {
       opacity: 1;
       pointer-events: auto;
-      transform: translateY(0) scale(1);
+      transform: scale(1) translate(0, 0);
     }
 
     .chatbot-head {
@@ -2830,26 +2831,64 @@
 
     .chatbot-suggestions {
       display: flex;
-      flex-wrap: wrap;
-      gap: .45rem;
-      padding: 0 1rem .85rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      gap: .5rem;
+      padding: .6rem 1rem 1rem;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.12);
+      scrollbar-width: none; /* Firefox */
+    }
+
+    .chatbot-suggestions::-webkit-scrollbar {
+      display: none; /* Safari and Chrome */
     }
 
     .chatbot-chip {
+      flex-shrink: 0;
       color: rgba(224, 247, 250, 0.9);
-      background: rgba(0, 229, 255, 0.08);
+      background: rgba(0, 229, 255, 0.05);
       border: 1px solid rgba(0, 229, 255, 0.22);
-      border-radius: 999px;
-      padding: .42rem .7rem;
-      font-size: .82rem;
+      border-radius: 99px;
+      padding: .4rem .95rem;
+      font-size: .8rem;
       font-weight: 700;
-      transition: transform .2s, border-color .2s, color .2s;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: all 0.28s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     .chatbot-chip:hover {
-      transform: translateY(-1px);
-      border-color: var(--teal);
-      color: var(--teal);
+      background: rgba(0, 229, 255, 0.16);
+      border-color: #00e5ff;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.28);
+      transform: translateY(-2px);
+    }
+
+    /* Pulsing Active Status Dot */
+    .status-pulse-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #00ff66;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00ff66;
+      position: relative;
+      margin-right: 6px;
+      vertical-align: middle;
+      animation: statusPulse 2s infinite ease-in-out;
+    }
+
+    @keyframes statusPulse {
+      0%, 100% {
+        opacity: 0.65;
+        box-shadow: 0 0 6px #00ff66;
+        transform: scale(0.95);
+      }
+      50% {
+        opacity: 1;
+        box-shadow: 0 0 14px #00ff66, 0 0 6px #00ff66;
+        transform: scale(1.08);
+      }
     }
 
     .chatbot-form {
@@ -2901,19 +2940,31 @@
       color: #001114;
       background: linear-gradient(135deg, var(--teal), #ffffff);
       font-weight: 900;
-      box-shadow: 0 0 28px rgba(0, 229, 255, 0.36), 0 14px 42px rgba(0, 0, 0, 0.35);
-      transition: transform .25s ease, opacity .25s ease;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.3), 0 8px 30px rgba(0, 0, 0, 0.35);
+      transition: transform .25s ease, opacity .25s ease, box-shadow .25s ease;
       pointer-events: auto;
+      animation: chatbotLauncherFloat 3.5s ease-in-out infinite alternate;
     }
 
     .chatbot-launcher:hover {
-      transform: translateY(-3px);
+      box-shadow: 0 0 35px rgba(0, 229, 255, 0.55), 0 12px 40px rgba(0, 0, 0, 0.45);
     }
 
     .chatbot-shell.is-open .chatbot-launcher {
       opacity: 0;
       pointer-events: none;
-      transform: translateY(12px) scale(.9);
+      transform: translateY(12px) scale(.85) !important;
+    }
+
+    @keyframes chatbotLauncherFloat {
+      0% {
+        transform: translateY(0);
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.3), 0 8px 30px rgba(0, 0, 0, 0.35);
+      }
+      100% {
+        transform: translateY(-7px);
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.5), 0 14px 40px rgba(0, 0, 0, 0.4);
+      }
     }
 
     .chatbot-launcher-icon {
@@ -3271,6 +3322,12 @@
       border-color: rgba(0, 180, 204, 0.25);
     }
 
+    body.light .chatbot-chip:hover {
+      background: rgba(0, 180, 204, 0.16);
+      border-color: rgba(0, 180, 204, 0.6);
+      box-shadow: 0 0 10px rgba(0, 180, 204, 0.15);
+    }
+
     /* ── DEVELOPER DASHBOARD ── */
     .db-grid {
       display: grid;
@@ -3598,7 +3655,7 @@
         <div>
           <p class="chatbot-kicker">Manav AI</p>
           <h2 class="chatbot-title">Ask about Manav</h2>
-          <p class="chatbot-status">Online for skills, qualifications, socials, and contact.</p>
+          <p class="chatbot-status"><span class="status-pulse-dot"></span>Online for skills, qualifications, socials, and contact.</p>
         </div>
         <button class="chatbot-close" type="button" id="chatbotClose" aria-label="Close chatbot">x</button>
       </div>
@@ -3626,10 +3683,10 @@
       </form>
     </section>
 
-    <button class="chatbot-launcher" type="button" id="chatbotLauncher" aria-label="Open portfolio chatbot">
+    <button class="chatbot-launcher magnetic-btn" type="button" id="chatbotLauncher" aria-label="Open portfolio chatbot">
       <span class="chatbot-launcher-icon"><img src="/Photos/logobg.png" alt="Manav Tiwari logo"></span>
       <span class="chatbot-launcher-text">
-        <span>Need help?</span>
+        <span>Need help? <span class="status-pulse-dot" style="margin-left: 2px; margin-right: 0;"></span></span>
         <span>Ask Manav AI</span>
       </span>
     </button>
