@@ -1,3 +1,4 @@
+import dns from "node:dns";
 import nodemailer from "nodemailer";
 import { getValue, setValue } from "./_db.js";
 
@@ -35,7 +36,9 @@ async function sendNotificationEmail(msg) {
       user,
       pass,
     },
-    family: 4, // Force IPv4 to bypass IPv6 ENETUNREACH errors on cloud hosting like Render
+    lookup: (hostname, options, callback) => {
+      dns.lookup(hostname, { family: 4 }, callback);
+    },
   });
 
   const mailOptions = {
