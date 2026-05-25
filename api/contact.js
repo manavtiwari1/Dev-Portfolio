@@ -35,6 +35,7 @@ async function sendNotificationEmail(msg) {
       user,
       pass,
     },
+    family: 4, // Force IPv4 to bypass IPv6 ENETUNREACH errors on cloud hosting like Render
   });
 
   const mailOptions = {
