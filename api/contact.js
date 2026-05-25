@@ -17,6 +17,7 @@ function parseMessages(value) {
 async function sendNotificationEmail(msg) {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.EMAIL_TO || "tiwarimanav118@gmail.com";
+  const fromEmail = process.env.EMAIL_FROM || "onboarding@resend.dev";
 
   if (!apiKey) {
     console.warn("RESEND_API_KEY is not configured in environment variables. Skipping email notification.");
@@ -30,7 +31,7 @@ async function sendNotificationEmail(msg) {
       "Authorization": `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      from: "Portfolio Contact <onboarding@resend.dev>",
+      from: `Portfolio Contact <${fromEmail}>`,
       to: [to],
       reply_to: msg.email,
       subject: `📩 New Portfolio Message: ${msg.subject}`,
