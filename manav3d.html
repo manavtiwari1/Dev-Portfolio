@@ -6595,8 +6595,8 @@
                 <div class="review-user-info">
                   <div class="review-user-avatar">${r.avatar || '👨‍💻'}</div>
                   <div class="review-user-meta">
-                    <span class="review-user-name">${escapeHTML(r.name)}</span>
-                    ${r.role ? `<span class="review-user-role">${escapeHTML(r.role)}</span>` : ''}
+                    <span class="review-user-name">${escapeHtml(r.name)}</span>
+                    ${r.role ? `<span class="review-user-role">${escapeHtml(r.role)}</span>` : ''}
                   </div>
                 </div>
                 <div class="review-stars-col">
@@ -6604,7 +6604,7 @@
                   <span class="review-date-display">${dateStr}</span>
                 </div>
               </div>
-              <p class="review-text-content">${escapeHTML(r.text)}</p>
+              <p class="review-text-content">${escapeHtml(r.text)}</p>
             `;
             grid.appendChild(card);
           });
