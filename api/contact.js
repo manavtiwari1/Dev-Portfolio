@@ -1,4 +1,4 @@
-import dns from "node:dns";
+import dns from "node:dns/promises";
 import nodemailer from "nodemailer";
 import { getValue, setValue } from "./_db.js";
 
@@ -18,7 +18,7 @@ function parseMessages(value) {
 
 async function sendNotificationEmail(msg) {
   const host = process.env.EMAIL_HOST || "smtp.gmail.com";
-  const port = parseInt(process.env.EMAIL_PORT || "587", 10);
+  const port = parseInt(process.env.EMAIL_PORT || "465", 10);
   const user = process.env.EMAIL_USER;
   const pass = process.env.EMAIL_PASS;
   const to = process.env.EMAIL_TO || user;
@@ -28,16 +28,29 @@ async function sendNotificationEmail(msg) {
     return;
   }
 
+  let resolvedHost = host;
+  if (host === "smtp.gmail.com") {
+    try {
+      const addresses = await dns.resolve4(host);
+      if (addresses && addresses.length > 0) {
+        resolvedHost = addresses[0];
+        console.log(`Resolved smtp.gmail.com to IPv4: ${resolvedHost}`);
+      }
+    } catch (dnsErr) {
+      console.warn("Failed to resolve smtp.gmail.com to IPv4, using original host name:", dnsErr);
+    }
+  }
+
   const transporter = nodemailer.createTransport({
-    host,
+    host: resolvedHost,
     port,
     secure: port === 465, // true for 465, false for other ports
     auth: {
       user,
       pass,
     },
-    lookup: (hostname, options, callback) => {
-      dns.lookup(hostname, { family: 4 }, callback);
+    tls: {
+      servername: "smtp.gmail.com", // Prevent SSL certificate verification failure when using direct IP
     },
   });
 
