@@ -266,14 +266,12 @@ export default function AdminPanel() {
 
         if (sRes && sRes.value) {
           let parsedSkills = JSON.parse(sRes.value);
-          const needsSync = !Array.isArray(parsedSkills) || 
-                            parsedSkills.length !== DEFAULT_SKILLS.length ||
-                            parsedSkills.some((s, idx) => s.name !== DEFAULT_SKILLS[idx].name || s.icon !== DEFAULT_SKILLS[idx].icon);
-          if (needsSync) {
-            parsedSkills = DEFAULT_SKILLS;
+          if (Array.isArray(parsedSkills) && parsedSkills.length > 0) {
+            setSkills(parsedSkills);
+          } else {
+            setSkills(DEFAULT_SKILLS);
             storage.set('portfolio_skills', JSON.stringify(DEFAULT_SKILLS), pw).catch(() => {});
           }
-          setSkills(parsedSkills);
         } else {
           setSkills(DEFAULT_SKILLS);
           storage.set('portfolio_skills', JSON.stringify(DEFAULT_SKILLS), pw).catch(() => {});
