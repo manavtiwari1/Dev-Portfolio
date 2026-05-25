@@ -4384,6 +4384,502 @@
     </div>
   </section>
 
+  <!-- STYLE FOR REVIEWS SECTION -->
+  <style>
+    #reviews {
+      padding: 100px 8vw 80px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .reviews-container {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    
+    @media (max-width: 990px) {
+      .reviews-container {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+    }
+    
+    /* Left Column: Overall Metrics */
+    .reviews-metrics-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 229, 255, 0.05);
+      position: sticky;
+      top: 100px;
+    }
+    
+    .avg-rating-big {
+      font-size: 4.8rem;
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      color: var(--teal);
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+      margin-bottom: 0.5rem;
+    }
+    
+    .rating-stars-row {
+      color: #f2c811;
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px rgba(242, 200, 17, 0.3);
+    }
+    
+    .rating-total-count {
+      color: var(--muted);
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .rating-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 2.2rem;
+    }
+    
+    .rating-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--white);
+    }
+    
+    .rating-bar-label {
+      width: 30px;
+      text-align: right;
+      font-weight: bold;
+    }
+    
+    .rating-bar-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 229, 255, 0.08);
+    }
+    
+    .rating-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--blue));
+      box-shadow: 0 0 8px var(--teal);
+      border-radius: 4px;
+      width: 0%;
+      transition: width 1s ease-out;
+    }
+    
+    .btn-write-review {
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      color: #000;
+      font-family: 'Orbitron', monospace;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.9rem 1.8rem;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.25);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-write-review:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.45);
+    }
+    
+    /* Right Column: Reviews wall & Form */
+    .reviews-wall-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .reviews-list-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+      max-height: 580px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    
+    .reviews-list-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .reviews-list-grid::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 3px;
+    }
+    
+    .reviews-list-grid::-webkit-scrollbar-thumb {
+      background: rgba(0, 229, 255, 0.15);
+      border-radius: 3px;
+    }
+    
+    .reviews-list-grid::-webkit-scrollbar-thumb:hover {
+      background: var(--teal);
+    }
+    
+    .review-item-card {
+      background: rgba(0, 20, 28, 0.6);
+      border: 1px solid rgba(0, 229, 255, 0.1);
+      border-radius: 16px;
+      padding: 1.6rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    
+    .review-item-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 229, 255, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 229, 255, 0.08);
+      background: rgba(0, 20, 28, 0.8);
+    }
+    
+    .review-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .review-user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .review-user-avatar {
+      font-size: 1.8rem;
+      width: 44px;
+      height: 44px;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(26, 108, 245, 0.05) 100%);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+    }
+    
+    .review-user-meta {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .review-user-name {
+      font-weight: 800;
+      color: var(--white);
+      font-size: 1.05rem;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.02em;
+    }
+    
+    .review-user-role {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    
+    .review-stars-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    
+    .review-stars-display {
+      color: #f2c811;
+      font-size: 0.95rem;
+    }
+    
+    .review-date-display {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    
+    .review-text-content {
+      color: rgba(224, 247, 250, 0.85);
+      font-size: 0.96rem;
+      line-height: 1.5;
+      font-weight: 500;
+      white-space: pre-wrap;
+    }
+    
+    /* Reviews Form Card */
+    .reviews-form-card {
+      background: rgba(0, 14, 20, 0.9);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 20px;
+      padding: 2.2rem;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--glow);
+      display: none; /* toggled by javascript */
+      flex-direction: column;
+      gap: 1.2rem;
+      animation: fadeIn 0.4s ease both;
+    }
+    
+    .reviews-form-card.form-active {
+      display: flex;
+    }
+    
+    .reviews-form-title {
+      font-family: 'Orbitron', monospace;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--teal);
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+      padding-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-star-rating-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-star-rating-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 0.08em;
+    }
+    
+    .form-stars-interactive {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .form-star-btn {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.15);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .form-star-btn:hover,
+    .form-star-btn.star-active {
+      color: #f2c811;
+      transform: scale(1.15);
+      text-shadow: 0 0 10px rgba(242, 200, 17, 0.4);
+    }
+    
+    .form-avatar-picker-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .form-avatar-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .form-avatar-choice {
+      font-size: 1.5rem;
+      width: 42px;
+      height: 42px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+    }
+    
+    .form-avatar-choice:hover,
+    .form-avatar-choice.avatar-active {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: var(--teal);
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+    }
+    
+    .form-char-counter {
+      text-align: right;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: -8px;
+    }
+    
+    .review-submit-success {
+      display: none;
+      background: rgba(0, 255, 135, 0.08);
+      border: 1px solid rgba(0, 255, 135, 0.25);
+      color: #00ff87;
+      padding: 1.2rem;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 600;
+      animation: fadeIn 0.4s ease both;
+    }
+  </style>
+
+  <!-- VISITOR REVIEWS & GUESTBOOK -->
+  <section id="reviews" class="section3d reveal">
+    <div class="sec-head">
+      <h2 class="sec-title">Reviews &amp; Guestbook</h2><span class="sec-line"></span>
+    </div>
+    
+    <div class="reviews-container">
+      <!-- Left Column: Metrics -->
+      <div class="reviews-metrics-card">
+        <div class="avg-rating-big" id="reviews-avg-rating">0.0</div>
+        <div class="rating-stars-row" id="reviews-avg-stars">☆☆☆☆☆</div>
+        <div class="rating-total-count" id="reviews-total-count">0 Reviews</div>
+        
+        <div class="rating-bars">
+          <div class="rating-bar-row">
+            <span class="rating-bar-label">5 ★</span>
+            <div class="rating-bar-track">
+              <div class="rating-bar-fill" id="rating-fill-5"></div>
+            </div>
+          </div>
+          <div class="rating-bar-row">
+            <span class="rating-bar-label">4 ★</span>
+            <div class="rating-bar-track">
+              <div class="rating-bar-fill" id="rating-fill-4"></div>
+            </div>
+          </div>
+          <div class="rating-bar-row">
+            <span class="rating-bar-label">3 ★</span>
+            <div class="rating-bar-track">
+              <div class="rating-bar-fill" id="rating-fill-3"></div>
+            </div>
+          </div>
+          <div class="rating-bar-row">
+            <span class="rating-bar-label">2 ★</span>
+            <div class="rating-bar-track">
+              <div class="rating-bar-fill" id="rating-fill-2"></div>
+            </div>
+          </div>
+          <div class="rating-bar-row">
+            <span class="rating-bar-label">1 ★</span>
+            <div class="rating-bar-track">
+              <div class="rating-bar-fill" id="rating-fill-1"></div>
+            </div>
+          </div>
+        </div>
+        
+        <button class="btn-write-review" id="btnToggleReviewForm">
+          <span>✍️ Write A Review</span>
+        </button>
+      </div>
+      
+      <!-- Right Column: Wall or Form -->
+      <div class="reviews-wall-container">
+        <!-- Success Alert -->
+        <div class="review-submit-success" id="reviewSuccessAlert">
+          🎉 Review submitted successfully! It has been received and is pending moderation by Manav. Thank you for your feedback!
+        </div>
+        
+        <!-- Form -->
+        <form class="reviews-form-card" id="reviewsForm" onsubmit="submitReview(event)">
+          <div class="reviews-form-title">Leave Your Review</div>
+          
+          <div class="cf-row" style="margin-bottom: 0;">
+            <div class="cf-group">
+              <label class="cf-label">YOUR NAME *</label>
+              <input type="text" class="cf-input" id="rev-name" required placeholder="e.g. John Doe" maxlength="100">
+            </div>
+            <div class="cf-group">
+              <label class="cf-label">YOUR ROLE / TITLE</label>
+              <input type="text" class="cf-input" id="rev-role" placeholder="e.g. Recruiter / Tech Lead / Student" maxlength="120">
+            </div>
+          </div>
+          
+          <div class="form-star-rating-row">
+            <span class="form-star-rating-label">RATING:</span>
+            <div class="form-stars-interactive" id="form-stars">
+              <button type="button" class="form-star-btn" data-star="1">★</button>
+              <button type="button" class="form-star-btn" data-star="2">★</button>
+              <button type="button" class="form-star-btn" data-star="3">★</button>
+              <button type="button" class="form-star-btn" data-star="4">★</button>
+              <button type="button" class="form-star-btn" data-star="5">★</button>
+            </div>
+          </div>
+          
+          <div class="form-avatar-picker-row">
+            <label class="cf-label">CHOOSE AVATAR EMOJI</label>
+            <div class="form-avatar-grid" id="form-avatars">
+              <span class="form-avatar-choice avatar-active" data-emoji="👨‍💻">👨‍💻</span>
+              <span class="form-avatar-choice" data-emoji="👩‍💻">👩‍💻</span>
+              <span class="form-avatar-choice" data-emoji="🚀">🚀</span>
+              <span class="form-avatar-choice" data-emoji="🤖">🤖</span>
+              <span class="form-avatar-choice" data-emoji="🧠">🧠</span>
+              <span class="form-avatar-choice" data-emoji="🎓">🎓</span>
+              <span class="form-avatar-choice" data-emoji="👑">👑</span>
+              <span class="form-avatar-choice" data-emoji="💼">💼</span>
+              <span class="form-avatar-choice" data-emoji="⚡">⚡</span>
+              <span class="form-avatar-choice" data-emoji="🌟">🌟</span>
+            </div>
+          </div>
+          
+          <div class="cf-group" style="width: 100%;">
+            <label class="cf-label">REVIEW CONTENT *</label>
+            <textarea class="cf-textarea" id="rev-text" required placeholder="Write your thoughts or feedback about Manav's work, skills, or portfolio here..." style="min-height: 120px;" maxlength="500"></textarea>
+          </div>
+          <div class="form-char-counter" id="rev-char-count">500 characters remaining</div>
+          
+          <div class="cf-row" style="margin-top: 0.5rem; justify-content: flex-start; gap: 1rem;">
+            <button type="submit" class="btn-solid" style="padding: 0.8rem 2rem; min-width: 130px; flex: 0 0 auto;" id="btnSubmitReview">
+              <span>SUBMIT REVIEW</span>
+            </button>
+            <button type="button" class="btn-ghost" id="btnCancelReview" style="padding: 0.8rem 2rem; min-width: 130px; flex: 0 0 auto; border-color: rgba(255,255,255,0.2);">
+              <span>CANCEL</span>
+            </button>
+          </div>
+        </form>
+        
+        <!-- Live Reviews List -->
+        <div class="reviews-list-grid" id="reviews-list-grid">
+          <div style="text-align: center; color: var(--muted); padding: 2rem;">Loading reviews...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section id="contact" class="section3d reveal">
     <div class="sec-head">
@@ -4607,6 +5103,20 @@
           body: JSON.stringify(message)
         });
         if (!response.ok) throw new Error('Could not save message.');
+      },
+      async getReviews() {
+        const response = await fetch(apiUrl('/api/reviews'));
+        if (!response.ok) throw new Error('Could not load reviews.');
+        return await response.json();
+      },
+      async addReview(review) {
+        const response = await fetch(apiUrl('/api/reviews'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(review)
+        });
+        if (!response.ok) throw new Error('Could not submit review.');
+        return await response.json();
       }
     };
 
@@ -5855,9 +6365,244 @@
         observer.observe(dbSection);
       }
 
+      // ── REVIEWS & GUESTBOOK JS LOGIC ──
+      let selectedRating = 5;
+      let selectedAvatar = "👨‍💻";
+
+      // Toggle reviews form panel
+      const btnToggleForm = document.getElementById('btnToggleReviewForm');
+      const reviewsForm = document.getElementById('reviewsForm');
+      const btnCancelReview = document.getElementById('btnCancelReview');
+      
+      if (btnToggleForm && reviewsForm) {
+        btnToggleForm.addEventListener('click', () => {
+          reviewsForm.classList.toggle('form-active');
+          if (reviewsForm.classList.contains('form-active')) {
+            reviewsForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        });
+      }
+      
+      if (btnCancelReview && reviewsForm) {
+        btnCancelReview.addEventListener('click', () => {
+          reviewsForm.classList.remove('form-active');
+          document.getElementById('reviewsForm').reset();
+          resetFormInteractiveStates();
+        });
+      }
+
+      // Stars hover and select
+      const starButtons = document.querySelectorAll('.form-star-btn');
+      starButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedRating = parseInt(btn.getAttribute('data-star'), 10);
+          updateFormStars(selectedRating);
+        });
+        
+        btn.addEventListener('mouseenter', () => {
+          const hoverVal = parseInt(btn.getAttribute('data-star'), 10);
+          highlightStars(hoverVal);
+        });
+      });
+      
+      const formStarsContainer = document.getElementById('form-stars');
+      if (formStarsContainer) {
+        formStarsContainer.addEventListener('mouseleave', () => {
+          updateFormStars(selectedRating);
+        });
+      }
+      
+      function highlightStars(count) {
+        starButtons.forEach(btn => {
+          const starVal = parseInt(btn.getAttribute('data-star'), 10);
+          if (starVal <= count) {
+            btn.style.color = '#f2c811';
+          } else {
+            btn.style.color = 'rgba(255, 255, 255, 0.15)';
+          }
+        });
+      }
+      
+      function updateFormStars(rating) {
+        starButtons.forEach(btn => {
+          const starVal = parseInt(btn.getAttribute('data-star'), 10);
+          if (starVal <= rating) {
+            btn.classList.add('star-active');
+            btn.style.color = '#f2c811';
+          } else {
+            btn.classList.remove('star-active');
+            btn.style.color = 'rgba(255, 255, 255, 0.15)';
+          }
+        });
+      }
+
+      // Avatar selection
+      const avatarChoices = document.querySelectorAll('.form-avatar-choice');
+      avatarChoices.forEach(choice => {
+        choice.addEventListener('click', () => {
+          avatarChoices.forEach(c => c.classList.remove('avatar-active'));
+          choice.classList.add('avatar-active');
+          selectedAvatar = choice.getAttribute('data-emoji');
+        });
+      });
+
+      // Textarea counter
+      const revText = document.getElementById('rev-text');
+      const revCounter = document.getElementById('rev-char-count');
+      if (revText && revCounter) {
+        revText.addEventListener('input', () => {
+          const rem = 500 - revText.value.length;
+          revCounter.textContent = `${rem} characters remaining`;
+        });
+      }
+
+      function resetFormInteractiveStates() {
+        selectedRating = 5;
+        selectedAvatar = "👨‍💻";
+        updateFormStars(5);
+        avatarChoices.forEach(c => c.classList.remove('avatar-active'));
+        const defaultAvatar = document.querySelector('.form-avatar-choice[data-emoji="👨‍💻"]');
+        if (defaultAvatar) defaultAvatar.classList.add('avatar-active');
+        if (revCounter) revCounter.textContent = '500 characters remaining';
+      }
+
+      // Form submission
+      window.submitReview = async function(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('btnSubmitReview');
+        const successAlert = document.getElementById('reviewSuccessAlert');
+        
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.querySelector('span').textContent = 'SUBMITTING...';
+        }
+        
+        const reviewData = {
+          name: document.getElementById('rev-name').value,
+          role: document.getElementById('rev-role').value,
+          rating: selectedRating,
+          avatar: selectedAvatar,
+          text: document.getElementById('rev-text').value
+        };
+        
+        try {
+          await storage.addReview(reviewData);
+          reviewsForm.classList.remove('form-active');
+          reviewsForm.reset();
+          resetFormInteractiveStates();
+          
+          if (successAlert) {
+            successAlert.style.display = 'block';
+            successAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+              successAlert.style.display = 'none';
+            }, 6000);
+          }
+          // Reload approved reviews
+          loadApprovedReviews();
+        } catch (err) {
+          alert('Failed to submit review: ' + err.message);
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.querySelector('span').textContent = 'SUBMIT REVIEW';
+          }
+        }
+      };
+
+      // Load and display reviews
+      async function loadApprovedReviews() {
+        const grid = document.getElementById('reviews-list-grid');
+        const avgRatingEl = document.getElementById('reviews-avg-rating');
+        const avgStarsEl = document.getElementById('reviews-avg-stars');
+        const totalCountEl = document.getElementById('reviews-total-count');
+        
+        if (!grid) return;
+        
+        try {
+          const reviewsData = await storage.getReviews();
+          
+          if (!Array.isArray(reviewsData) || reviewsData.length === 0) {
+            grid.innerHTML = '<div style="text-align: center; color: var(--muted); padding: 2rem; font-weight: 500;">Be the first to leave a review! Click the button on the left to write one.</div>';
+            if (avgRatingEl) avgRatingEl.textContent = '0.0';
+            if (avgStarsEl) avgStarsEl.textContent = '☆☆☆☆☆';
+            if (totalCountEl) totalCountEl.textContent = '0 Reviews';
+            return;
+          }
+          
+          // Calculate stats
+          const count = reviewsData.length;
+          let sum = 0;
+          const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+          
+          reviewsData.forEach(r => {
+            sum += r.rating;
+            if (distribution[r.rating] !== undefined) distribution[r.rating]++;
+          });
+          
+          const avg = (sum / count).toFixed(1);
+          
+          // Update stats DOM
+          if (avgRatingEl) avgRatingEl.textContent = avg;
+          if (avgStarsEl) {
+            const stars = Math.round(avg);
+            avgStarsEl.textContent = '★'.repeat(stars) + '☆'.repeat(5 - stars);
+          }
+          if (totalCountEl) totalCountEl.textContent = `${count} Review${count > 1 ? 's' : ''}`;
+          
+          // Update bar fills
+          for (let i = 1; i <= 5; i++) {
+            const fill = document.getElementById(`rating-fill-${i}`);
+            if (fill) {
+              const percentage = ((distribution[i] / count) * 100).toFixed(0);
+              fill.style.width = `${percentage}%`;
+            }
+          }
+          
+          // Render reviews
+          grid.innerHTML = '';
+          reviewsData.forEach(r => {
+            const card = document.createElement('div');
+            card.className = 'review-item-card';
+            
+            const starText = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+            
+            const dateObj = new Date(r.date);
+            const dateStr = dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            
+            card.innerHTML = `
+              <div class="review-item-header">
+                <div class="review-user-info">
+                  <div class="review-user-avatar">${r.avatar || '👨‍💻'}</div>
+                  <div class="review-user-meta">
+                    <span class="review-user-name">${escapeHTML(r.name)}</span>
+                    ${r.role ? `<span class="review-user-role">${escapeHTML(r.role)}</span>` : ''}
+                  </div>
+                </div>
+                <div class="review-stars-col">
+                  <span class="review-stars-display">${starText}</span>
+                  <span class="review-date-display">${dateStr}</span>
+                </div>
+              </div>
+              <p class="review-text-content">${escapeHTML(r.text)}</p>
+            `;
+            grid.appendChild(card);
+          });
+        } catch (err) {
+          console.error("Error loading reviews:", err);
+          grid.innerHTML = '<div style="text-align: center; color: #ff5a6a; padding: 2rem;">Failed to load reviews. Please reload the page.</div>';
+        }
+      }
+      
+      // Load reviews on startup
+      loadApprovedReviews();
+
       /* Init */
       window._projInit = initCarousel;
-      window.addEventListener('load', initCarousel);
+      window.addEventListener('load', () => {
+        initCarousel();
+        resetFormInteractiveStates();
+      });
       window.addEventListener('resize', () => goTo(current, true));
     })();
   </script>

@@ -227,6 +227,7 @@ export default function AdminPanel() {
   const [certifications, setCertifications] = useState([]);
   const [projects, setProjects] = useState([]);
   const [chatbotReplies, setChatbotReplies] = useState(DEFAULT_CHATBOT_REPLIES);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
   const [newSkill, setNewSkill] = useState({ icon:"🚀", name:"", tags:"" });
@@ -248,7 +249,7 @@ export default function AdminPanel() {
     (async () => {
       setLoading(true);
       try {
-        const [mRes, sRes, qRes, expRes, cRes, pRes, botRes] = await Promise.all([
+        const [mRes, sRes, qRes, expRes, cRes, pRes, botRes, revRes] = await Promise.all([
           storage.get('contact_messages', pw).catch(() => null),
           storage.get('portfolio_skills', pw).catch(() => null),
           storage.get('portfolio_qualifications', pw).catch(() => null),
@@ -256,6 +257,7 @@ export default function AdminPanel() {
           storage.get('portfolio_certifications', pw).catch(() => null),
           storage.get('portfolio_projects', pw).catch(() => null),
           storage.get('portfolio_chatbot', pw).catch(() => null),
+          storage.get('portfolio_reviews', pw).catch(() => null),
         ]);
 
         if (mRes && mRes.value) {
@@ -317,6 +319,35 @@ export default function AdminPanel() {
           setChatbotReplies(DEFAULT_CHATBOT_REPLIES);
           storage.set('portfolio_chatbot', JSON.stringify(DEFAULT_CHATBOT_REPLIES), pw).catch(() => {});
         }
+
+        if (revRes && revRes.value) {
+          setReviews(JSON.parse(revRes.value));
+        } else {
+          const defaultReviews = [
+            {
+              id: "1",
+              name: "Dr. Rajesh Kumar",
+              role: "Professor of Computer Science, DU",
+              rating: 5,
+              text: "Manav is an exceptionally brilliant student. His dedication to learning generative AI tools and full-stack architecture is outstanding.",
+              date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+              approved: true,
+              avatar: "👨‍🏫"
+            },
+            {
+              id: "2",
+              name: "Sarah Jenkins",
+              role: "Tech Recruiter",
+              rating: 5,
+              text: "Visited Manav's portfolio and was blown away by the 3D graphics and active chatbot clone. A top-tier developer indeed!",
+              date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+              approved: true,
+              avatar: "👩‍💻"
+            }
+          ];
+          setReviews(defaultReviews);
+          storage.set('portfolio_reviews', JSON.stringify(defaultReviews), pw).catch(() => {});
+        }
       } catch (err) {
         console.error("Error loading data in parallel:", err);
       } finally {
@@ -360,6 +391,26 @@ export default function AdminPanel() {
   const saveMsgs = async (updated) => {
     setMessages(updated);
     try { await storage.set('contact_messages', JSON.stringify(updated), pw); } catch {}
+  };
+
+  const saveReviews = async (updated) => {
+    setReviews(updated);
+    try { await storage.set('portfolio_reviews', JSON.stringify(updated), pw); } catch {}
+  };
+
+  const approveReview = async (id) => {
+    const updated = reviews.map(r => r.id === id ? { ...r, approved: true } : r);
+    await saveReviews(updated);
+  };
+
+  const disapproveReview = async (id) => {
+    const updated = reviews.map(r => r.id === id ? { ...r, approved: false } : r);
+    await saveReviews(updated);
+  };
+
+  const deleteReview = async (id) => {
+    const updated = reviews.filter(r => r.id !== id);
+    await saveReviews(updated);
   };
 
   /* ── login ── */
@@ -728,6 +779,9 @@ export default function AdminPanel() {
           <button style={S.tabBtn(tab==="qualifications")} onClick={()=>setTab("qualifications")}>Qualifications</button>
           <button style={S.tabBtn(tab==="certifications")} onClick={()=>setTab("certifications")}>Certifications</button>
           <button style={S.tabBtn(tab==="chatbot")} onClick={()=>setTab("chatbot")}>Manav AI</button>
+          <button style={S.tabBtn(tab==="reviews")} onClick={()=>setTab("reviews")}>
+            ⭐ Reviews {reviews.filter(r => !r.approved).length > 0 && <span style={{background:"#ff007f",color:"#fff",borderRadius:10,padding:"0 5px",fontSize:".65rem",marginLeft:4}}>{reviews.filter(r => !r.approved).length}</span>}
+          </button>
           <button style={S.logoutBtn} onClick={()=>setAuthed(false)}>Logout</button>
         </div>
       </div>
@@ -754,6 +808,14 @@ export default function AdminPanel() {
               <div style={S.statCard("#7b2fff")}>
                 <div style={S.statNum("#7b2fff")}>{skills.length}</div>
                 <div style={S.statLabel}>Total Skills</div>
+              </div>
+              <div style={S.statCard("#00e5ff")}>
+                <div style={S.statNum("#00e5ff")}>{reviews.length}</div>
+                <div style={S.statLabel}>Total Reviews</div>
+              </div>
+              <div style={S.statCard(reviews.filter(r => !r.approved).length > 0 ? "#ff007f" : "#00e5ff")}>
+                <div style={S.statNum(reviews.filter(r => !r.approved).length > 0 ? "#ff007f" : "#00e5ff")}>{reviews.filter(r => !r.approved).length}</div>
+                <div style={S.statLabel}>Pending Reviews</div>
               </div>
               <div style={S.statCard("#f2c811")}>
                 <div style={S.statNum("#f2c811")}>
@@ -1423,7 +1485,7 @@ export default function AdminPanel() {
               ))}
             </div>
           </>
-        ) : (
+        ) : tab === "chatbot" ? (
           <>
             <div style={S.pageTitle}>Manage Manav AI Chatbot</div>
             <div style={S.pageSub}>Edit chatbot replies shown on the front page. Save changes, then refresh the portfolio to see updates.</div>
@@ -1489,6 +1551,93 @@ export default function AdminPanel() {
 
             <div style={{...S.noMsg, padding:"1.2rem", textAlign:"left"}}>
               Custom questions are matched before automatic intents and appear as extra quick question chips in Manav AI.
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={S.pageTitle}>⭐ Reviews & Guestbook Moderation</div>
+            <div style={S.pageSub}>Manage comments and ratings submitted by visitors. Approved reviews are displayed publicly on the portfolio.</div>
+
+            {/* PENDING REVIEWS BOX */}
+            <div style={{marginBottom: "2rem"}}>
+              <div style={{...S.addTitle, fontSize: "0.85rem", borderBottom: "1px solid rgba(0, 229, 255, 0.15)", paddingBottom: ".4rem", marginBottom: "1rem"}}>
+                ⏳ PENDING APPROVAL ({reviews.filter(r => !r.approved).length})
+              </div>
+              
+              {reviews.filter(r => !r.approved).length === 0 ? (
+                <div style={S.noMsg}>No pending reviews. Good job!</div>
+              ) : (
+                <div style={S.msgList}>
+                  {reviews.filter(r => !r.approved).map(rev => (
+                    <div key={rev.id} style={S.msgCard(false)}>
+                      <div style={S.msgTop}>
+                        <div style={{display: "flex", gap: "10px", alignItems: "center"}}>
+                          <div style={{fontSize: "2rem", background: "rgba(0, 229, 255, 0.1)", borderRadius: "50%", width: "48px", height: "48px", display: "flex", alignItems: "center", justifySelf: "center", justifyContent: "center"}}>
+                            {rev.avatar || "👨‍💻"}
+                          </div>
+                          <div>
+                            <div style={S.msgName}>{rev.name}</div>
+                            {rev.role && <div style={S.msgEmail}>{rev.role}</div>}
+                          </div>
+                        </div>
+                        <div style={{textAlign: "right"}}>
+                          <div style={{color: "#f2c811", fontSize: "1.1rem", fontWeight: "bold"}}>
+                            {"★".repeat(rev.rating)}{"☆".repeat(5 - rev.rating)}
+                          </div>
+                          <div style={S.msgDate}>{fmt(rev.date)}</div>
+                        </div>
+                      </div>
+                      <div style={{...S.msgBody, marginTop: "1rem", whiteSpace: "pre-wrap"}}>{rev.text}</div>
+                      
+                      <div style={{display: "flex", gap: ".6rem", marginTop: "1.2rem"}}>
+                        <button style={{...S.addBtn, background: "linear-gradient(135deg, #00ff87, #60efff)"}} onClick={() => approveReview(rev.id)}>✓ APPROVE & PUBLISH</button>
+                        <button style={S.removeBtn} onClick={() => deleteReview(rev.id)}>🗑️ REJECT / DELETE</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* APPROVED REVIEWS BOX */}
+            <div>
+              <div style={{...S.addTitle, fontSize: "0.85rem", borderBottom: "1px solid rgba(0, 229, 255, 0.15)", paddingBottom: ".4rem", marginBottom: "1rem"}}>
+                ✓ LIVE APPROVED REVIEWS ({reviews.filter(r => r.approved).length})
+              </div>
+
+              {reviews.filter(r => r.approved).length === 0 ? (
+                <div style={S.noMsg}>No approved reviews yet. Approve pending submissions or wait for reviews.</div>
+              ) : (
+                <div style={S.msgList}>
+                  {reviews.filter(r => r.approved).map(rev => (
+                    <div key={rev.id} style={S.msgCard(true)}>
+                      <div style={S.msgTop}>
+                        <div style={{display: "flex", gap: "10px", alignItems: "center"}}>
+                          <div style={{fontSize: "2rem", background: "rgba(255, 255, 255, 0.05)", borderRadius: "50%", width: "48px", height: "48px", display: "flex", alignItems: "center", justifySelf: "center", justifyContent: "center"}}>
+                            {rev.avatar || "👨‍💻"}
+                          </div>
+                          <div>
+                            <div style={S.msgName}>{rev.name}</div>
+                            {rev.role && <div style={S.msgEmail}>{rev.role}</div>}
+                          </div>
+                        </div>
+                        <div style={{textAlign: "right"}}>
+                          <div style={{color: "#f2c811", fontSize: "1.1rem"}}>
+                            {"★".repeat(rev.rating)}{"☆".repeat(5 - rev.rating)}
+                          </div>
+                          <div style={S.msgDate}>{fmt(rev.date)}</div>
+                        </div>
+                      </div>
+                      <div style={{...S.msgBody, marginTop: "1rem", whiteSpace: "pre-wrap"}}>{rev.text}</div>
+                      
+                      <div style={{display: "flex", gap: ".6rem", marginTop: "1.2rem"}}>
+                        <button style={S.editBtn} onClick={() => disapproveReview(rev.id)}>⊘ HIDE / DISAPPROVE</button>
+                        <button style={S.removeBtn} onClick={() => deleteReview(rev.id)}>🗑️ DELETE</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </>
         )}

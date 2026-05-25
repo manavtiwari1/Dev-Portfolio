@@ -5,6 +5,7 @@ import authHandler from "./api/auth.js";
 import contactHandler from "./api/contact.js";
 import storageHandler from "./api/storage.js";
 import chatHandler from "./api/chat.js";
+import reviewsHandler from "./api/reviews.js";
 
 async function readJsonBody(req) {
   const chunks = [];
@@ -43,6 +44,7 @@ export default defineConfig({
             "/api/contact": contactHandler,
             "/api/storage": storageHandler,
             "/api/chat": chatHandler,
+            "/api/reviews": reviewsHandler,
           };
           const handler = handlers[url.pathname];
           if (!handler) {
