@@ -122,14 +122,14 @@ export default async function handler(req, res) {
     existing.unshift(msg);
     await setValue("contact_messages", JSON.stringify(existing.slice(0, 500)));
 
-    // Try sending email in the background, catch errors gracefully
-    try {
-      await sendNotificationEmail(msg);
-      console.log(`Notification email sent successfully to: ${process.env.EMAIL_TO || process.env.EMAIL_USER}`);
-    } catch (emailErr) {
-      console.error("Email notification sending failed:", emailErr);
-      // We do not fail the request if email sending fails, as the database save was successful.
-    }
+    // Send email asynchronously in the background so it doesn't block the client's HTTP response
+    sendNotificationEmail(msg)
+      .then(() => {
+        console.log(`Notification email sent successfully to: ${process.env.EMAIL_TO || process.env.EMAIL_USER}`);
+      })
+      .catch((emailErr) => {
+        console.error("Email notification sending failed:", emailErr);
+      });
 
     res.status(200).json({ ok: true });
   } catch (error) {
