@@ -1449,7 +1449,11 @@ export default function AdminPanel() {
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(0,229,255,0.08)", paddingBottom: "6px" }}>
                       <span style={{ fontSize: "0.78rem", color: "#4a7a82", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>Total Coding time</span>
-                      <span style={{ fontSize: "0.85rem", color: "#00e5ff", fontWeight: 700, fontFamily: "monospace" }}>{wakaData.human_readable_total || `${wakaData.total_hours} hrs`}</span>
+                      <span style={{ fontSize: "0.85rem", color: "#00e5ff", fontWeight: 700, fontFamily: "monospace" }}>
+                        {wakaData.total_seconds 
+                          ? `${Math.floor(wakaData.total_seconds / 3600)} hrs ${Math.floor((wakaData.total_seconds % 3600) / 60)} mins ${Math.floor(wakaData.total_seconds % 60)} secs`
+                          : (wakaData.human_readable_total || `${wakaData.total_hours} hrs`)}
+                      </span>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(0,229,255,0.08)", paddingBottom: "6px" }}>
                       <span style={{ fontSize: "0.78rem", color: "#4a7a82", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>Daily average</span>
