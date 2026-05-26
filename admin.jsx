@@ -470,10 +470,10 @@ export default function AdminPanel() {
     setEditingMember(null);
   };
 
-  const toggleResignMember = async (id) => {
+  const changeMemberStatus = async (id, status) => {
     const updated = team.map(m => {
       if (m.id === id) {
-        return { ...m, status: m.status === "Resigned" ? "Active" : "Resigned" };
+        return { ...m, status };
       }
       return m;
     });
@@ -997,6 +997,71 @@ export default function AdminPanel() {
         .glow-card:hover {
           transform: translateY(-5px) !important;
           box-shadow: 0 10px 25px rgba(0, 229, 255, 0.15) !important;
+        }
+
+        .status-dropdown-wrapper {
+          position: relative;
+          display: inline-block;
+        }
+
+        .status-dropdown-menu {
+          display: none;
+          position: absolute;
+          right: 0;
+          top: 100%;
+          background: rgba(4, 15, 20, 0.95);
+          border: 1px solid rgba(0, 229, 255, 0.25);
+          border-radius: 6px;
+          min-width: 120px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+          z-index: 10;
+          backdrop-filter: blur(12px);
+          padding: 4px 0;
+          margin-top: 4px;
+        }
+
+        .status-dropdown-wrapper:hover .status-dropdown-menu {
+          display: block;
+        }
+
+        .status-dropdown-item {
+          display: block;
+          width: 100%;
+          padding: 8px 12px;
+          text-align: left;
+          background: transparent;
+          border: none;
+          color: #a3c2c7;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-family: 'Rajdhani', sans-serif;
+        }
+
+        .status-dropdown-item:hover {
+          background: rgba(0, 229, 255, 0.15);
+        }
+        
+        .status-dropdown-item.active-opt {
+          color: #00ff87;
+        }
+        .status-dropdown-item.active-opt:hover {
+          background: rgba(0, 255, 135, 0.15);
+        }
+
+        .status-dropdown-item.resign-opt {
+          color: #ff9f43;
+        }
+        .status-dropdown-item.resign-opt:hover {
+          background: rgba(255, 159, 67, 0.15);
+        }
+
+        .status-dropdown-item.fired-opt {
+          color: #ff5a6a;
+        }
+        .status-dropdown-item.fired-opt:hover {
+          background: rgba(255, 90, 106, 0.15);
         }
       `}</style>
 
@@ -2285,36 +2350,60 @@ export default function AdminPanel() {
                         <div>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <div style={S.msgName}>{m.name}</div>
-                            {m.status === "Resigned" ? (
-                              <span style={{
-                                background: "rgba(255,90,106,0.12)",
-                                border: "1px solid rgba(255,90,106,0.3)",
-                                color: "#ff5a6a",
-                                borderRadius: "4px",
-                                padding: "1px 6px",
-                                fontSize: "0.68rem",
-                                fontWeight: "bold",
-                                textTransform: "uppercase",
-                                letterSpacing: "0.05em"
-                              }}>
-                                Resigned
-                              </span>
-                            ) : (
-                              <span style={{
-                                background: "rgba(0,255,135,0.12)",
-                                border: "1px solid rgba(0,255,135,0.3)",
-                                color: "#00ff87",
-                                borderRadius: "4px",
-                                padding: "1px 6px",
-                                fontSize: "0.68rem",
-                                fontWeight: "bold",
-                                textTransform: "uppercase",
-                                letterSpacing: "0.05em",
-                                boxShadow: "0 0 8px rgba(0, 255, 135, 0.15)"
-                              }}>
-                                Active
-                              </span>
-                            )}
+                            {(() => {
+                              if (m.status === "Resigned") {
+                                return (
+                                  <span style={{
+                                    background: "rgba(255,159,67,0.12)",
+                                    border: "1px solid rgba(255,159,67,0.3)",
+                                    color: "#ff9f43",
+                                    borderRadius: "4px",
+                                    padding: "1px 6px",
+                                    fontSize: "0.68rem",
+                                    fontWeight: "bold",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.05em",
+                                    boxShadow: "0 0 8px rgba(255, 159, 67, 0.15)"
+                                  }}>
+                                    Resigned
+                                  </span>
+                                );
+                              } else if (m.status === "Fired") {
+                                return (
+                                  <span style={{
+                                    background: "rgba(255,90,106,0.12)",
+                                    border: "1px solid rgba(255,90,106,0.3)",
+                                    color: "#ff5a6a",
+                                    borderRadius: "4px",
+                                    padding: "1px 6px",
+                                    fontSize: "0.68rem",
+                                    fontWeight: "bold",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.05em",
+                                    boxShadow: "0 0 8px rgba(255, 90, 106, 0.15)"
+                                  }}>
+                                    Fired
+                                  </span>
+                                );
+                              } else {
+                                return (
+                                  <span style={{
+                                    background: "rgba(0,255,135,0.12)",
+                                    border: "1px solid rgba(0,255,135,0.3)",
+                                    color: "#00ff87",
+                                    borderRadius: "4px",
+                                    padding: "1px 6px",
+                                    fontSize: "0.68rem",
+                                    fontWeight: "bold",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.05em",
+                                    boxShadow: "0 0 8px rgba(0, 255, 135, 0.15)"
+                                  }}>
+                                    Active
+                                  </span>
+                                );
+                              }
+                            })()}
                           </div>
                           <div style={S.msgEmail}>{m.role}</div>
                           <div style={{fontSize: "0.8rem", color: "#7a9aa0", marginTop: "4px"}}>
@@ -2328,17 +2417,54 @@ export default function AdminPanel() {
                         </div>
                       </div>
                       <div style={S.cardActions}>
-                        <button 
-                          style={{
-                            ...S.editBtn, 
-                            background: m.status === "Resigned" ? "rgba(0, 255, 135, 0.08)" : "rgba(255, 193, 7, 0.08)",
-                            color: m.status === "Resigned" ? "#00ff87" : "#ffc107",
-                            borderColor: m.status === "Resigned" ? "rgba(0, 255, 135, 0.22)" : "rgba(255, 193, 7, 0.22)"
-                          }} 
-                          onClick={() => toggleResignMember(m.id)}
-                        >
-                          {m.status === "Resigned" ? "Rehire" : "Resign"}
-                        </button>
+                        <div className="status-dropdown-wrapper">
+                          <button 
+                            style={{
+                              ...S.editBtn, 
+                              background: m.status === "Resigned" 
+                                ? "rgba(255, 159, 67, 0.08)" 
+                                : m.status === "Fired" 
+                                ? "rgba(255, 90, 106, 0.08)" 
+                                : "rgba(0, 255, 135, 0.08)",
+                              color: m.status === "Resigned" 
+                                ? "#ff9f43" 
+                                : m.status === "Fired" 
+                                ? "#ff5a6a" 
+                                : "#00ff87",
+                              borderColor: m.status === "Resigned" 
+                                ? "rgba(255, 159, 67, 0.22)" 
+                                : m.status === "Fired" 
+                                ? "rgba(255, 90, 106, 0.22)" 
+                                : "rgba(0, 255, 135, 0.22)",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
+                              cursor: "pointer"
+                            }}
+                          >
+                            Status ▾
+                          </button>
+                          <div className="status-dropdown-menu">
+                            <button 
+                              className="status-dropdown-item active-opt" 
+                              onClick={() => changeMemberStatus(m.id, "Active")}
+                            >
+                              🟢 Active
+                            </button>
+                            <button 
+                              className="status-dropdown-item resign-opt" 
+                              onClick={() => changeMemberStatus(m.id, "Resigned")}
+                            >
+                              🟠 Resigned
+                            </button>
+                            <button 
+                              className="status-dropdown-item fired-opt" 
+                              onClick={() => changeMemberStatus(m.id, "Fired")}
+                            >
+                              🔴 Fired
+                            </button>
+                          </div>
+                        </div>
                         <button style={S.editBtn} onClick={()=>startEditMember(m)}>Edit</button>
                         <button style={S.removeBtn} onClick={()=>deleteTeamMember(m.id)}>X</button>
                       </div>
