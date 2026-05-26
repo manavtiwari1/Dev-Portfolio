@@ -241,6 +241,9 @@ export default function AdminPanel() {
   const [editingQualification, setEditingQualification] = useState(null);
   const [editingCertification, setEditingCertification] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
+  const [team, setTeam] = useState([]);
+  const [newMember, setNewMember] = useState({ name: "", age: "", qualification: "", role: "", dateOfHire: "" });
+  const [editingMember, setEditingMember] = useState(null);
   const [iconOpen, setIconOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -275,7 +278,7 @@ export default function AdminPanel() {
     (async () => {
       setLoading(true);
       try {
-        const [mRes, sRes, qRes, expRes, cRes, pRes, botRes, revRes] = await Promise.all([
+        const [mRes, sRes, qRes, expRes, cRes, pRes, botRes, revRes, teamRes] = await Promise.all([
           storage.get('contact_messages', pw).catch(() => null),
           storage.get('portfolio_skills', pw).catch(() => null),
           storage.get('portfolio_qualifications', pw).catch(() => null),
@@ -284,12 +287,19 @@ export default function AdminPanel() {
           storage.get('portfolio_projects', pw).catch(() => null),
           storage.get('portfolio_chatbot', pw).catch(() => null),
           storage.get('portfolio_reviews', pw).catch(() => null),
+          storage.get('portfolio_team', pw).catch(() => null),
         ]);
 
         if (mRes && mRes.value) {
           setMessages(JSON.parse(mRes.value));
         } else {
           setMessages([]);
+        }
+
+        if (teamRes && teamRes.value) {
+          setTeam(JSON.parse(teamRes.value));
+        } else {
+          setTeam([]);
         }
 
         if (sRes && sRes.value) {
@@ -428,6 +438,36 @@ export default function AdminPanel() {
   const saveReviews = async (updated) => {
     setReviews(updated);
     try { await storage.set('portfolio_reviews', JSON.stringify(updated), pw); } catch {}
+  };
+
+  /* ── team actions ── */
+  const saveTeam = async (updated) => {
+    setTeam(updated);
+    try { await storage.set('portfolio_team', JSON.stringify(updated), pw); } catch {}
+  };
+
+  const addTeamMember = async () => {
+    if (!newMember.name || !newMember.role) return;
+    const added = [...team, { ...newMember, id: Date.now().toString() }];
+    await saveTeam(added);
+    setNewMember({ name: "", age: "", qualification: "", role: "", dateOfHire: "" });
+  };
+
+  const deleteTeamMember = async (id) => {
+    const updated = team.filter(m => m.id !== id);
+    await saveTeam(updated);
+    if (editingMember && editingMember.id === id) setEditingMember(null);
+  };
+
+  const startEditMember = (member) => {
+    setEditingMember({ ...member });
+  };
+
+  const saveEditMember = async () => {
+    if (!editingMember.name || !editingMember.role) return;
+    const updated = team.map(m => m.id === editingMember.id ? editingMember : m);
+    await saveTeam(updated);
+    setEditingMember(null);
   };
 
   const approveReview = async (id) => {
@@ -804,7 +844,8 @@ export default function AdminPanel() {
     { id: "qualifications", label: "Qualifications", icon: "🎓" },
     { id: "certifications", label: "Certifications", icon: "🏆" },
     { id: "chatbot", label: "Manav AI", icon: "🤖" },
-    { id: "reviews", label: "Reviews", icon: "⭐", count: reviews.filter(r => !r.approved).length, badgeColor: "#ff007f" }
+    { id: "reviews", label: "Reviews", icon: "⭐", count: reviews.filter(r => !r.approved).length, badgeColor: "#ff007f" },
+    { id: "team", label: "Team Members", icon: "👥" }
   ];
 
   /* ─────── MAIN PANEL ─────── */
@@ -2029,6 +2070,163 @@ export default function AdminPanel() {
 
             <div style={{...S.noMsg, padding:"1.2rem", textAlign:"left"}}>
               Custom questions are matched before automatic intents and appear as extra quick question chips in Manav AI.
+            </div>
+          </>
+        ) : tab === "team" ? (
+          <>
+            <div style={S.pageTitle}>👥 Manage Team Members</div>
+            <div style={S.pageSub}>Add, edit, or remove your freelancing agency team members. Stored securely in MongoDB Cloud.</div>
+
+            {editingMember ? (
+              /* EDIT MEMBER BOX */
+              <div style={S.addBox} className="glass-panel">
+                <div style={S.addTitle}>✍️ EDIT TEAM MEMBER</div>
+                <div style={S.formGrid2}>
+                  <div>
+                    <div style={S.fieldLabel}>FULL NAME</div>
+                    <input
+                      style={S.addInput}
+                      value={editingMember.name}
+                      onChange={e=>setEditingMember(p=>({...p,name:e.target.value}))}
+                      placeholder="e.g. John Doe"
+                    />
+                  </div>
+                  <div>
+                    <div style={S.fieldLabel}>ROLE / DESIGNATION</div>
+                    <input
+                      style={S.addInput}
+                      value={editingMember.role}
+                      onChange={e=>setEditingMember(p=>({...p,role:e.target.value}))}
+                      placeholder="e.g. UI/UX Designer"
+                    />
+                  </div>
+                </div>
+                <div style={S.formGrid4}>
+                  <div>
+                    <div style={S.fieldLabel}>AGE</div>
+                    <input
+                      style={S.addInput}
+                      type="number"
+                      value={editingMember.age}
+                      onChange={e=>setEditingMember(p=>({...p,age:e.target.value}))}
+                      placeholder="e.g. 24"
+                    />
+                  </div>
+                  <div>
+                    <div style={S.fieldLabel}>QUALIFICATION</div>
+                    <input
+                      style={S.addInput}
+                      value={editingMember.qualification}
+                      onChange={e=>setEditingMember(p=>({...p,qualification:e.target.value}))}
+                      placeholder="e.g. B.Tech CS"
+                    />
+                  </div>
+                  <div style={{gridColumn: "span 2"}}>
+                    <div style={S.fieldLabel}>DATE OF HIRE</div>
+                    <input
+                      style={S.addInput}
+                      type="date"
+                      value={editingMember.dateOfHire}
+                      onChange={e=>setEditingMember(p=>({...p,dateOfHire:e.target.value}))}
+                    />
+                  </div>
+                </div>
+                <div style={S.actionRow}>
+                  <button style={S.addBtn} onClick={saveEditMember}>SAVE CHANGES</button>
+                  <button style={S.cancelBtn} onClick={()=>setEditingMember(null)}>Cancel</button>
+                </div>
+              </div>
+            ) : (
+              /* ADD MEMBER BOX */
+              <div style={S.addBox} className="glass-panel">
+                <div style={S.addTitle}>+ ADD NEW TEAM MEMBER</div>
+                <div style={S.formGrid2}>
+                  <div>
+                    <div style={S.fieldLabel}>FULL NAME</div>
+                    <input
+                      style={S.addInput}
+                      value={newMember.name}
+                      onChange={e=>setNewMember(p=>({...p,name:e.target.value}))}
+                      placeholder="e.g. Rahul Sharma"
+                    />
+                  </div>
+                  <div>
+                    <div style={S.fieldLabel}>ROLE / DESIGNATION</div>
+                    <input
+                      style={S.addInput}
+                      value={newMember.role}
+                      onChange={e=>setNewMember(p=>({...p,role:e.target.value}))}
+                      placeholder="e.g. Lead Web Developer"
+                    />
+                  </div>
+                </div>
+                <div style={S.formGrid4}>
+                  <div>
+                    <div style={S.fieldLabel}>AGE</div>
+                    <input
+                      style={S.addInput}
+                      type="number"
+                      value={newMember.age}
+                      onChange={e=>setNewMember(p=>({...p,age:e.target.value}))}
+                      placeholder="e.g. 22"
+                    />
+                  </div>
+                  <div>
+                    <div style={S.fieldLabel}>QUALIFICATION</div>
+                    <input
+                      style={S.addInput}
+                      value={newMember.qualification}
+                      onChange={e=>setNewMember(p=>({...p,qualification:e.target.value}))}
+                      placeholder="e.g. BCA Student"
+                    />
+                  </div>
+                  <div style={{gridColumn: "span 2"}}>
+                    <div style={S.fieldLabel}>DATE OF HIRE</div>
+                    <input
+                      style={S.addInput}
+                      type="date"
+                      value={newMember.dateOfHire}
+                      onChange={e=>setNewMember(p=>({...p,dateOfHire:e.target.value}))}
+                    />
+                  </div>
+                </div>
+                <button style={S.addBtn} onClick={addTeamMember}>ADD MEMBER</button>
+              </div>
+            )}
+
+            {/* TEAM LIST */}
+            <div style={S.msgList}>
+              {team.length === 0 ? (
+                <div style={S.noMsg}>No team members registered yet. Add your first agency team member above!</div>
+              ) : (
+                team.map(m => (
+                  <div key={m.id} style={S.msgCard(true)} className="glass-panel">
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem"}}>
+                      <div style={{display: "flex", gap: "14px", alignItems: "center"}}>
+                        <div style={{fontSize: "2rem", background: "rgba(0, 229, 255, 0.1)", borderRadius: "50%", width: "48px", height: "48px", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                          👤
+                        </div>
+                        <div>
+                          <div style={S.msgName}>{m.name}</div>
+                          <div style={S.msgEmail}>{m.role}</div>
+                          <div style={{fontSize: "0.8rem", color: "#7a9aa0", marginTop: "4px"}}>
+                            Age: <strong>{m.age || "N/A"}</strong> · Qualification: <strong>{m.qualification || "N/A"}</strong>
+                          </div>
+                          {m.dateOfHire && (
+                            <div style={{fontSize: "0.76rem", color: "#4a7a82", marginTop: "4px", fontFamily: "monospace"}}>
+                              📅 Hired: {new Date(m.dateOfHire).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div style={S.cardActions}>
+                        <button style={S.editBtn} onClick={()=>startEditMember(m)}>Edit</button>
+                        <button style={S.removeBtn} onClick={()=>deleteTeamMember(m.id)}>X</button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </>
         ) : (

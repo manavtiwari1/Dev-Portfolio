@@ -118,6 +118,7 @@ const ARRAY_KEYS = new Set([
   "portfolio_certifications",
   "portfolio_projects",
   "portfolio_reviews",
+  "portfolio_team",
 ]);
 
 const migrationPromises = {};
