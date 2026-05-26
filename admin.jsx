@@ -143,17 +143,17 @@ const storage = {
 };
 
 const S = {
-  root: { minHeight:"100vh", background:"#03090b", color:"#e0f7fa", fontFamily:"'Segoe UI',sans-serif", padding:0 },
-  login: { minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"radial-gradient(circle at center, #0a1f28 0%, #03090b 100%)", padding:"1rem" },
-  loginBox: { background:"rgba(1, 10, 15, 0.75)", border:"1px solid rgba(0, 229, 255, 0.15)", borderRadius:20, padding:"3rem 2.2rem", width:"100%", maxWidth:390, backdropFilter:"blur(25px)", boxShadow:"0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(0,229,255,0.08)", transition:"all 0.3s ease" },
+  root: { minHeight:"100vh", background:"#03090b", color:"#e0f7fa", fontFamily:"'Rajdhani',sans-serif", padding:0 },
+  login: { minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"radial-gradient(circle at center, #0a2530 0%, #020709 100%)", padding:"1.5rem" },
+  loginBox: { background:"rgba(0, 20, 28, 0.65)", border:"1px solid rgba(0, 229, 255, 0.2)", borderRadius:24, padding:"3rem 2.2rem", width:"100%", maxWidth:400, backdropFilter:"blur(20px)", boxShadow:"0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(0,229,255,0.05)" },
   loginLogoContainer: { display:"flex", justifyContent:"center", marginBottom:"1.2rem" },
-  loginLogo: { width:74, height:74, borderRadius:"50%", border:"2px solid rgba(0, 229, 255, 0.25)", padding:4, background:"rgba(0, 20, 28, 0.6)", boxShadow:"0 0 15px rgba(0, 229, 255, 0.15)", transition:"all 0.3s ease", objectFit:"contain" },
-  loginTitle: { fontFamily:"'Orbitron',monospace", fontSize:"1.45rem", fontWeight:800, background:"linear-gradient(90deg,#00e5ff,#1a6cf5)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", textAlign:"center", marginBottom:".3rem", letterSpacing:".03em" },
-  loginSub: { color:"#4a7a82", fontSize:".8rem", textAlign:"center", marginBottom:"2rem", letterSpacing:".05em" },
+  loginLogo: { width:80, height:80, borderRadius:"50%", border:"2px solid rgba(0, 229, 255, 0.35)", padding:4, background:"rgba(0, 20, 28, 0.6)", boxShadow:"0 0 20px rgba(0, 229, 255, 0.2)", objectFit:"contain" },
+  loginTitle: { fontFamily:"'Orbitron',monospace", fontSize:"1.6rem", fontWeight:900, background:"linear-gradient(90deg,#00e5ff,#1a6cf5)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", textAlign:"center", marginBottom:".3rem", letterSpacing:".05em" },
+  loginSub: { color:"#4a7a82", fontSize:".85rem", textAlign:"center", marginBottom:"2rem", letterSpacing:".05em", fontWeight:600 },
   inputContainer: { position:"relative", marginBottom:"1.2rem" },
-  inputLabel: { display:"block", fontFamily:"'Orbitron',monospace", fontSize:".65rem", fontWeight:700, color:"#00e5ff", letterSpacing:".08em", marginBottom:".4rem", textTransform:"uppercase" },
+  inputLabel: { display:"block", fontFamily:"'Orbitron',monospace", fontSize:".68rem", fontWeight:800, color:"#00e5ff", letterSpacing:".1em", marginBottom:".4rem", textTransform:"uppercase" },
   input: (focused) => ({ width:"100%", background: focused ? "rgba(0,25,35,0.75)" : "rgba(0,12,18,0.5)", border: focused ? "1px solid #00e5ff" : "1px solid rgba(0,229,255,0.18)", borderRadius:8, padding:".8rem 1rem", color:"#e0f7fa", fontSize:".92rem", outline:"none", fontFamily:"inherit", transition:"all 0.25s ease", boxSizing:"border-box", boxShadow: focused ? "0 0 12px rgba(0,229,255,0.2)" : "none" }),
-  loginBtn: (hovered) => ({ width:"100%", background: hovered ? "linear-gradient(90deg,#33f0ff,#3b82f6)" : "linear-gradient(90deg,#00e5ff,#1a6cf5)", color:"#000", border:"none", borderRadius:30, padding:".9rem", fontWeight:800, fontSize:".95rem", cursor:"pointer", fontFamily:"'Orbitron',monospace", letterSpacing:".1em", transition:"all 0.3s ease", transform: hovered ? "translateY(-2px)" : "none", boxShadow: hovered ? "0 6px 20px rgba(0,229,255,0.4)" : "0 4px 12px rgba(0,229,255,0.15)" }),
+  loginBtn: (hovered) => ({ width:"100%", background: hovered ? "linear-gradient(90deg,#33f0ff,#3b82f6)" : "linear-gradient(90deg,#00e5ff,#1a6cf5)", color:"#000", border:"none", borderRadius:30, padding:".9rem", fontWeight:900, fontSize:"1rem", cursor:"pointer", fontFamily:"'Orbitron',monospace", letterSpacing:".1em", transition:"all 0.3s ease", transform: hovered ? "translateY(-2px)" : "none", boxShadow: hovered ? "0 6px 20px rgba(0,229,255,0.4)" : "0 4px 12px rgba(0,229,255,0.15)" }),
   err: { color:"#ff5a6a", fontSize:".8rem", textAlign:"center", marginTop:".8rem", fontWeight:600 },
 
   nav: { background:"rgba(0,10,15,0.95)", borderBottom:"1px solid rgba(0,229,255,0.15)", padding:"1rem 2rem", display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:100, backdropFilter:"blur(16px)" },
@@ -164,53 +164,53 @@ const S = {
   visitBtn: { background:"rgba(0,229,255,0.1)", color:"#00e5ff", border:"1px solid rgba(0,229,255,0.3)", borderRadius:50, padding:".45rem 1.1rem", cursor:"pointer", fontSize:".8rem", fontFamily:"inherit", textDecoration:"none", display:"inline-flex", alignItems:"center" },
 
   main: { padding:"1.5rem", maxWidth:900, margin:"0 auto" },
-  pageTitle: { fontFamily:"'Orbitron',monospace", fontSize:"1.2rem", fontWeight:800, color:"#00e5ff", marginBottom:".3rem" },
-  pageSub: { color:"#4a7a82", fontSize:".82rem", marginBottom:"1.5rem" },
+  pageTitle: { fontFamily:"'Orbitron',monospace", fontSize:"1.45rem", fontWeight:800, color:"#00e5ff", marginBottom:".3rem", letterSpacing:"0.03em" },
+  pageSub: { color:"#4a7a82", fontSize:".88rem", marginBottom:"1.8rem", fontWeight:500 },
 
-  statsRow: { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:"1rem", marginBottom:"1.5rem" },
-  statCard: (color) => ({ background:"rgba(0,20,28,0.8)", border:`1px solid ${color}30`, borderRadius:12, padding:"1rem 1.2rem" }),
-  statNum: (color) => ({ fontSize:"2rem", fontWeight:800, color, fontFamily:"'Orbitron',monospace", lineHeight:1 }),
-  statLabel: { color:"#4a7a82", fontSize:".75rem", marginTop:".2rem" },
+  statsRow: { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))", gap:"1.2rem", marginBottom:"2rem" },
+  statCard: (color) => ({ background:"rgba(0,20,28,0.75)", border:"1px solid rgba(0,229,255,0.15)", borderLeft:`3.5px solid ${color}`, borderRadius:16, padding:"1.4rem", transition:"all 0.3s ease", backdropFilter:"blur(15px)" }),
+  statNum: (color) => ({ fontSize:"2.2rem", fontWeight:800, color, fontFamily:"'Orbitron',monospace", lineHeight:1 }),
+  statLabel: { color:"#4a7a82", fontSize:"0.82rem", fontWeight:600, marginTop:"0.4rem", textTransform:"uppercase", letterSpacing:"0.05em" },
 
   msgList: { display:"flex", flexDirection:"column", gap:".8rem" },
-  msgCard: (read) => ({ background: read ? "rgba(0,15,22,0.6)" : "rgba(0,229,255,0.04)", border: `1px solid ${read ? "rgba(255,255,255,0.06)" : "rgba(0,229,255,0.25)"}`, borderRadius:12, padding:"1.2rem 1.4rem", cursor:"pointer", transition:"all .2s", position:"relative" }),
+  msgCard: (read) => ({ background: read ? "rgba(0,15,22,0.6)" : "rgba(0,229,255,0.04)", border: `1px solid ${read ? "rgba(255,255,255,0.06)" : "rgba(0,229,255,0.25)"}`, borderRadius:16, padding:"1.4rem 1.6rem", cursor:"pointer", transition:"all .2s", position:"relative" }),
   msgTop: { display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:"1rem", marginBottom:".5rem" },
-  msgName: { fontWeight:700, fontSize:"1rem", color:"#e0f7fa" },
-  msgEmail: { color:"#00e5ff", fontSize:".8rem" },
-  msgSubject: { color:"#e0f7fa", fontSize:".88rem", marginBottom:".4rem", fontWeight:600 },
-  msgBody: { color:"#7a9aa0", fontSize:".85rem", lineHeight:1.6 },
-  msgDate: { color:"#4a7a82", fontSize:".72rem", flexShrink:0 },
-  unreadDot: { position:"absolute", top:"1rem", right:"1rem", width:8, height:8, borderRadius:"50%", background:"#00e5ff", boxShadow:"0 0 8px #00e5ff" },
-  noMsg: { textAlign:"center", color:"#4a7a82", padding:"3rem", fontSize:".9rem" },
-  delBtn: { background:"rgba(255,90,106,0.1)", color:"#ff5a6a", border:"1px solid rgba(255,90,106,0.25)", borderRadius:6, padding:".3rem .8rem", cursor:"pointer", fontSize:".75rem", fontFamily:"inherit", marginTop:".6rem" },
-  markBtn: { background:"rgba(0,229,255,0.1)", color:"#00e5ff", border:"1px solid rgba(0,229,255,0.25)", borderRadius:6, padding:".3rem .8rem", cursor:"pointer", fontSize:".75rem", fontFamily:"inherit", marginTop:".6rem", marginRight:".5rem" },
+  msgName: { fontWeight:700, fontSize:"1.05rem", color:"#e0f7fa" },
+  msgEmail: { color:"#00e5ff", fontSize:".85rem", fontWeight:600 },
+  msgSubject: { color:"#e0f7fa", fontSize:".92rem", marginBottom:".4rem", fontWeight:700 },
+  msgBody: { color:"#7a9aa0", fontSize:".9rem", lineHeight:1.6, fontWeight:500 },
+  msgDate: { color:"#4a7a82", fontSize:".78rem", flexShrink:0, fontWeight:600 },
+  unreadDot: { position:"absolute", top:"1.2rem", right:"1.2rem", width:8, height:8, borderRadius:"50%", background:"#00e5ff", boxShadow:"0 0 8px #00e5ff" },
+  noMsg: { textAlign:"center", color:"#4a7a82", padding:"3rem", fontSize:".95rem", fontWeight:600 },
+  delBtn: { background:"rgba(255,90,106,0.1)", color:"#ff5a6a", border:"1px solid rgba(255,90,106,0.25)", borderRadius:6, padding:".35rem .9rem", cursor:"pointer", fontSize:".78rem", fontFamily:"inherit", marginTop:".6rem", fontWeight:600 },
+  markBtn: { background:"rgba(0,229,255,0.1)", color:"#00e5ff", border:"1px solid rgba(0,229,255,0.25)", borderRadius:6, padding:".35rem .9rem", cursor:"pointer", fontSize:".78rem", fontFamily:"inherit", marginTop:".6rem", marginRight:".5rem", fontWeight:600 },
 
-  skillsGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))", gap:"1rem", marginBottom:"1.5rem" },
-  skillCard: { background:"rgba(0,20,28,0.85)", border:"1px solid rgba(0,229,255,0.18)", borderRadius:12, padding:"1.2rem", display:"flex", flexDirection:"column", gap:".5rem", position:"relative" },
-  skillIcon: { fontSize:"1.8rem" },
-  skillName: { fontWeight:700, fontSize:"1rem" },
+  skillsGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(230px,1fr))", gap:"1.2rem", marginBottom:"2rem" },
+  skillCard: { background:"rgba(0,20,28,0.75)", border:"1px solid rgba(0,229,255,0.15)", borderRadius:16, padding:"1.5rem", display:"flex", flexDirection:"column", gap:"0.6rem", position:"relative", backdropFilter:"blur(15px)" },
+  skillIcon: { fontSize:"2rem" },
+  skillName: { fontWeight:700, fontSize:"1.08rem" },
   skillTags: { display:"flex", flexWrap:"wrap", gap:".3rem" },
-  tag: { background:"rgba(0,229,255,0.08)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:20, padding:".15rem .5rem", fontSize:".68rem", color:"#00b4cc" },
+  tag: { background:"rgba(0,229,255,0.08)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:20, padding:".18rem .6rem", fontSize:".72rem", color:"#00b4cc", fontWeight:600 },
   skillDelBtn: { position:"absolute", top:".7rem", right:".7rem", background:"rgba(255,90,106,0.12)", color:"#ff5a6a", border:"1px solid rgba(255,90,106,0.2)", borderRadius:6, padding:".2rem .6rem", cursor:"pointer", fontSize:".72rem", fontFamily:"inherit" },
 
-  addBox: { background:"rgba(0,20,28,0.85)", border:"1px solid rgba(0,229,255,0.25)", borderRadius:14, padding:"1.4rem", marginBottom:"1.5rem" },
-  addTitle: { fontFamily:"'Orbitron',monospace", fontSize:".75rem", color:"#00e5ff", letterSpacing:".12em", marginBottom:"1rem" },
+  addBox: { background:"rgba(0,20,28,0.75)", border:"1px solid rgba(0,229,255,0.25)", borderRadius:16, padding:"1.8rem", marginBottom:"2rem", backdropFilter:"blur(15px)", boxShadow:"0 10px 30px rgba(0,0,0,0.2)" },
+  addTitle: { fontFamily:"'Orbitron',monospace", fontSize:".8rem", color:"#00e5ff", letterSpacing:".12em", marginBottom:"1.2rem", fontWeight:800 },
   addRow: { display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:".8rem", alignItems:"end" },
-  addInput: { background:"rgba(0,30,40,0.8)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".65rem .9rem", color:"#e0f7fa", fontSize:".88rem", outline:"none", fontFamily:"inherit", width:"100%", boxSizing:"border-box", minWidth:0 },
-  iconSel: { background:"rgba(0,30,40,0.9)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".5rem", display:"flex", flexWrap:"wrap", gap:".3rem", maxHeight:100, overflowY:"auto", marginBottom:".8rem" },
-  iconOpt: (sel) => ({ fontSize:"1.3rem", padding:".3rem", borderRadius:6, cursor:"pointer", background: sel ? "rgba(0,229,255,0.2)" : "transparent", border: sel ? "1px solid #00e5ff" : "1px solid transparent" }),
-  addBtn: { background:"linear-gradient(135deg,#00e5ff,#1a6cf5)", color:"#000", border:"none", borderRadius:50, padding:".65rem 1.6rem", fontWeight:700, cursor:"pointer", fontFamily:"'Orbitron',monospace", fontSize:".72rem", letterSpacing:".08em", whiteSpace:"nowrap" },
-  tagsInput: { background:"rgba(0,30,40,0.8)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".65rem .9rem", color:"#e0f7fa", fontSize:".88rem", outline:"none", fontFamily:"inherit", width:"100%" },
-  fieldLabel: { fontSize:".72rem", color:"#00e5ff", letterSpacing:".1em", marginBottom:".3rem", fontFamily:"'Orbitron',monospace" },
+  addInput: { background:"rgba(0,30,40,0.8)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".75rem 1rem", color:"#e0f7fa", fontSize:".9rem", outline:"none", fontFamily:"inherit", width:"100%", boxSizing:"border-box", minWidth:0 },
+  iconSel: { background:"rgba(0,30,40,0.9)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".6rem", display:"flex", flexWrap:"wrap", gap:".35rem", maxHeight:110, overflowY:"auto", marginBottom:".8rem" },
+  iconOpt: (sel) => ({ fontSize:"1.4rem", padding:".35rem", borderRadius:6, cursor:"pointer", background: sel ? "rgba(0,229,255,0.2)" : "transparent", border: sel ? "1px solid #00e5ff" : "1px solid transparent" }),
+  addBtn: { background:"linear-gradient(135deg,#00e5ff,#1a6cf5)", color:"#000", border:"none", borderRadius:50, padding:".75rem 1.8rem", fontWeight:800, cursor:"pointer", fontFamily:"'Orbitron',monospace", fontSize:".75rem", letterSpacing:".08em", whiteSpace:"nowrap" },
+  tagsInput: { background:"rgba(0,30,40,0.8)", border:"1px solid rgba(0,229,255,0.2)", borderRadius:8, padding:".75rem 1rem", color:"#e0f7fa", fontSize:".9rem", outline:"none", fontFamily:"inherit", width:"100%" },
+  fieldLabel: { fontSize:".78rem", color:"#00e5ff", letterSpacing:".1em", marginBottom:".4rem", fontFamily:"'Orbitron',monospace", fontWeight:700 },
   formGrid2: { display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))", gap:".8rem", marginBottom:".8rem" },
   formGrid4: { display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))", gap:".8rem", marginBottom:".8rem" },
   actionRow: { display:"flex", alignItems:"center", gap:".8rem", flexWrap:"wrap" },
   cardActions: { display:"flex", gap:".4rem", flexShrink:0, flexWrap:"wrap", justifyContent:"flex-end" },
-  editBtn: { background:"rgba(0,229,255,0.1)", color:"#00e5ff", border:"1px solid rgba(0,229,255,0.25)", borderRadius:6, padding:".3rem .8rem", cursor:"pointer", fontSize:".75rem", fontFamily:"inherit" },
-  removeBtn: { background:"rgba(255,90,106,0.12)", color:"#ff5a6a", border:"1px solid rgba(255,90,106,0.2)", borderRadius:6, padding:".3rem .8rem", cursor:"pointer", fontSize:".75rem", fontFamily:"inherit" },
-  cancelBtn: { background:"rgba(255,255,255,0.08)", color:"#e0f7fa", border:"1px solid rgba(255,255,255,0.2)", borderRadius:50, padding:".65rem 1.4rem", fontWeight:700, cursor:"pointer", fontFamily:"'Orbitron',monospace", fontSize:".72rem", letterSpacing:".08em" },
-  chartBox: { background: "rgba(0, 20, 28, 0.8)", border: "1px solid rgba(0, 229, 255, 0.15)", borderRadius: 12, padding: "1.2rem", boxShadow: "0 10px 30px rgba(0,0,0,0.4)" },
-  chartTitle: { fontFamily: "'Orbitron', monospace", fontSize: ".72rem", color: "#00e5ff", letterSpacing: ".08em", marginBottom: "1rem", fontWeight: 700 },
+  editBtn: { background:"rgba(0,229,255,0.1)", color:"#00e5ff", border:"1px solid rgba(0,229,255,0.25)", borderRadius:6, padding:".35rem .9rem", cursor:"pointer", fontSize:".78rem", fontFamily:"inherit", fontWeight:600 },
+  removeBtn: { background:"rgba(255,90,106,0.12)", color:"#ff5a6a", border:"1px solid rgba(255,90,106,0.2)", borderRadius:6, padding:".35rem .9rem", cursor:"pointer", fontSize:".78rem", fontFamily:"inherit", fontWeight:600 },
+  cancelBtn: { background:"rgba(255,255,255,0.08)", color:"#e0f7fa", border:"1px solid rgba(255,255,255,0.2)", borderRadius:50, padding:".75rem 1.6rem", fontWeight:800, cursor:"pointer", fontFamily:"'Orbitron',monospace", fontSize:".75rem", letterSpacing:".08em" },
+  chartBox: { background: "rgba(0, 20, 28, 0.75)", border: "1px solid rgba(0, 229, 255, 0.15)", borderRadius: 16, padding: "1.5rem", boxShadow: "0 15px 35px rgba(0,0,0,0.3)", backdropFilter:"blur(15px)" },
+  chartTitle: { fontFamily: "'Orbitron', monospace", fontSize: ".8rem", color: "#00e5ff", letterSpacing: ".08em", marginBottom: "1.2rem", fontWeight: 800 },
 };
 
 export default function AdminPanel() {
@@ -242,6 +242,31 @@ export default function AdminPanel() {
   const [editingCertification, setEditingCertification] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
   const [iconOpen, setIconOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      if (!mobile) setMobileMenuOpen(false);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("admin_username");
+    const savedPw = localStorage.getItem("admin_password");
+    if (savedUser && savedPw) {
+      adminUsername = savedUser;
+      adminPassword = savedPw;
+      setUsername(savedUser);
+      setPw(savedPw);
+      setAuthed(true);
+    }
+  }, []);
 
   /* ── load data ── */
   useEffect(() => {
@@ -429,6 +454,8 @@ export default function AdminPanel() {
       if (response.ok) {
         adminUsername = username;
         adminPassword = pw;
+        localStorage.setItem("admin_username", username);
+        localStorage.setItem("admin_password", pw);
         setAuthed(true);
         setPwErr("");
         return;
@@ -761,32 +788,335 @@ export default function AdminPanel() {
     </div>
   );
 
+  const navItems = [
+    { id: "dashboard", label: "Dashboard", icon: "📊" },
+    { id: "messages", label: "Messages", icon: "📬", count: unread, badgeColor: "#00e5ff" },
+    { id: "projects", label: "Projects", icon: "🚀" },
+    { id: "skills", label: "Skills", icon: "🛠️" },
+    { id: "experience", label: "Work Experience", icon: "💼" },
+    { id: "qualifications", label: "Qualifications", icon: "🎓" },
+    { id: "certifications", label: "Certifications", icon: "🏆" },
+    { id: "chatbot", label: "Manav AI", icon: "🤖" },
+    { id: "reviews", label: "Reviews", icon: "⭐", count: reviews.filter(r => !r.approved).length, badgeColor: "#ff007f" }
+  ];
+
   /* ─────── MAIN PANEL ─────── */
   return (
-    <div style={S.root}>
-      {/* NAV */}
-      <div style={S.nav}>
-        <div style={S.navTitle}>⚡ ADMIN — CODE WITH MANAV</div>
-        <div style={S.navBtns}>
-          <a href="/" target="_blank" rel="noopener noreferrer" style={S.visitBtn}>🌐 Visit Website</a>
-          <button style={S.tabBtn(tab==="dashboard")} onClick={()=>setTab("dashboard")}>📊 Dashboard</button>
-          <button style={S.tabBtn(tab==="messages")} onClick={()=>setTab("messages")}>
-            📬 Messages {unread > 0 && <span style={{background:"#00e5ff",color:"#000",borderRadius:10,padding:"0 5px",fontSize:".65rem",marginLeft:4}}>{unread}</span>}
+    <div style={{
+      ...S.root,
+      display: "flex",
+      flexDirection: isMobile ? "column" : "row",
+      minHeight: "100vh"
+    }}>
+      {/* Global CSS Style Block */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+          background: rgba(1, 10, 15, 0.4);
+        }
+        ::-webkit-scrollbar-thumb {
+          background: rgba(0, 229, 255, 0.25);
+          border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(0, 229, 255, 0.5);
+        }
+
+        .glass-panel {
+          background: rgba(0, 20, 28, 0.55) !important;
+          border: 1px solid rgba(0, 229, 255, 0.12) !important;
+          border-radius: 16px !important;
+          backdrop-filter: blur(20px) !important;
+          -webkit-backdrop-filter: blur(20px) !important;
+          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        }
+
+        .glass-panel:hover {
+          border-color: rgba(0, 229, 255, 0.35) !important;
+          box-shadow: 0 12px 40px 0 rgba(0, 229, 255, 0.08), 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
+          transform: translateY(-2px) !important;
+        }
+
+        .sidebar-btn {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          width: 100%;
+          padding: 11px 16px;
+          background: transparent;
+          border: 1px solid transparent;
+          border-radius: 12px;
+          color: #a0c2cd;
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 0.98rem;
+          font-weight: 600;
+          text-align: left;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          position: relative;
+          overflow: hidden;
+          outline: none;
+        }
+
+        .sidebar-btn:hover {
+          color: #00e5ff;
+          background: rgba(0, 229, 255, 0.06);
+          border-color: rgba(0, 229, 255, 0.1);
+          transform: translateX(4px);
+        }
+
+        .sidebar-btn.active {
+          color: #000000;
+          background: linear-gradient(135deg, #00e5ff, #1a6cf5);
+          font-weight: 700;
+          box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+        }
+
+        .sidebar-btn.active:hover {
+          transform: none;
+        }
+
+        .status-pulse-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #00ff87;
+          box-shadow: 0 0 8px #00ff87;
+          display: inline-block;
+          animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+          0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(0, 255, 135, 0.7);
+          }
+          70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 6px rgba(0, 255, 135, 0);
+          }
+          100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(0, 255, 135, 0);
+          }
+        }
+
+        .btn-glow {
+          position: relative;
+          overflow: hidden;
+          transition: all 0.3s ease;
+        }
+
+        .btn-glow::after {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -60%;
+          width: 20%;
+          height: 200%;
+          background: rgba(255, 255, 255, 0.25);
+          transform: rotate(30deg);
+          transition: all 0.5s ease;
+          opacity: 0;
+        }
+
+        .btn-glow:hover::after {
+          left: 120%;
+          opacity: 1;
+        }
+
+        .glow-card {
+          transition: all 0.3s ease !important;
+        }
+
+        .glow-card:hover {
+          transform: translateY(-5px) !important;
+          box-shadow: 0 10px 25px rgba(0, 229, 255, 0.15) !important;
+        }
+      `}</style>
+
+      {/* MOBILE TOP HEADER BAR */}
+      {isMobile && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "60px",
+          background: "rgba(3, 9, 11, 0.95)",
+          borderBottom: "1px solid rgba(0, 229, 255, 0.15)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 1.2rem",
+          zIndex: 999,
+          backdropFilter: "blur(12px)"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <img src="/Photos/logobg.png" alt="Logo" style={{ width: "32px", height: "32px", borderRadius: "50%", border: "1px solid rgba(0, 229, 255, 0.3)" }} />
+            <span style={{ fontFamily: "'Orbitron', monospace", fontSize: "0.9rem", fontWeight: 800, color: "#00e5ff", letterSpacing: "0.05em" }}>MANAV PORTFOLIO</span>
+          </div>
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            style={{
+              background: "rgba(0, 229, 255, 0.08)",
+              border: "1px solid rgba(0, 229, 255, 0.25)",
+              color: "#00e5ff",
+              borderRadius: "6px",
+              padding: "0.4rem 0.8rem",
+              fontFamily: "inherit",
+              fontSize: "0.85rem",
+              fontWeight: 700,
+              cursor: "pointer"
+            }}
+          >
+            {mobileMenuOpen ? "✕ Close" : "☰ Menu"}
           </button>
-          <button style={S.tabBtn(tab==="projects")} onClick={()=>setTab("projects")}>🚀 Projects</button>
-          <button style={S.tabBtn(tab==="skills")} onClick={()=>setTab("skills")}>🛠️ Skills</button>
-          <button style={S.tabBtn(tab==="experience")} onClick={()=>setTab("experience")}>Work Experience</button>
-          <button style={S.tabBtn(tab==="qualifications")} onClick={()=>setTab("qualifications")}>Qualifications</button>
-          <button style={S.tabBtn(tab==="certifications")} onClick={()=>setTab("certifications")}>Certifications</button>
-          <button style={S.tabBtn(tab==="chatbot")} onClick={()=>setTab("chatbot")}>Manav AI</button>
-          <button style={S.tabBtn(tab==="reviews")} onClick={()=>setTab("reviews")}>
-            ⭐ Reviews {reviews.filter(r => !r.approved).length > 0 && <span style={{background:"#ff007f",color:"#fff",borderRadius:10,padding:"0 5px",fontSize:".65rem",marginLeft:4}}>{reviews.filter(r => !r.approved).length}</span>}
+        </div>
+      )}
+
+      {/* LEFT SIDEBAR (Desktop) OR OVERLAY DRAWER (Mobile) */}
+      <div style={{
+        width: isMobile ? "280px" : "260px",
+        background: "rgba(1, 10, 15, 0.88)",
+        borderRight: isMobile ? "none" : "1px solid rgba(0, 229, 255, 0.12)",
+        display: "flex",
+        flexDirection: "column",
+        height: isMobile ? "100vh" : "auto",
+        position: isMobile ? "fixed" : "sticky",
+        top: 0,
+        left: isMobile ? (mobileMenuOpen ? "0" : "-280px") : "0",
+        bottom: 0,
+        zIndex: 1000,
+        transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
+        backdropFilter: "blur(25px)",
+        WebkitBackdropFilter: "blur(25px)",
+        padding: "1.8rem 1.2rem",
+        boxSizing: "border-box"
+      }}>
+        {/* Sidebar Header Brand */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "2rem", borderBottom: "1px solid rgba(0, 229, 255, 0.12)", paddingBottom: "1.5rem" }}>
+          <img src="/Photos/logobg.png" alt="Logo" style={{ width: "42px", height: "42px", borderRadius: "50%", border: "2px solid rgba(0, 229, 255, 0.35)", boxShadow: "0 0 10px rgba(0,229,255,0.2)" }} />
+          <div>
+            <div style={{ fontFamily: "'Orbitron', monospace", fontSize: "1.1rem", fontWeight: 800, color: "#00e5ff", letterSpacing: "0.03em" }}>MANAV T.</div>
+            <div style={{ fontSize: "0.75rem", color: "#4a7a82", fontWeight: 600, display: "flex", alignItems: "center", gap: "5px" }}>
+              <span className="status-pulse-dot"></span> Admin Active
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar Navigation Items */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px", flex: 1, overflowY: "auto", paddingRight: "4px" }}>
+          {navItems.map(item => (
+            <button
+              key={item.id}
+              className={`sidebar-btn ${tab === item.id ? 'active' : ''}`}
+              onClick={() => {
+                setTab(item.id);
+                if (isMobile) setMobileMenuOpen(false);
+              }}
+            >
+              <span style={{ fontSize: "1.1rem" }}>{item.icon}</span>
+              <span style={{ flex: 1 }}>{item.label}</span>
+              {item.count > 0 && (
+                <span style={{
+                  background: item.badgeColor || "#00e5ff",
+                  color: item.badgeColor === "#ff007f" ? "#fff" : "#000",
+                  borderRadius: 10,
+                  padding: "1px 6px",
+                  fontSize: "0.7rem",
+                  fontWeight: "bold",
+                  boxShadow: `0 0 8px ${item.badgeColor || "#00e5ff"}`
+                }}>
+                  {item.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Sidebar Footer Operations */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "1.5rem", borderTop: "1px solid rgba(0, 229, 255, 0.12)", paddingTop: "1.5rem" }}>
+          <a href="/" target="_blank" rel="noopener noreferrer" style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            background: "rgba(0, 229, 255, 0.06)",
+            border: "1px solid rgba(0, 229, 255, 0.18)",
+            borderRadius: "10px",
+            color: "#00e5ff",
+            padding: "10px 14px",
+            fontSize: "0.85rem",
+            fontWeight: 700,
+            textDecoration: "none",
+            transition: "all 0.2s ease"
+          }} className="btn-glow">
+            <span>🌐</span> Visit Live Site
+          </a>
+          <button 
+            onClick={() => {
+              localStorage.removeItem("admin_username");
+              localStorage.removeItem("admin_password");
+              adminUsername = "";
+              adminPassword = "";
+              setAuthed(false);
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              background: "rgba(255, 90, 106, 0.08)",
+              border: "1px solid rgba(255, 90, 106, 0.22)",
+              borderRadius: "10px",
+              color: "#ff5a6a",
+              padding: "10px 14px",
+              fontSize: "0.85rem",
+              fontWeight: 700,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              transition: "all 0.2s ease"
+            }}
+          >
+            <span>🚪</span> Secure Logout
           </button>
-          <button style={S.logoutBtn} onClick={()=>setAuthed(false)}>Logout</button>
         </div>
       </div>
 
-      <div style={S.main}>
+      {/* MOBILE BACKDROP DRAWER OVERLAY */}
+      {isMobile && mobileMenuOpen && (
+        <div 
+          onClick={() => setMobileMenuOpen(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(1, 6, 8, 0.65)",
+            backdropFilter: "blur(4px)",
+            zIndex: 998,
+            transition: "opacity 0.3s ease"
+          }}
+        />
+      )}
+
+      {/* MAIN CONTENT AREA */}
+      <div style={{
+        flex: 1,
+        minWidth: 0,
+        minHeight: "100vh",
+        padding: isMobile ? "1.5rem" : "2.5rem 3.5rem",
+        paddingTop: isMobile ? "5.5rem" : "2.5rem",
+        boxSizing: "border-box",
+        transition: "all 0.3s ease"
+      }}>
         {loading ? (
           <div style={{textAlign:"center",padding:"3rem",color:"#4a7a82"}}>Loading...</div>
         ) : tab === "dashboard" ? (
@@ -797,27 +1127,27 @@ export default function AdminPanel() {
 
             {/* METRICS ROW */}
             <div style={S.statsRow}>
-              <div style={S.statCard("#00e5ff")}>
+              <div style={S.statCard("#00e5ff")} className="glow-card glass-panel">
                 <div style={S.statNum("#00e5ff")}>{messages.length}</div>
                 <div style={S.statLabel}>Total Messages</div>
               </div>
-              <div style={S.statCard(unread > 0 ? "#ff007f" : "#00e5ff")}>
+              <div style={S.statCard(unread > 0 ? "#ff007f" : "#00e5ff")} className="glow-card glass-panel">
                 <div style={S.statNum(unread > 0 ? "#ff007f" : "#00e5ff")}>{unread}</div>
                 <div style={S.statLabel}>Unread Messages</div>
               </div>
-              <div style={S.statCard("#7b2fff")}>
+              <div style={S.statCard("#7b2fff")} className="glow-card glass-panel">
                 <div style={S.statNum("#7b2fff")}>{skills.length}</div>
                 <div style={S.statLabel}>Total Skills</div>
               </div>
-              <div style={S.statCard("#00e5ff")}>
+              <div style={S.statCard("#00e5ff")} className="glow-card glass-panel">
                 <div style={S.statNum("#00e5ff")}>{reviews.length}</div>
                 <div style={S.statLabel}>Total Reviews</div>
               </div>
-              <div style={S.statCard(reviews.filter(r => !r.approved).length > 0 ? "#ff007f" : "#00e5ff")}>
+              <div style={S.statCard(reviews.filter(r => !r.approved).length > 0 ? "#ff007f" : "#00e5ff")} className="glow-card glass-panel">
                 <div style={S.statNum(reviews.filter(r => !r.approved).length > 0 ? "#ff007f" : "#00e5ff")}>{reviews.filter(r => !r.approved).length}</div>
                 <div style={S.statLabel}>Pending Reviews</div>
               </div>
-              <div style={S.statCard("#f2c811")}>
+              <div style={S.statCard("#f2c811")} className="glow-card glass-panel">
                 <div style={S.statNum("#f2c811")}>
                   {messages.length > 0 
                     ? `${Math.round((messages.filter(m=>m.read).length / messages.length) * 100)}%` 
@@ -831,7 +1161,7 @@ export default function AdminPanel() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "1.5rem", marginTop: "1rem" }}>
               
               {/* AREA CHART: Weekly Message Trend */}
-              <div style={S.chartBox}>
+              <div style={S.chartBox} className="glass-panel">
                 <div style={S.chartTitle}>📬 CONTACT MESSAGES (LAST 7 DAYS)</div>
                 {(() => {
                   const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -912,7 +1242,7 @@ export default function AdminPanel() {
               </div>
 
               {/* DONUT CHART: Skill Categories */}
-              <div style={S.chartBox}>
+              <div style={S.chartBox} className="glass-panel">
                 <div style={S.chartTitle}>🛠️ SKILL CATEGORY DISTRIBUTION</div>
                 {(() => {
                   let catCounts = {
@@ -1039,7 +1369,7 @@ export default function AdminPanel() {
               {messages.length === 0 ? (
                 <div style={S.noMsg}>📭 No messages yet. They'll appear here when someone submits the contact form.</div>
               ) : messages.map(msg => (
-                <div key={msg.id} style={S.msgCard(msg.read)} onClick={()=>{ setExpanded(expanded===msg.id?null:msg.id); if(!msg.read) markRead(msg.id); }}>
+                <div key={msg.id} style={S.msgCard(msg.read)} className="glass-panel" onClick={()=>{ setExpanded(expanded===msg.id?null:msg.id); if(!msg.read) markRead(msg.id); }}>
                   {!msg.read && <div style={S.unreadDot}/>}
                   <div style={S.msgTop}>
                     <div>
@@ -1072,7 +1402,7 @@ export default function AdminPanel() {
             <div style={S.pageSub}>Add or remove skills shown in the Technical Arsenal section</div>
 
             {/* Add Skill */}
-            <div style={S.addBox}>
+            <div style={S.addBox} className="glass-panel">
               <div style={S.addTitle}>+ ADD NEW SKILL</div>
               <div style={{marginBottom:".6rem",fontSize:".82rem",color:"#4a7a82"}}>Pick icon:</div>
               <div style={S.iconSel}>
@@ -1117,7 +1447,7 @@ export default function AdminPanel() {
               {skills.map(sk => {
                 const fluentUrl = getFluentEmojiUrl(sk.icon);
                 return (
-                  <div key={sk.id} style={S.skillCard}>
+                  <div key={sk.id} style={S.skillCard} className="glass-panel glow-card">
                     <button style={S.skillDelBtn} onClick={()=>deleteSkill(sk.id)}>✕</button>
                     <div style={S.skillIcon}>
                       {fluentUrl ? (
@@ -1146,7 +1476,7 @@ export default function AdminPanel() {
             <div style={S.pageSub}>Add or remove projects shown in the carousel · changes reflect instantly on the portfolio</div>
 
             {/* Add Project */}
-            <div style={S.addBox}>
+            <div style={S.addBox} className="glass-panel">
               <div style={S.addTitle}>+ ADD NEW PROJECT</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".8rem",marginBottom:".8rem"}}>
                 <div>
@@ -1265,7 +1595,7 @@ export default function AdminPanel() {
             <div style={S.pageTitle}>Manage Work Experience</div>
             <div style={S.pageSub}>Add, edit, or remove timeline items shown in the Work Experience section</div>
 
-            <div style={S.addBox}>
+            <div style={S.addBox} className="glass-panel">
               <div style={S.addTitle}>+ ADD WORK EXPERIENCE</div>
               <div style={S.formGrid2}>
                 <div>
@@ -1319,7 +1649,7 @@ export default function AdminPanel() {
                     </div>
                   </div>
                 ) : (
-                  <div key={exp.id} style={S.msgCard(true)}>
+                  <div key={exp.id} style={S.msgCard(true)} className="glass-panel">
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem"}}>
                       <div style={{minWidth:0}}>
                         <div style={S.msgName}>{exp.role}</div>
@@ -1342,7 +1672,7 @@ export default function AdminPanel() {
             <div style={S.pageTitle}>Manage Qualifications</div>
             <div style={S.pageSub}>Add, edit, or remove timeline items shown in the Qualifications section</div>
 
-            <div style={S.addBox}>
+            <div style={S.addBox} className="glass-panel">
               <div style={S.addTitle}>+ ADD QUALIFICATION</div>
               <div style={S.formGrid2}>
                 <div>
@@ -1396,7 +1726,7 @@ export default function AdminPanel() {
                     </div>
                   </div>
                 ) : (
-                  <div key={q.id} style={S.msgCard(true)}>
+                  <div key={q.id} style={S.msgCard(true)} className="glass-panel">
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem"}}>
                       <div style={{minWidth:0}}>
                         <div style={S.msgName}>{q.role}</div>
@@ -1419,7 +1749,7 @@ export default function AdminPanel() {
             <div style={S.pageTitle}>Manage Certifications</div>
             <div style={S.pageSub}>Add, edit, or remove certification cards shown below Qualifications</div>
 
-            <div style={S.addBox}>
+            <div style={S.addBox} className="glass-panel">
               <div style={S.addTitle}>+ ADD CERTIFICATION</div>
               <div style={S.formGrid4}>
                 <div>
@@ -1471,7 +1801,7 @@ export default function AdminPanel() {
                     </div>
                   </div>
                 ) : (
-                  <div key={c.id} style={S.skillCard}>
+                  <div key={c.id} style={S.skillCard} className="glass-panel glow-card">
                     <div style={{position:"absolute",top:".7rem",right:".7rem",display:"flex",gap:".4rem"}}>
                       <button style={S.editBtn} onClick={()=>startEditCertification(c)}>Edit</button>
                       <button style={S.removeBtn} onClick={()=>deleteCertification(c.id)}>X</button>
@@ -1490,7 +1820,7 @@ export default function AdminPanel() {
             <div style={S.pageTitle}>Manage Manav AI Chatbot</div>
             <div style={S.pageSub}>Edit chatbot replies shown on the front page. Save changes, then refresh the portfolio to see updates.</div>
 
-            <div style={S.addBox}>
+            <div style={S.addBox} className="glass-panel">
               <div style={S.addTitle}>CHATBOT REPLIES</div>
               {CHATBOT_REPLY_FIELDS.map(([key, label]) => (
                 <div key={key} style={{marginBottom:"1rem"}}>
@@ -1508,7 +1838,7 @@ export default function AdminPanel() {
               </div>
             </div>
 
-            <div style={S.addBox}>
+            <div style={S.addBox} className="glass-panel">
               <div style={S.addTitle}>+ ADD CUSTOM QUESTION</div>
               <div style={S.formGrid2}>
                 <div>
@@ -1537,7 +1867,7 @@ export default function AdminPanel() {
               {(chatbotReplies.customQuestions || []).length === 0 ? (
                 <div style={S.noMsg}>No custom questions yet. Add one above to show it as a chatbot quick question.</div>
               ) : (chatbotReplies.customQuestions || []).map(item => (
-                <div key={item.id} style={S.msgCard(true)}>
+                <div key={item.id} style={S.msgCard(true)} className="glass-panel">
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem"}}>
                     <div>
                       <div style={S.msgName}>{item.question}</div>
@@ -1569,7 +1899,7 @@ export default function AdminPanel() {
               ) : (
                 <div style={S.msgList}>
                   {reviews.filter(r => !r.approved).map(rev => (
-                    <div key={rev.id} style={S.msgCard(false)}>
+                    <div key={rev.id} style={S.msgCard(false)} className="glass-panel">
                       <div style={S.msgTop}>
                         <div style={{display: "flex", gap: "10px", alignItems: "center"}}>
                           <div style={{fontSize: "2rem", background: "rgba(0, 229, 255, 0.1)", borderRadius: "50%", width: "48px", height: "48px", display: "flex", alignItems: "center", justifySelf: "center", justifyContent: "center"}}>
@@ -1610,7 +1940,7 @@ export default function AdminPanel() {
               ) : (
                 <div style={S.msgList}>
                   {reviews.filter(r => r.approved).map(rev => (
-                    <div key={rev.id} style={S.msgCard(true)}>
+                    <div key={rev.id} style={S.msgCard(true)} className="glass-panel">
                       <div style={S.msgTop}>
                         <div style={{display: "flex", gap: "10px", alignItems: "center"}}>
                           <div style={{fontSize: "2rem", background: "rgba(255, 255, 255, 0.05)", borderRadius: "50%", width: "48px", height: "48px", display: "flex", alignItems: "center", justifySelf: "center", justifyContent: "center"}}>

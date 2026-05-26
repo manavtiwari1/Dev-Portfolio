@@ -505,7 +505,6 @@
       color: rgba(224, 247, 250, 0.9);
       letter-spacing: 0;
       margin-bottom: .8rem;
-      animation: fadeUp .8s ease both;
     }
 
     .hero-name1 {
@@ -514,7 +513,6 @@
       font-size: clamp(3.8rem, 6vw, 6.8rem);
       color: var(--white);
       line-height: 1;
-      animation: fadeUp .8s .1s ease both;
       text-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
     }
 
@@ -527,7 +525,6 @@
       background: linear-gradient(135deg, var(--teal), #43a7ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: fadeUp .8s .2s ease both;
       filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.4));
     }
 
@@ -536,7 +533,6 @@
       font-weight: 800;
       color: var(--white);
       margin-bottom: 2rem;
-      animation: fadeUp .9s .3s ease both;
       min-height: 2rem;
     }
 
@@ -551,7 +547,6 @@
       line-height: 1.55;
       margin: 0 0 2.4rem;
       font-weight: 500;
-      animation: fadeUp .9s .4s ease both;
     }
 
     .hero-btns {
@@ -559,7 +554,6 @@
       gap: 1.25rem;
       justify-content: flex-start;
       flex-wrap: wrap;
-      animation: fadeUp .9s .5s ease both;
       width: 100%;
       max-width: 460px;
       margin-bottom: 0;
@@ -677,7 +671,6 @@
       width: min(520px, 86vw);
       height: min(520px, 86vw);
       margin: 0 auto;
-      animation: fadeIn 1s .6s ease both;
       flex-shrink: 0;
     }
 
@@ -2139,16 +2132,71 @@
     /* ── REVEAL ── */
     .reveal {
       opacity: 0;
-      transform: translateY(32px);
-      transition: opacity .7s ease, transform .7s ease;
+      filter: blur(6px);
+      transform: translateY(24px);
+      transition: opacity 0.85s cubic-bezier(0.25, 1, 0.5, 1), 
+                  transform 0.85s cubic-bezier(0.25, 1, 0.5, 1), 
+                  filter 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform, opacity, filter;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+    }
+
+    /* 3D Left Swing Reveal */
+    .reveal.reveal-left {
+      transform: perspective(1200px) rotateY(15deg) translateX(-40px) translateY(0) scale(0.97);
+      transform-origin: left center;
+    }
+
+    /* 3D Right Swing Reveal */
+    .reveal.reveal-right {
+      transform: perspective(1200px) rotateY(-15deg) translateX(40px) translateY(0) scale(0.97);
+      transform-origin: right center;
+    }
+
+    /* 3D Bottom Swing Reveal (Upward) */
+    .reveal.reveal-scale, .reveal.reveal-up {
+      transform: perspective(1200px) rotateX(12deg) translateY(30px) scale(0.97);
+      transform-origin: bottom center;
+    }
+
+    .reveal.reveal-fade {
+      transform: translateY(0) translateX(0) scale(1) rotateX(0) rotateY(0);
     }
 
     .reveal.visible {
-      opacity: 1;
-      transform: none;
+      opacity: 1 !important;
+      filter: blur(0) !important;
+      transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateX(0) translateY(0) scale(1) !important;
     }
 
     /* ── KEYFRAMES ── */
+    @keyframes slideFromLeft {
+      from {
+        opacity: 0;
+        filter: blur(8px);
+        transform: perspective(1200px) rotateY(25deg) translateX(-80px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+        transform: perspective(1200px) rotateY(0) translateX(0) scale(1);
+      }
+    }
+
+    @keyframes slideFromRight {
+      from {
+        opacity: 0;
+        filter: blur(8px);
+        transform: perspective(1200px) rotateY(-25deg) translateX(80px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+        transform: perspective(1200px) rotateY(0) translateX(0) scale(1);
+      }
+    }
+
     @keyframes fadeUp {
       from {
         opacity: 0;
@@ -3699,11 +3747,11 @@
   <section id="hero">
     <div class="hero-shell">
       <div class="hero-copy">
-        <p class="hero-hello">Hello, I'm</p>
-        <h1 class="hero-name1">Manav</h1>
-        <h1 class="hero-name2">Tiwari</h1>
-        <p class="hero-role"><span class="iam">I am</span> a Full Stack Developer</p>
-        <p class="hero-desc">Full Stack Developer working at the intersection of AI, cloud, automation, and real-world
+        <p class="hero-hello reveal reveal-left" style="transition-delay: 0s">Hello, I'm</p>
+        <h1 class="hero-name1 reveal reveal-left" style="transition-delay: 0.08s">Manav</h1>
+        <h1 class="hero-name2 reveal reveal-left" style="transition-delay: 0.16s">Tiwari</h1>
+        <p class="hero-role reveal reveal-left" style="transition-delay: 0.24s"><span class="iam">I am</span> a Full Stack Developer</p>
+        <p class="hero-desc reveal reveal-left" style="transition-delay: 0.32s">Full Stack Developer working at the intersection of AI, cloud, automation, and real-world
           problem solving.
           Passionate about building modern web applications, AI-powered systems, intelligent Discord bots, and
           data-driven dashboards that deliver impactful user experiences.
@@ -3711,13 +3759,13 @@
           experience creating scalable and interactive solutions using modern technologies.
           Focused on transforming complex ideas into fast, efficient, and production-ready platforms through smart
           automation, analytics, and innovative AI integration.</p>
-        <div class="hero-btns">
+        <div class="hero-btns reveal reveal-left" style="transition-delay: 0.4s">
           <a href="#contact" class="btn-solid magnetic-btn">Connect With Me</a>
           <a href="#skills" class="btn-ghost magnetic-btn">View Work</a>
         </div>
       </div>
 
-      <div class="hud-wrap">
+      <div class="hud-wrap reveal reveal-right" style="transition-delay: 0.24s">
         <div class="hud-inner">
           <div class="photo-circle"><img src="/Photos/manav.png" alt="Profile Photo"></div>
           <svg class="hud-svg" viewBox="0 0 290 290" fill="none">
@@ -3744,15 +3792,15 @@
   </section>
 
   <!-- ABOUT -->
-  <section id="about" class="section3d reveal">
-    <div class="sec-head">
+  <section id="about" class="section3d">
+    <div class="sec-head reveal">
       <h2 class="sec-title">About Me</h2><span class="sec-line"></span>
     </div>
 
     <div class="about-layout">
 
       <!-- LEFT: Tablet frame -->
-      <div class="about-tablet-wrap">
+      <div class="about-tablet-wrap reveal reveal-left">
         <div class="about-side-plus">+</div>
         <div class="about-tablet-frame">
           <img src="/Photos/ghiblie.png" alt="Developer at work"
@@ -3768,7 +3816,7 @@
       </div>
 
       <!-- RIGHT: Text content -->
-      <div class="about-content">
+      <div class="about-content reveal reveal-right">
         <div class="about-accent-line"></div>
 
         <div class="about-content-card">
@@ -3796,18 +3844,18 @@
   </section>
 
   <!-- RESUME BUTTON -->
-  <div class="resume-btn-container">
+  <div class="resume-btn-container reveal">
     <a href="https://docs.google.com/document/d/1PF-SQ9K6Yu1DaiUYDIkRAVY6jPsjEJDG/edit?usp=sharing&ouid=117710315095802691664&rtpof=true&sd=true"
       target="_blank" rel="noopener noreferrer" class="resume-cv-btn magnetic-btn">Click here to see CV / Resume</a>
   </div>
 
   <!-- TECHNICAL ARSENAL -->
-  <section id="skills" class="section3d reveal">
-    <div class="sec-head">
+  <section id="skills" class="section3d">
+    <div class="sec-head reveal">
       <h2 class="sec-title">Technical Arsenal</h2><span class="sec-line"></span>
     </div>
     <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:2rem;letter-spacing:.05em"
-      id="flip-hint-text">Hover over
+      id="flip-hint-text" class="reveal reveal-fade">Hover over
       a card to flip it ↻</p>
     <script>
       if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
@@ -4067,8 +4115,8 @@
   </section>
 
   <!-- WORK EXPERIENCE -->
-  <section id="experience" class="section3d reveal">
-    <div class="sec-head">
+  <section id="experience" class="section3d">
+    <div class="sec-head reveal">
       <h2 class="sec-title">Work Experience</h2><span class="sec-line"></span>
     </div>
 
@@ -4078,7 +4126,7 @@
       <div class="tl-deco-circle"></div>
 
       <!-- Initial loading placeholder (will be replaced by JS) -->
-      <div class="tl-row is-left">
+      <div class="tl-row is-left reveal reveal-left">
         <div class="tl-left">
           <div class="tl-card">
             <div class="tl-role">Internship</div>
@@ -4097,8 +4145,8 @@
 
   <!-- QUALIFICATIONS -->
 
-  <section id="qualifications" class="section3d reveal">
-    <div class="sec-head">
+  <section id="qualifications" class="section3d">
+    <div class="sec-head reveal">
       <h2 class="sec-title">Qualifications</h2><span class="sec-line"></span>
     </div>
 
@@ -4108,7 +4156,7 @@
       <div class="tl-deco-circle"></div>
 
       <!-- Row 1: LEFT -->
-      <div class="tl-row is-left">
+      <div class="tl-row is-left reveal reveal-left">
         <div class="tl-left">
           <div class="tl-card">
             <div class="tl-role">Student</div>
@@ -4124,7 +4172,7 @@
       </div>
 
       <!-- Row 2: RIGHT -->
-      <div class="tl-row">
+      <div class="tl-row reveal reveal-right">
         <div class="tl-empty"></div>
         <div class="tl-mid">
           <div class="tl-dot-new"></div>
@@ -4143,7 +4191,7 @@
 
     <!-- CERTIFICATIONS -->
     <div id="certifications" style="margin-top:1rem">
-      <button class="certs-toggle-btn" onclick="toggleCerts(this)" aria-expanded="true">
+      <button class="certs-toggle-btn reveal" onclick="toggleCerts(this)" aria-expanded="true">
         🛡 CERTIFICATIONS
       </button>
       <div class="certs-grid" id="certs">
@@ -4185,14 +4233,14 @@
   </section>
 
   <!-- DEV DASHBOARD & LIVE STATS -->
-  <section id="dashboard" class="section3d reveal">
-    <div class="sec-head">
+  <section id="dashboard" class="section3d">
+    <div class="sec-head reveal">
       <h2 class="sec-title">Dev Dashboard</h2><span class="sec-line"></span>
     </div>
     
     <div class="db-grid">
       <!-- Card 1: Live Status -->
-      <div class="db-card">
+      <div class="db-card reveal reveal-left">
         <div class="db-status-wrap">
           <div class="db-status-header">
             <div class="db-status-dot"></div>
@@ -4231,7 +4279,7 @@
       </div>
 
       <!-- Card 2: GitHub Consistency Tracker -->
-      <div class="db-card">
+      <div class="db-card reveal reveal-right">
         <div class="db-git-header">
           <div>
             <div class="db-git-title">GitHub Consistency</div>
@@ -4254,7 +4302,7 @@
     </div>
 
     <!-- Mini Counters Row -->
-    <div class="db-card" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+    <div class="db-card reveal reveal-scale" style="margin-top: 1.5rem; margin-bottom: 2rem;">
       <div class="db-mini-grid">
         <div class="db-mini-card">
           <div class="db-mini-num db-counter" id="db-counter-projects" data-target="25" data-suffix="+">0+</div>
@@ -4277,13 +4325,13 @@
   </section>
 
   <!-- SOCIAL -->
-  <section id="social" class="section3d reveal">
-    <div class="sec-head">
+  <section id="social" class="section3d">
+    <div class="sec-head reveal">
       <h2 class="sec-title">Social Network</h2><span class="sec-line"></span>
     </div>
-    <p class="social-intro">Connect with me across the web. I'm always active and open to new conversations!</p>
+    <p class="social-intro reveal">Connect with me across the web. I'm always active and open to new conversations!</p>
     <div class="social-grid">
-      <a href="https://github.com/manavtiwari1" class="social-card featured" target="_blank" rel="noopener noreferrer">
+      <a href="https://github.com/manavtiwari1" class="social-card featured reveal reveal-scale" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -4294,7 +4342,7 @@
         <div class="social-name">GitHub</div>
         <div class="social-sub">Code &amp; Projects</div>
       </a>
-      <a href="https://www.linkedin.com/in/manav-tiwari-0185651b2/" class="social-card" target="_blank"
+      <a href="https://www.linkedin.com/in/manav-tiwari-0185651b2/" class="social-card reveal reveal-scale" style="transition-delay: 0.05s" target="_blank"
         rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
@@ -4306,7 +4354,7 @@
         <div class="social-name">LinkedIn</div>
         <div class="social-sub">Professional Network</div>
       </a>
-      <a href="https://x.com/ManavAneja13" class="social-card" target="_blank" rel="noopener noreferrer">
+      <a href="https://x.com/ManavAneja13" class="social-card reveal reveal-scale" style="transition-delay: 0.1s" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -4317,7 +4365,7 @@
         <div class="social-name">X (Twitter)</div>
         <div class="social-sub">Tech &amp; Updates</div>
       </a>
-      <a href="https://www.instagram.com/imanavv_25/" class="social-card" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.instagram.com/imanavv_25/" class="social-card reveal reveal-scale" style="transition-delay: 0.15s" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -4328,7 +4376,7 @@
         <div class="social-name">Instagram</div>
         <div class="social-sub">Behind the Scenes</div>
       </a>
-      <a href="https://www.youtube.com/@amplify_25" class="social-card" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.youtube.com/@amplify_25" class="social-card reveal reveal-scale" style="transition-delay: 0.2s" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -4339,7 +4387,7 @@
         <div class="social-name">YouTube</div>
         <div class="social-sub">Video Content</div>
       </a>
-      <a href="https://www.twitch.tv/mannavvvvv_1" class="social-card" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.twitch.tv/mannavvvvv_1" class="social-card reveal reveal-scale" style="transition-delay: 0.25s" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -4350,7 +4398,7 @@
         <div class="social-name">Twitch</div>
         <div class="social-sub">Live Streams</div>
       </a>
-      <a href="https://discord.gg/wZawPJ5" class="social-card" target="_blank" rel="noopener noreferrer">
+      <a href="https://discord.gg/wZawPJ5" class="social-card reveal reveal-scale" style="transition-delay: 0.3s" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -4361,7 +4409,7 @@
         <div class="social-name">Discord</div>
         <div class="social-sub">Community Chat</div>
       </a>
-      <a href="https://steamcommunity.com/id/manavaneja/" class="social-card" target="_blank" rel="noopener noreferrer">
+      <a href="https://steamcommunity.com/id/manavaneja/" class="social-card reveal reveal-scale" style="transition-delay: 0.35s" target="_blank" rel="noopener noreferrer">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -4372,7 +4420,7 @@
         <div class="social-name">Steam</div>
         <div class="social-sub">Gaming Profile</div>
       </a>
-      <a href="mailto:tiwarimanav118@gmail.com" class="social-card">
+      <a href="mailto:tiwarimanav118@gmail.com" class="social-card reveal reveal-scale" style="transition-delay: 0.4s">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -4780,14 +4828,14 @@
   </style>
 
   <!-- VISITOR REVIEWS & GUESTBOOK -->
-  <section id="reviews" class="section3d reveal">
-    <div class="sec-head">
+  <section id="reviews" class="section3d">
+    <div class="sec-head reveal">
       <h2 class="sec-title">Reviews &amp; Guestbook</h2><span class="sec-line"></span>
     </div>
     
     <div class="reviews-container">
       <!-- Left Column: Metrics -->
-      <div class="reviews-metrics-card">
+      <div class="reviews-metrics-card reveal reveal-left">
         <div class="avg-rating-big" id="reviews-avg-rating">0.0</div>
         <div class="rating-stars-row" id="reviews-avg-stars">☆☆☆☆☆</div>
         <div class="rating-total-count" id="reviews-total-count">0 Reviews</div>
@@ -4831,7 +4879,7 @@
       </div>
       
       <!-- Right Column: Wall or Form -->
-      <div class="reviews-wall-container">
+      <div class="reviews-wall-container reveal reveal-right">
         <!-- Success Alert -->
         <div class="review-submit-success" id="reviewSuccessAlert">
           🎉 Review submitted successfully! It has been received and is pending moderation by Manav. Thank you for your feedback!
@@ -4904,16 +4952,16 @@
   </section>
 
   <!-- CONTACT -->
-  <section id="contact" class="section3d reveal">
-    <div class="sec-head">
+  <section id="contact" class="section3d">
+    <div class="sec-head reveal">
       <h2 class="sec-title">Initialize Connection</h2><span class="sec-line"></span>
     </div>
-    <div class="mail-icon">✉</div>
-    <h3 class="contact-h">Let's Work Together</h3>
-    <p class="contact-p">Whether you have a question, a project idea, or just want to say hi — fill out the form below!
+    <div class="mail-icon reveal reveal-fade">✉</div>
+    <h3 class="contact-h reveal">Let's Work Together</h3>
+    <p class="contact-p reveal">Whether you have a question, a project idea, or just want to say hi — fill out the form below!
     </p>
 
-    <form class="contact-form" id="contactForm" onsubmit="submitForm(event)">
+    <form class="contact-form reveal reveal-scale" id="contactForm" onsubmit="submitForm(event)">
       <div class="cf-row">
         <div class="cf-group">
           <label class="cf-label">YOUR NAME</label>
@@ -5435,7 +5483,7 @@
       if (window._loadedDataCache['skills'] === serialized) return;
       window._loadedDataCache['skills'] = serialized;
 
-      grid.innerHTML = skills.map(skill => {
+      grid.innerHTML = skills.map((skill, index) => {
         const safeName = escapeHtml(skill.name || 'Untitled Skill');
         const safeIcon = escapeHtml(skill.icon || '⚡');
         const tags = Array.isArray(skill.tags) ? skill.tags : [];
@@ -5454,8 +5502,10 @@
           ? `<img class="card-back-icon" src="${fluentUrl}" alt="${safeName}" style="width:28px;height:28px;object-fit:contain;margin-bottom:0.2rem;" />`
           : `<span class="card-back-icon">${safeIcon}</span>`;
 
+        const delay = (index % 4) * 0.08;
+
         return `
-      <div class="card-3d"><div class="card-3d-inner">
+      <div class="card-3d reveal reveal-scale" style="transition-delay: ${delay}s"><div class="card-3d-inner">
         <div class="card-face card-front">
           ${iconHtml}
           <div class="card-name">${safeName}</div>
@@ -5497,7 +5547,7 @@
 
         if (isLeft) {
           return `
-            <div class="tl-row is-left">
+            <div class="tl-row is-left reveal reveal-left">
               <div class="tl-left">${cardHtml}</div>
               <div class="tl-mid"><div class="tl-dot-new"></div></div>
               <div class="tl-empty"></div>
@@ -5505,7 +5555,7 @@
           `;
         } else {
           return `
-            <div class="tl-row">
+            <div class="tl-row reveal reveal-right">
               <div class="tl-empty"></div>
               <div class="tl-mid"><div class="tl-dot-new"></div></div>
               <div class="tl-right">${cardHtml}</div>
@@ -5543,7 +5593,7 @@
 
         if (isLeft) {
           return `
-            <div class="tl-row is-left">
+            <div class="tl-row is-left reveal reveal-left">
               <div class="tl-left">${cardHtml}</div>
               <div class="tl-mid"><div class="tl-dot-new"></div></div>
               <div class="tl-empty"></div>
@@ -5551,7 +5601,7 @@
           `;
         } else {
           return `
-            <div class="tl-row">
+            <div class="tl-row reveal reveal-right">
               <div class="tl-empty"></div>
               <div class="tl-mid"><div class="tl-dot-new"></div></div>
               <div class="tl-right">${cardHtml}</div>
@@ -5572,7 +5622,7 @@
       window._loadedDataCache['certifications'] = serialized;
 
       list.innerHTML = items.map((item, index) => `
-    <div class="cert-card">
+    <div class="cert-card reveal reveal-scale" style="transition-delay: ${(index % 3) * 0.08}s">
       <div class="cert-icon ${index === 0 ? 'g' : ''}">${escapeHtml(item.icon || '🏆')}</div>
       <div>
         <div class="cert-name">${escapeHtml(item.name || 'Untitled Certificate')}</div>
@@ -5638,15 +5688,17 @@
       if (window._projInit) window._projInit();
     }
 
-    function loadPortfolioContent() {
-      loadPortfolioSkills();
-      loadPortfolioExperience();
-      loadPortfolioQualifications();
-      loadPortfolioCertifications();
-      loadPortfolioProjects();
+    async function loadPortfolioContent() {
+      await loadPortfolioSkills();
+      await loadPortfolioExperience();
+      await loadPortfolioQualifications();
+      await loadPortfolioCertifications();
+      await loadPortfolioProjects();
       if (typeof window._reloadChatbot === 'function') {
         window._reloadChatbot();
       }
+      // Re-observe all reveals so that dynamically loaded skills, timeline items, and certs animate on scroll!
+      observeReveals();
     }
 
     loadPortfolioContent();
@@ -5683,9 +5735,20 @@
 
     /* ── SCROLL REVEAL ── */
     const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        } else {
+          e.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.02 });
+    
+    function observeReveals() {
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    }
+    
+    observeReveals();
 
     /* ── TYPING ── */
     const phrases = ['Full Stack Developer', 'UI/UX Designer', 'Data Analyst', 'AI Enthusiast', 'Streamer'];
