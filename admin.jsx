@@ -242,7 +242,7 @@ export default function AdminPanel() {
   const [editingCertification, setEditingCertification] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
   const [team, setTeam] = useState([]);
-  const [newMember, setNewMember] = useState({ name: "", age: "", qualification: "", role: "", dateOfHire: "" });
+  const [newMember, setNewMember] = useState({ name: "", age: "", qualification: "", role: "", dateOfHire: "", avatar: "👨‍💻" });
   const [editingMember, setEditingMember] = useState(null);
   const [iconOpen, setIconOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -450,7 +450,7 @@ export default function AdminPanel() {
     if (!newMember.name || !newMember.role) return;
     const added = [...team, { ...newMember, id: Date.now().toString() }];
     await saveTeam(added);
-    setNewMember({ name: "", age: "", qualification: "", role: "", dateOfHire: "" });
+    setNewMember({ name: "", age: "", qualification: "", role: "", dateOfHire: "", avatar: "👨‍💻" });
   };
 
   const deleteTeamMember = async (id) => {
@@ -2131,6 +2131,39 @@ export default function AdminPanel() {
                     />
                   </div>
                 </div>
+                <div style={{marginBottom: "1rem", marginTop: "1rem"}}>
+                  <div style={S.fieldLabel}>SELECT TEAM MEMBER AVATAR (TECH BITMOJI)</div>
+                  <div style={{
+                    display: "flex", 
+                    flexWrap: "wrap", 
+                    gap: "8px", 
+                    background: "rgba(0,12,18,0.5)", 
+                    padding: "10px", 
+                    borderRadius: "10px", 
+                    border: "1px solid rgba(0, 229, 255, 0.15)",
+                    marginTop: "4px"
+                  }}>
+                    {["👨‍💻", "👩‍💻", "🧑‍💻", "💻", "🧠", "🎨", "🚀", "🛡️", "⚙️", "📱", "🤖", "🌐", "📊", "🐞", "⚡", "👾", "🛰️", "🎮"].map(emoji => (
+                      <span
+                        key={emoji}
+                        onClick={() => setEditingMember(p => ({ ...p, avatar: emoji }))}
+                        style={{
+                          fontSize: "1.8rem",
+                          cursor: "pointer",
+                          padding: "6px",
+                          borderRadius: "8px",
+                          transition: "all 0.2s ease",
+                          background: editingMember.avatar === emoji ? "rgba(0, 229, 255, 0.2)" : "transparent",
+                          border: editingMember.avatar === emoji ? "1px solid #00e5ff" : "1px solid transparent",
+                          boxShadow: editingMember.avatar === emoji ? "0 0 10px rgba(0, 229, 255, 0.3)" : "none"
+                        }}
+                        title={emoji}
+                      >
+                        {emoji}
+                      </span>
+                    ))}
+                  </div>
+                </div>
                 <div style={S.actionRow}>
                   <button style={S.addBtn} onClick={saveEditMember}>SAVE CHANGES</button>
                   <button style={S.cancelBtn} onClick={()=>setEditingMember(null)}>Cancel</button>
@@ -2190,6 +2223,39 @@ export default function AdminPanel() {
                     />
                   </div>
                 </div>
+                <div style={{marginBottom: "1rem", marginTop: "1rem"}}>
+                  <div style={S.fieldLabel}>SELECT TEAM MEMBER AVATAR (TECH BITMOJI)</div>
+                  <div style={{
+                    display: "flex", 
+                    flexWrap: "wrap", 
+                    gap: "8px", 
+                    background: "rgba(0,12,18,0.5)", 
+                    padding: "10px", 
+                    borderRadius: "10px", 
+                    border: "1px solid rgba(0, 229, 255, 0.15)",
+                    marginTop: "4px"
+                  }}>
+                    {["👨‍💻", "👩‍💻", "🧑‍💻", "💻", "🧠", "🎨", "🚀", "🛡️", "⚙️", "📱", "🤖", "🌐", "📊", "🐞", "⚡", "👾", "🛰️", "🎮"].map(emoji => (
+                      <span
+                        key={emoji}
+                        onClick={() => setNewMember(p => ({ ...p, avatar: emoji }))}
+                        style={{
+                          fontSize: "1.8rem",
+                          cursor: "pointer",
+                          padding: "6px",
+                          borderRadius: "8px",
+                          transition: "all 0.2s ease",
+                          background: newMember.avatar === emoji ? "rgba(0, 229, 255, 0.2)" : "transparent",
+                          border: newMember.avatar === emoji ? "1px solid #00e5ff" : "1px solid transparent",
+                          boxShadow: newMember.avatar === emoji ? "0 0 10px rgba(0, 229, 255, 0.3)" : "none"
+                        }}
+                        title={emoji}
+                      >
+                        {emoji}
+                      </span>
+                    ))}
+                  </div>
+                </div>
                 <button style={S.addBtn} onClick={addTeamMember}>ADD MEMBER</button>
               </div>
             )}
@@ -2203,8 +2269,8 @@ export default function AdminPanel() {
                   <div key={m.id} style={S.msgCard(true)} className="glass-panel">
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem"}}>
                       <div style={{display: "flex", gap: "14px", alignItems: "center"}}>
-                        <div style={{fontSize: "2rem", background: "rgba(0, 229, 255, 0.1)", borderRadius: "50%", width: "48px", height: "48px", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                          👤
+                        <div style={{fontSize: "2.1rem", background: "rgba(0, 229, 255, 0.1)", borderRadius: "50%", width: "48px", height: "48px", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(0, 229, 255, 0.2)", boxShadow: "0 0 8px rgba(0, 229, 255, 0.1)"}}>
+                          {m.avatar || "👨‍💻"}
                         </div>
                         <div>
                           <div style={S.msgName}>{m.name}</div>
