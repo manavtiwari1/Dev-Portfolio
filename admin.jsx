@@ -470,6 +470,16 @@ export default function AdminPanel() {
     setEditingMember(null);
   };
 
+  const toggleResignMember = async (id) => {
+    const updated = team.map(m => {
+      if (m.id === id) {
+        return { ...m, status: m.status === "Resigned" ? "Active" : "Resigned" };
+      }
+      return m;
+    });
+    await saveTeam(updated);
+  };
+
   const approveReview = async (id) => {
     const updated = reviews.map(r => r.id === id ? { ...r, approved: true } : r);
     await saveReviews(updated);
@@ -2273,7 +2283,24 @@ export default function AdminPanel() {
                           {m.avatar || "👨‍💻"}
                         </div>
                         <div>
-                          <div style={S.msgName}>{m.name}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <div style={S.msgName}>{m.name}</div>
+                            {m.status === "Resigned" && (
+                              <span style={{
+                                background: "rgba(255,90,106,0.12)",
+                                border: "1px solid rgba(255,90,106,0.3)",
+                                color: "#ff5a6a",
+                                borderRadius: "4px",
+                                padding: "1px 6px",
+                                fontSize: "0.68rem",
+                                fontWeight: "bold",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.05em"
+                              }}>
+                                Resigned
+                              </span>
+                            )}
+                          </div>
                           <div style={S.msgEmail}>{m.role}</div>
                           <div style={{fontSize: "0.8rem", color: "#7a9aa0", marginTop: "4px"}}>
                             Age: <strong>{m.age || "N/A"}</strong> · Qualification: <strong>{m.qualification || "N/A"}</strong>
@@ -2286,6 +2313,17 @@ export default function AdminPanel() {
                         </div>
                       </div>
                       <div style={S.cardActions}>
+                        <button 
+                          style={{
+                            ...S.editBtn, 
+                            background: m.status === "Resigned" ? "rgba(0, 255, 135, 0.08)" : "rgba(255, 193, 7, 0.08)",
+                            color: m.status === "Resigned" ? "#00ff87" : "#ffc107",
+                            borderColor: m.status === "Resigned" ? "rgba(0, 255, 135, 0.22)" : "rgba(255, 193, 7, 0.22)"
+                          }} 
+                          onClick={() => toggleResignMember(m.id)}
+                        >
+                          {m.status === "Resigned" ? "Rehire" : "Resign"}
+                        </button>
                         <button style={S.editBtn} onClick={()=>startEditMember(m)}>Edit</button>
                         <button style={S.removeBtn} onClick={()=>deleteTeamMember(m.id)}>X</button>
                       </div>
