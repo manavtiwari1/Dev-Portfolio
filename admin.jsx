@@ -2285,7 +2285,7 @@ export default function AdminPanel() {
                         <div>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <div style={S.msgName}>{m.name}</div>
-                            {m.status === "Resigned" && (
+                            {m.status === "Resigned" ? (
                               <span style={{
                                 background: "rgba(255,90,106,0.12)",
                                 border: "1px solid rgba(255,90,106,0.3)",
@@ -2298,6 +2298,21 @@ export default function AdminPanel() {
                                 letterSpacing: "0.05em"
                               }}>
                                 Resigned
+                              </span>
+                            ) : (
+                              <span style={{
+                                background: "rgba(0,255,135,0.12)",
+                                border: "1px solid rgba(0,255,135,0.3)",
+                                color: "#00ff87",
+                                borderRadius: "4px",
+                                padding: "1px 6px",
+                                fontSize: "0.68rem",
+                                fontWeight: "bold",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.05em",
+                                boxShadow: "0 0 8px rgba(0, 255, 135, 0.15)"
+                              }}>
+                                Active
                               </span>
                             )}
                           </div>
