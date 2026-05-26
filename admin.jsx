@@ -244,6 +244,7 @@ export default function AdminPanel() {
   const [iconOpen, setIconOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [wakaData, setWakaData] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -373,6 +374,12 @@ export default function AdminPanel() {
           setReviews(defaultReviews);
           storage.set('portfolio_reviews', JSON.stringify(defaultReviews), pw).catch(() => {});
         }
+
+        // Load WakaTime async
+        fetch(apiUrl('/api/wakatime'))
+          .then(res => res.ok ? res.json() : null)
+          .then(data => { if (data) setWakaData(data); })
+          .catch(() => {});
       } catch (err) {
         console.error("Error loading data in parallel:", err);
       } finally {
@@ -1336,6 +1343,143 @@ export default function AdminPanel() {
               </div>
 
             </div>
+
+            {/* REAL-TIME ANALYTICS ROW */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "1.5rem", marginTop: "1.5rem" }}>
+              
+              {/* Intent Analysis Chart */}
+              <div style={S.chartBox} className="glass-panel">
+                <div style={S.chartTitle}>📩 CONTACT QUERY INTENT ANALYSIS</div>
+                {(() => {
+                  const intentCounts = { "Collab & Projects": 0, "Jobs & Internships": 0, "Queries & Questions": 0, "General & Other": 0 };
+                  messages.forEach(m => {
+                    const text = ((m.subject || "") + " " + (m.message || "")).toLowerCase();
+                    if (text.includes("collab") || text.includes("project") || text.includes("work") || text.includes("freelance") || text.includes("build") || text.includes("client")) {
+                      intentCounts["Collab & Projects"]++;
+                    } else if (text.includes("hire") || text.includes("job") || text.includes("intern") || text.includes("resume") || text.includes("career")) {
+                      intentCounts["Jobs & Internships"]++;
+                    } else if (text.includes("query") || text.includes("question") || text.includes("ask") || text.includes("how") || text.includes("what")) {
+                      intentCounts["Queries & Questions"]++;
+                    } else {
+                      intentCounts["General & Other"]++;
+                    }
+                  });
+                  const totalMsgs = messages.length;
+                  const colors = {
+                    "Collab & Projects": "#00e5ff",
+                    "Jobs & Internships": "#7b2fff",
+                    "Queries & Questions": "#ff007f",
+                    "General & Other": "#f2c811"
+                  };
+                  return (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                      <div style={{ display: "flex", height: "16px", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(0,229,255,0.12)" }}>
+                        {totalMsgs === 0 ? (
+                          <div style={{ flex: 1, background: "rgba(74, 122, 130, 0.12)" }} />
+                        ) : (
+                          Object.entries(intentCounts).map(([intent, count]) => {
+                            const pct = (count / totalMsgs) * 100;
+                            return count > 0 ? (
+                              <div 
+                                key={intent} 
+                                style={{ 
+                                  width: `${pct}%`, 
+                                  background: colors[intent], 
+                                  boxShadow: `0 0 10px ${colors[intent]}`, 
+                                  transition: "all 0.3s ease" 
+                                }} 
+                                title={`${intent}: ${count} (${Math.round(pct)}%)`}
+                              />
+                            ) : null;
+                          })
+                        )}
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                        {Object.entries(intentCounts).map(([intent, count]) => {
+                          const pct = totalMsgs > 0 ? (count / totalMsgs) * 100 : 0;
+                          return (
+                            <div key={intent} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", fontSize: "0.78rem" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
+                                <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: colors[intent] }} />
+                                <span style={{ color: "#a0c2cd", fontFamily: "monospace" }}>{intent}</span>
+                              </div>
+                              <span style={{ color: "#e0f7fa", fontWeight: 700, fontFamily: "monospace" }}>{count} ({Math.round(pct)}%)</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Guestbook Ratings Breakdown */}
+              <div style={S.chartBox} className="glass-panel">
+                <div style={S.chartTitle}>⭐ GUESTBOOK RATINGS BREAKDOWN</div>
+                {(() => {
+                  const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+                  reviews.forEach(r => {
+                    const star = Math.round(r.rating);
+                    if (star >= 1 && star <= 5) starCounts[star]++;
+                  });
+                  const totalRevs = reviews.length;
+                  return (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                      {Object.entries(starCounts).reverse().map(([star, count]) => {
+                        const percent = totalRevs > 0 ? (count / totalRevs) * 100 : 0;
+                        return (
+                          <div key={star} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "0.78rem", color: "#b0d0d8" }}>
+                            <span style={{ width: "25px", fontFamily: "monospace", color: "#00e5ff", fontWeight: "bold" }}>{star}★</span>
+                            <div style={{ flex: 1, height: "6px", background: "rgba(255,255,255,0.03)", borderRadius: "3px", overflow: "hidden", border: "1px solid rgba(0,229,255,0.06)" }}>
+                              <div style={{ width: `${percent}%`, height: "100%", background: "linear-gradient(90deg, #00e5ff, #1a6cf5)", borderRadius: "3px", boxShadow: "0 0 5px #00e5ff" }} />
+                            </div>
+                            <span style={{ width: "65px", textAlign: "right", fontFamily: "monospace", color: "#a0c2cd" }}>{count} revs</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* WakaTime Live Coding HUD */}
+              <div style={S.chartBox} className="glass-panel">
+                <div style={S.chartTitle}>🚀 LIVE CODING DIAGNOSTICS (WAKATIME)</div>
+                {wakaData ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(0,229,255,0.08)", paddingBottom: "6px" }}>
+                      <span style={{ fontSize: "0.78rem", color: "#4a7a82", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>Total Coding time</span>
+                      <span style={{ fontSize: "0.85rem", color: "#00e5ff", fontWeight: 700, fontFamily: "monospace" }}>{wakaData.human_readable_total || `${wakaData.total_hours} hrs`}</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(0,229,255,0.08)", paddingBottom: "6px" }}>
+                      <span style={{ fontSize: "0.78rem", color: "#4a7a82", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>Daily average</span>
+                      <span style={{ fontSize: "0.85rem", color: "#1a6cf5", fontWeight: 700, fontFamily: "monospace" }}>{wakaData.daily_average_hours} hrs/day</span>
+                    </div>
+                    <div style={{ marginTop: "4px" }}>
+                      <div style={{ fontSize: "0.75rem", color: "#a0c2cd", marginBottom: "6px", fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>Top Languages</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                        {(wakaData.languages || []).slice(0, 3).map(lang => (
+                          <div key={lang.name} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", fontSize: "0.72rem" }}>
+                            <span style={{ flex: 1, color: "#e0f7fa", fontFamily: "monospace" }}>{lang.name}</span>
+                            <span style={{ color: "#00e5ff", fontWeight: 600, fontFamily: "monospace" }}>{lang.percent.toFixed(1)}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", gap: "8px", padding: "1rem" }}>
+                    <div style={{ fontSize: "1.4rem" }}>📡</div>
+                    <div style={{ fontSize: "0.75rem", color: "#4a7a82", fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>WakaTime stats offline</div>
+                    <div style={{ fontSize: "0.7rem", color: "#7a9aa0", lineHeight: 1.4 }}>
+                      Set your <strong>WAKATIME_API_KEY</strong> in <code>.env</code> to stream live IDE programming analytics directly onto your admin cockpit!
+                    </div>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
           </>
         ) : tab === "messages" ? (
           /* ─────── MESSAGES TAB ─────── */
