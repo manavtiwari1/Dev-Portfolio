@@ -3620,6 +3620,157 @@
       20% { opacity: 1; }
       100% { opacity: .2; }
     }
+
+    /* NEW PROJECT POPUP STYLING */
+    .new-project-popup-wrapper {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 99999;
+      max-width: 380px;
+      width: calc(100% - 48px);
+      transform: translateY(150px) scale(0.9);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .new-project-popup-wrapper.active {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .new-project-popup-card {
+      position: relative;
+      background: rgba(4, 20, 28, 0.85);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 16px;
+      padding: 20px 24px;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 
+                  0 0 30px rgba(0, 229, 255, 0.1),
+                  inset 0 0 15px rgba(0, 229, 255, 0.05);
+      overflow: hidden;
+    }
+
+    .new-project-popup-glow {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.06) 0%, transparent 60%);
+      pointer-events: none;
+      animation: rotateGlow 12s linear infinite;
+    }
+
+    @keyframes rotateGlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .new-project-popup-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      color: #7a9aa0;
+      font-size: 20px;
+      font-weight: 300;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s ease;
+      z-index: 2;
+    }
+
+    .new-project-popup-close:hover {
+      color: #ff5a6a;
+    }
+
+    .new-project-popup-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .new-project-popup-tag {
+      display: inline-block;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #00ff87;
+      background: rgba(0, 255, 135, 0.1);
+      border: 1px solid rgba(0, 255, 135, 0.25);
+      border-radius: 4px;
+      padding: 2px 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+      box-shadow: 0 0 8px rgba(0, 255, 135, 0.15);
+    }
+
+    .new-project-popup-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 6px 0;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+    }
+
+    .new-project-popup-desc {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #a3c2c7;
+      margin: 0 0 16px 0;
+    }
+
+    .new-project-popup-desc strong {
+      color: #00e5ff;
+      text-shadow: 0 0 6px rgba(0, 229, 255, 0.2);
+    }
+
+    .new-project-popup-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 16px;
+      background: linear-gradient(135deg, #00e5ff, #1a6cf5);
+      border: none;
+      border-radius: 8px;
+      color: #000000;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+    }
+
+    .new-project-popup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.45);
+      filter: brightness(1.1);
+    }
+
+    .new-project-popup-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 10px rgba(0, 229, 255, 0.25);
+    }
+
+    .new-project-popup-btn .arrow-icon {
+      transition: transform 0.2s ease;
+    }
+
+    .new-project-popup-btn:hover .arrow-icon {
+      transform: translateX(4px);
+    }
   </style>
 </head>
 
@@ -4420,7 +4571,7 @@
         <div class="social-name">Steam</div>
         <div class="social-sub">Gaming Profile</div>
       </a>
-      <a href="mailto:tiwarimanav118@gmail.com" class="social-card reveal reveal-scale" style="transition-delay: 0.4s">
+      <a href="mailto:contact@manavtiwari.in" class="social-card reveal reveal-scale" style="transition-delay: 0.4s">
         <div class="social-icon">
           <svg viewBox="0 0 24 24">
             <path
@@ -5223,7 +5374,7 @@
         experience: "Manav did an Internship at Comnet Vison IT India Pvt ltd, Nehru Place from June 2025 to August 2025, where he worked on making SO PO and BTO.",
         projects: "Featured work includes the Amplify Edge Discord Bot with AI-powered moderation and dynamic roles, plus the VIBRATIONS Fest Website with registration, Supabase auth, admin controls, and responsive event pages. Upcoming projects include Smart AI Interview and AI Smart Study Assistant.",
         futureProjects: "Manav is working on Smart AI Interview, a project that helps students practice interviews across multiple domains, including government exams and big tech companies. He is also working on an AI Smart Study Assistant for smarter learning and personalized study support.",
-        contact: "You can use the contact form below to reach Manav for project collaborations, queries, or ideas. You can also email him directly at tiwarimanav118@gmail.com. I can take you there now.",
+        contact: "You can use the contact form below to reach Manav for project collaborations, queries, or ideas. You can also email him directly at contact@manavtiwari.in. I can take you there now.",
         qualification: "Manav is studying Computer Science at Shivaji College, University of Delhi, focused on AI and web development. He completed high school in New Delhi and has certifications in AI, prompt engineering, Power BI, Tableau, and Generative AI.",
         socials: "For future updates and quick connection, follow Manav on LinkedIn, GitHub, X, Instagram, YouTube, Twitch, Discord, Steam, or email. I can take you to the socials section now.",
         fallback: "I can help with Manav's skills, experience, projects, qualifications, socials, and contact details. Try asking: What can Manav build?",
@@ -6705,6 +6856,48 @@
       });
       window.addEventListener('resize', () => goTo(current, true));
     })();
+  </script>
+
+  <!-- NEW PROJECT ANNOUNCEMENT POPUP -->
+  <div id="new-project-popup" class="new-project-popup-wrapper">
+    <div class="new-project-popup-card">
+      <button class="new-project-popup-close" onclick="dismissNewProjectPopup()" title="Close Notification">&times;</button>
+      <div class="new-project-popup-glow"></div>
+      <div class="new-project-popup-content">
+        <div class="new-project-popup-tag">🚀 NEW LAUNCH</div>
+        <h4 class="new-project-popup-title">Manav Tiwari published new project</h4>
+        <p class="new-project-popup-desc">Explore <strong>CV Mind AI</strong>—a premium AI-powered Resume Builder designed to craft optimization-ready, interview-winning professional CVs in seconds.</p>
+        <a href="https://cv-mind-ai.vercel.app/" target="_blank" class="new-project-popup-btn" onclick="dismissNewProjectPopup()">
+          Visit the Project
+          <svg class="arrow-icon" viewBox="0 0 24 24" width="16" height="16" style="margin-left: 4px;">
+            <path fill="currentColor" d="M5 13h11.86l-5.43 5.43 1.42 1.42L21 12l-8.15-8.15-1.42 1.42L16.86 11H5v2z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Announce New Project Popup Logic
+    window.addEventListener('DOMContentLoaded', () => {
+      // Check if the user has already dismissed this specific launch popup in this session
+      if (!sessionStorage.getItem('newProjectPopupDismissed')) {
+        setTimeout(() => {
+          const popup = document.getElementById('new-project-popup');
+          if (popup) {
+            popup.classList.add('active');
+          }
+        }, 2500); // Premium delay after entrance animations
+      }
+    });
+
+    function dismissNewProjectPopup() {
+      const popup = document.getElementById('new-project-popup');
+      if (popup) {
+        popup.classList.remove('active');
+        sessionStorage.setItem('newProjectPopupDismissed', 'true');
+      }
+    }
   </script>
 </body>
 

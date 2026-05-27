@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     - Upcoming / Future Projects: ${chatbotData.futureProjects || "Smart AI Interview, AI Smart Study Assistant."}
     - Qualifications / Education: ${chatbotData.qualification || "Computer Science degree at Shivaji College, DU (2025 - 2029)."}
     - Connections & Social Media links: ${chatbotData.socials || "LinkedIn, GitHub, X, Instagram, Steam, Discord."}
-    - Contacting / Collaborating: ${chatbotData.contact || "Email tiwarimanav118@gmail.com or use the contact form."}
+    - Contacting / Collaborating: ${chatbotData.contact || "Email contact@manavtiwari.in or use the contact form."}
     `;
 
     if (Array.isArray(chatbotData.customQuestions) && chatbotData.customQuestions.length > 0) {
@@ -65,7 +65,7 @@ export default async function handler(req, res) {
       3. VIBRATIONS Fest Website - Festival portal with Supabase auth and event registration.
       4. Smart AI Interview - Interactive exam and job prep simulator.
     - Portfolio stats: 25+ Projects completed, 100+ Coding Hours, 132+ GitHub Commits, 15+ Followers on GitHub.
-    - Contacts: Email tiwarimanav118@gmail.com. Has links to LinkedIn, GitHub, X (Twitter), and Instagram.
+    - Contacts: Email contact@manavtiwari.in. Has links to LinkedIn, GitHub, X (Twitter), and Instagram.
     
     ${customFacts}
     ${customInstructionsText}

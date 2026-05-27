@@ -16,7 +16,7 @@ function parseMessages(value) {
 
 async function sendNotificationEmail(msg) {
   const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.EMAIL_TO || "tiwarimanav118@gmail.com";
+  const to = process.env.EMAIL_TO || "contact@manavtiwari.in";
   const fromEmail = process.env.EMAIL_FROM || "onboarding@resend.dev";
 
   if (!apiKey) {
