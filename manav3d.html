@@ -5957,10 +5957,19 @@
       const mobileLinks = document.querySelectorAll('#nav-overlay .nav-link');
       const desktopLinks = document.querySelectorAll('.desktop-nav a');
       
+      function getAbsoluteOffsetTop(el) {
+        let top = 0;
+        while (el) {
+          top += el.offsetTop;
+          el = el.offsetParent;
+        }
+        return top;
+      }
+      
       let current = 'hero';
       sections.forEach(id => {
         const el = document.getElementById(id);
-        if (el && window.scrollY >= el.offsetTop - 200) current = id;
+        if (el && window.scrollY >= getAbsoluteOffsetTop(el) - 200) current = id;
       });
       
       mobileLinks.forEach(l => {
