@@ -5981,9 +5981,9 @@
 
       // Update URL path dynamically using history.replaceState (replacing # with /)
       const currentPath = window.location.pathname;
-      let newPath = '/manav';
+      let newPath = '/';
       if (current !== 'hero') {
-        newPath = '/manav/' + current;
+        newPath = '/' + current;
       }
       if (currentPath + window.location.search !== newPath + window.location.search) {
         window.history.replaceState(null, '', newPath + window.location.search);
@@ -6012,8 +6012,8 @@
         // Close mobile nav overlay if open
         if (typeof closeNav === 'function') closeNav();
         
-        // Update URL path using history.pushState
-        const newPath = targetId === 'hero' || targetId === 'home' ? '/manav' : '/manav/' + targetId;
+        // Update URL path using history.pushState at root level
+        const newPath = targetId === 'hero' || targetId === 'home' ? '/' : '/' + targetId;
         window.history.pushState(null, '', newPath + window.location.search);
         
         // Manually trigger link highlighting
@@ -6025,8 +6025,9 @@
     window.addEventListener('popstate', () => {
       const pathParts = window.location.pathname.split('/');
       const targetId = pathParts[pathParts.length - 1];
+      const validSections = ['about', 'skills', 'projects', 'experience', 'qualifications', 'certifications', 'dashboard', 'social', 'contact'];
       
-      if (targetId && targetId !== 'manav' && targetId !== '') {
+      if (targetId && validSections.includes(targetId)) {
         const el = document.getElementById(targetId);
         if (el) {
           el.scrollIntoView({ behavior: 'smooth' });
@@ -6044,8 +6045,9 @@
     function scrollToSectionOnLoad() {
       const pathParts = window.location.pathname.split('/');
       const targetId = pathParts[pathParts.length - 1];
+      const validSections = ['about', 'skills', 'projects', 'experience', 'qualifications', 'certifications', 'dashboard', 'social', 'contact'];
       
-      if (targetId && targetId !== 'manav' && targetId !== '') {
+      if (targetId && validSections.includes(targetId)) {
         setTimeout(() => {
           const el = document.getElementById(targetId);
           if (el) {

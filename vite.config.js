@@ -59,8 +59,8 @@ export default defineConfig({
 
         server.middlewares.use((req, res, next) => {
           const originalUrl = req.url;
-          if (originalUrl === "/manav3d.html") {
-            res.writeHead(301, { Location: "/manav" });
+          if (originalUrl === "/manav3d.html" || originalUrl === "/manav" || originalUrl.startsWith("/manav/")) {
+            res.writeHead(301, { Location: "/" });
             res.end();
             return;
           }
@@ -69,11 +69,13 @@ export default defineConfig({
             res.end();
             return;
           }
-          if (originalUrl === "/" || originalUrl === "/manav" || originalUrl === "/index" || originalUrl.startsWith("/manav/")) {
-            req.url = "/manav3d.html";
-          }
           if (originalUrl === "/admin") {
             req.url = "/admin.html";
+          } else {
+            const isApiOrAsset = originalUrl.startsWith("/api") || originalUrl.includes(".") || originalUrl.startsWith("/@") || originalUrl.startsWith("/src") || originalUrl.startsWith("/node_modules");
+            if (!isApiOrAsset) {
+              req.url = "/manav3d.html";
+            }
           }
           next();
         });
@@ -83,7 +85,7 @@ export default defineConfig({
   server: {
     host: "localhost",
     port: 8080,
-    open: "/manav",
+    open: "/",
   },
   build: {
     rollupOptions: {
