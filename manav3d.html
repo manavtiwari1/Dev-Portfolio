@@ -5951,7 +5951,7 @@
     // Close on Escape key
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
 
-    // highlight whichever section is in view
+    // highlight whichever section is in view and update address bar dynamically
     function updateActiveLink() {
       const sections = ['hero', 'about', 'skills', 'projects', 'experience', 'qualifications', 'certifications', 'dashboard', 'social', 'contact'];
       const mobileLinks = document.querySelectorAll('#nav-overlay .nav-link');
@@ -5978,12 +5978,82 @@
           l.classList.add('active');
         }
       });
+
+      // Update URL path dynamically using history.replaceState (replacing # with /)
+      const currentPath = window.location.pathname;
+      let newPath = '/manav';
+      if (current !== 'hero') {
+        newPath = '/manav/' + current;
+      }
+      if (currentPath + window.location.search !== newPath + window.location.search) {
+        window.history.replaceState(null, '', newPath + window.location.search);
+      }
     }
     let scrollTimeout;
     window.addEventListener('scroll', () => {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(updateActiveLink, 150);
     }, { passive: true });
+
+    // Intercept clicks on links that target sections (replacing # with /)
+    document.addEventListener('click', e => {
+      const link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      
+      const targetId = link.getAttribute('href').replace('#', '');
+      const targetElement = document.getElementById(targetId === 'home' ? 'hero' : targetId);
+      
+      if (targetElement) {
+        e.preventDefault();
+        
+        // Smooth scroll to the target
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+        
+        // Close mobile nav overlay if open
+        if (typeof closeNav === 'function') closeNav();
+        
+        // Update URL path using history.pushState
+        const newPath = targetId === 'hero' || targetId === 'home' ? '/manav' : '/manav/' + targetId;
+        window.history.pushState(null, '', newPath + window.location.search);
+        
+        // Manually trigger link highlighting
+        updateActiveLink();
+      }
+    });
+
+    // Listen to back/forward button navigation
+    window.addEventListener('popstate', () => {
+      const pathParts = window.location.pathname.split('/');
+      const targetId = pathParts[pathParts.length - 1];
+      
+      if (targetId && targetId !== 'manav' && targetId !== '') {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        const hero = document.getElementById('hero');
+        if (hero) {
+          hero.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+      updateActiveLink();
+    });
+
+    // Scroll to the correct section on initial load if path specifies a section
+    function scrollToSectionOnLoad() {
+      const pathParts = window.location.pathname.split('/');
+      const targetId = pathParts[pathParts.length - 1];
+      
+      if (targetId && targetId !== 'manav' && targetId !== '') {
+        setTimeout(() => {
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 800); // Premium delay to allow Three.js load
+      }
+    }
 
     /* ── CONTACT FORM ── */
     async function submitForm(e) {
@@ -6853,6 +6923,7 @@
       window.addEventListener('load', () => {
         initCarousel();
         resetFormInteractiveStates();
+        scrollToSectionOnLoad();
       });
       window.addEventListener('resize', () => goTo(current, true));
     })();

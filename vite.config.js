@@ -69,7 +69,7 @@ export default defineConfig({
             res.end();
             return;
           }
-          if (originalUrl === "/" || originalUrl === "/manav" || originalUrl === "/index") {
+          if (originalUrl === "/" || originalUrl === "/manav" || originalUrl === "/index" || originalUrl.startsWith("/manav/")) {
             req.url = "/manav3d.html";
           }
           if (originalUrl === "/admin") {
